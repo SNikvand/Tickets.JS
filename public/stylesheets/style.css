@@ -102,3 +102,6 @@ body {
 hr {
     border-top-color: #DBDBDB;
 }
+.t-spaceIcons span {
+    padding-right: 10px;
+}
