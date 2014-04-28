@@ -94,3 +94,11 @@ body {
     display: inline-block;
     border-radius: 50%;
 }
+.t-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 85%;
+}
+hr {
+    border-top-color: #DBDBDB;
+}
