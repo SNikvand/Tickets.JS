@@ -1,13 +1,20 @@
 extends layout
 
 block content
-  .container
-    form.form-signin(role='form')
-      h2.form-signin-heading Please sign in
-      input.form-control(type='email', placeholder='Email address', required='required', autofocus='autofocus')
-      input.form-control(type='password', placeholder='Password', required='required')
-      label.checkbox
-        input(type='checkbox', value='remember-me')
-        | Remember me
-      button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
-      a.btn.btn-lg.btn-primary.btn-block(href='/admin/#/overview') Go To Admin Page
+  h1= title
+  p Welcome to #{title}
+
+  // SESSIONS TEST
+  if user
+      p You are logged in as #{user}
+      p
+      form(method='post', action='/logout')
+          input(type='submit', value='Logout')
+  else
+      form(method='post', action='/login')
+          input(type='text', name='username')
+          input(type='submit', value='Login')
+  // END SESSIONS TEST
+
+  script(src='/javascripts/socket.io.js')
+  script(src='/javascripts/ticket_client.js')
