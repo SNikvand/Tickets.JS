@@ -1,0 +1,48 @@
+<form class="form-signin" role="form">
+    <h2 class="form-signin-heading">New user registration</h2>
+    <input type="text" class="form-control" id="firstname" placeholder="Firstname" required autofocus>
+    <input type="text" class="form-control" id="lastname" placeholder="Lastname" required>
+    <input type="email" class="form-control" placeholder="Email address" required>
+    <input type="password" class="form-control" placeholder="Password" required>
+
+    <script>
+        function permission() {
+            $(".dropdown-menu li a").click(function () {
+                $(".btn:first-child").text($(this).text());
+                $(".btn:first-child").val($(this).text());
+            });
+        }
+    </script>
+
+    <div class="btn-group" style="margin-bottom:10px">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" onclick="permission()"
+                style="width:300px;height:40px">
+            Permission <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Administrator</a></li>
+            <li><a href="#">Manager</a></li>
+            <li><a href="#">IT team</a></li>
+        </ul>
+    </div>
+    <br/>
+
+    <div id="depart">
+        <label for="name">Department</label>
+        <br/>
+        <label class="checkbox-inline">
+            <input type="checkbox" value="sales"> Sales
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" value="it"> IT
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" value="hr"> HR
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" value="cs"> Customer service
+        </label>
+    </div>
+    <br/>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+</form>
