@@ -14,4 +14,12 @@ angular
                 url: '/newuser',
                 templateUrl: '/template/newUser.html'
             })
+            .state('viewtickets', {
+                url: '/viewtickets',
+                templateUrl: '/template/viewTickets.html'
+            })
+            .state('viewusers', {
+                url: '/viewusers',
+                templateUrl: '/template/viewUsers.html'
+            })
     }]);
