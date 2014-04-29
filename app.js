@@ -42,7 +42,7 @@ app.post('/login', function(req, res) {
 
     app.locals.user = req.session.user;
 
-    res.redirect('/');
+    res.redirect('/admin');
 });
 app.post('/logout', function(req, res) {
     delete app.locals.user;
