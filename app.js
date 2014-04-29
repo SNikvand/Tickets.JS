@@ -20,7 +20,7 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
+app.use(express.cookieParser('M3ZZ0-S0PR4N0'));
 app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -32,6 +32,25 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/admin', admin.index);
+
+app.post('/login', function(req, res) {
+    // AUTHENTICATION: check req.body.username and req.body.password against the database
+    // DATABASE FUNCTION: retrieve role from database for this user
+
+    req.session.user = req.body.username;
+    req.session.pass = req.body.password;
+
+    app.locals.user = req.session.user;
+
+    res.redirect('/');
+});
+app.post('/logout', function(req, res) {
+    delete app.locals.user;
+
+    req.session.destroy(function() {
+        res.redirect('/');
+    });
+});
 
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
