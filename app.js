@@ -37,10 +37,13 @@ app.post('/login', function(req, res) {
     // AUTHENTICATION: check req.body.username and req.body.password against the database
     // DATABASE FUNCTION: retrieve role from database for this user
 
-    req.session.user = req.body.username;
-    req.session.pass = req.body.password;
+    // set the sessions
+    req.session.user = req.body.user;
+    req.session.role = req.body.role;
 
-    app.locals.user = req.session.user;
+    // grant client access to session variables
+    app.locals.sessionUser = req.session.user;
+    app.locals.sessionRole = req.session.role;
 
     res.redirect('/');
 });

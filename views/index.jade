@@ -5,15 +5,27 @@ block content
   p Welcome to #{title}
 
   // SESSIONS TEST
-  if user
-      p You are logged in as #{user}
+  if sessionUser
+      p You are logged in as #{sessionUser} as #{sessionRole}.
       p
       form(method='post', action='/logout')
           input(type='submit', value='Logout')
+
+      // pass session variables to javascript
+      script(type='text/javascript').
+        var sessionUser = "#{sessionUser}";
+        var sessionRole = "#{sessionRole}";
   else
       form(method='post', action='/login')
-          input(type='text', name='username')
-          input(type='submit', value='Login')
+          p
+              input(type='text', name='user')
+          p
+              select(name='role')
+                option(value='IT User') IT User
+                option(value='Manager') Manager
+                option(value='Admin') Admin
+          p
+              input(type='submit', value='Login')
   // END SESSIONS TEST
 
   script(src='/javascripts/socket.io.js')
