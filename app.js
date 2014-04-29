@@ -74,6 +74,25 @@ app.post('/verifyAccess', function(req, res) {
     res.send(permissions.checkRestriction(pageid, role));
 });
 
+app.post('/login', function(req, res) {
+    // AUTHENTICATION: check req.body.username and req.body.password against the database
+    // DATABASE FUNCTION: retrieve role from database for this user
+
+    req.session.user = req.body.username;
+    req.session.pass = req.body.password;
+
+    app.locals.user = req.session.user;
+
+    res.redirect('/');
+});
+app.post('/logout', function(req, res) {
+    delete app.locals.user;
+
+    req.session.destroy(function() {
+        res.redirect('/');
+    });
+});
+
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
