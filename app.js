@@ -36,20 +36,26 @@ app.get('/admin', admin.index);
 app.post('/login', function(req, res) {
     // AUTHENTICATION: check req.body.username and req.body.password against the database
     // DATABASE FUNCTION: retrieve role from database for this user
+    // DATABASE FUNCTION: retrieve set of departments assigned to this user
+    // if admin, depts return "all"
+    // if IT user, depts return "none" or "null"
 
     // set the sessions
     req.session.user = req.body.user;
     req.session.role = req.body.role;
+    req.session.depts = req.body.depts;
 
     // grant client access to session variables
     app.locals.sessionUser = req.session.user;
     app.locals.sessionRole = req.session.role;
+    app.locals.sessionDepts = req.session.depts;
 
     res.redirect('/admin');
 });
 app.post('/logout', function(req, res) {
     delete app.locals.sessionUser;
     delete app.locals.sessionRole;
+    delete app.locals.sessionDepts;
 
     req.session.destroy(function() {
         res.redirect('/');
