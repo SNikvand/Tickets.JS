@@ -45,10 +45,11 @@ app.post('/login', function(req, res) {
     app.locals.sessionUser = req.session.user;
     app.locals.sessionRole = req.session.role;
 
-    res.redirect('/');
+    res.redirect('/admin');
 });
 app.post('/logout', function(req, res) {
-    delete app.locals.user;
+    delete app.locals.sessionUser;
+    delete app.locals.sessionRole;
 
     req.session.destroy(function() {
         res.redirect('/');
