@@ -2,6 +2,57 @@ var mainList;
 var expiredList;
 var dueList;
 
+function generateList(ticketList) {
+    var listMarkup = '';
+
+    listMarkup += '<table><tr>' +
+        '<th>Priority</th>' +
+        '<th>Title</th>' +
+        '<th>Department</th>' +
+        '<th>Assigned To</th>' +
+        '<th>Date Created</th>' +
+        '<th>Date Altered</th>' +
+        '</tr>';
+
+    for (var x in ticketList) {
+        listMarkup += '<tr>';
+
+        switch (ticketList[x].priority) {
+            case 1:
+                listMarkup += '<td class="priority1">1</td>';
+                break;
+            case 2:
+                listMarkup += '<td class="priority2">2</td>';
+                break;
+            case 3:
+                listMarkup += '<td class="priority3">3</td>';
+                break;
+            case 4:
+                listMarkup += '<td class="priority4">4</td>';
+                break;
+            case 5:
+                listMarkup += '<td class="priority5">5</td>';
+                break;
+            default:
+                console.log("error: invalid priority level");
+        }
+
+        listMarkup += ticketList[x].title == null ? '<td></td>' : '<td>' + ticketList[x].title + '</td>';
+        listMarkup += ticketList[x].dept == null ? '<td></td>' : '<td>' + ticketList[x].dept + '</td>';
+        listMarkup += ticketList[x].assignedTo == null ? '<td></td>' : '<td>' + ticketList[x].assignedTo + '</td>';
+
+        // dates will probably be parsed differently
+        listMarkup += ticketList[x].dateCreated == null ? '<td></td>' : '<td>' + ticketList[x].dateCreated + '</td>';
+        listMarkup += ticketList[x].dateAltered == null ? '<td></td>' : '<td>' + ticketList[x].dateAltered + '</td>';
+
+        listMarkup += '</tr>';
+    }
+
+    listMarkup += '</table>';
+
+    return listMarkup;
+}
+
 function initializeAdmin() {
     // DATABASE FUNCTION: number of new tickets should somehow be fetched from database
     $('#newTickets').html('New tickets since last login: <a href="#">10</a>');
@@ -13,17 +64,25 @@ function initializeAdmin() {
 
     $('#adminHome').css('display', 'block');
 
-    var mainFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
-        assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
-    var expiredFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
-        assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
-    var dueFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
+    var noFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
         assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
 
-    // get full list
-    socket.emit('getTickets', mainFilters, null, "include", "exclude", 5);
-    socket.on('displayTickets', function(ticketList) {
-        
+    // get main list
+    socket.emit('getTicketsAdmin3', noFilters, null, "include", "exclude", 5);
+    socket.on('displayTicketsAdmin3', function(ticketList) {
+        $('#admin3').append(generateList(ticketList));
+    });
+
+    // get expired list
+    socket.emit('getTicketsAdmin2', noFilters, null, "exclude", "only", 5);
+    socket.on('displayTicketsAdmin2', function(ticketList) {
+        $('#admin2').append(generateList(ticketList));
+    });
+
+    // get soon-to-expire list
+    socket.emit('getTicketsAdmin1', noFilters, null, "exclude", "exclude", 5);
+    socket.on('displayTicketsAdmin1', function(ticketList) {
+        $('#admin1').append(generateList(ticketList));
     });
 }
 
@@ -37,6 +96,27 @@ function initializeManager() {
     $('#totalTickets').css('display', 'block');
 
     $('#managerHome').css('display', 'block');
+
+    var deptFilters = {dept: sessionDepts, priority: null, submittedBy: null, clientEmail: null,
+        assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
+
+    // get main list
+    socket.emit('getTicketsManager3', deptFilters, null, "include", "exclude", 5);
+    socket.on('displayTicketsManager3', function(ticketList) {
+        $('#manager3').append(generateList(ticketList));
+    });
+
+    // get expired list
+    socket.emit('getTicketsManager2', deptFilters, null, "exclude", "only", 5);
+    socket.on('displayTicketsManager2', function(ticketList) {
+        $('#manager2').append(generateList(ticketList));
+    });
+
+    // get soon-to-expire list
+    socket.emit('getTicketsManager1', deptFilters, null, "exclude", "exclude", 5);
+    socket.on('displayTicketsManager1', function(ticketList) {
+        $('#manager1').append(generateList(ticketList));
+    });
 }
 
 function initializeITUser() {
@@ -48,7 +128,28 @@ function initializeITUser() {
     $('#totalAssigned').html('Total number of assignments: <a href="#">5</a>');
     $('#totalAssigned').css('display', 'block');
 
-    $('#itUserHome').css('display', 'block');
+    $('#ituserHome').css('display', 'block');
+
+    var itFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
+        assignedTo: sessionUser, alteredBy: null, dateCreated: null, dateAltered: null};
+
+    // get assigned list
+    socket.emit('getTicketsITUser3', itFilters, null, "include", "exclude", 5);
+    socket.on('displayTicketsITUser3', function(ticketList) {
+        $('#ituser3').append(generateList(ticketList));
+    });
+
+    // get expired list
+    socket.emit('getTicketsITUser2', itFilters, null, "exclude", "only", 5);
+    socket.on('displayTicketsITUser2', function(ticketList) {
+        $('#ituser2').append(generateList(ticketList));
+    });
+
+    // get soon-to-expire list
+    socket.emit('getTicketsITUser1', itFilters, null, "exclude", "exclude", 5);
+    socket.on('displayTicketsITUser1', function(ticketList) {
+        $('#ituser1').append(generateList(ticketList));
+    });
 }
 
 $(document).ready(function() {
