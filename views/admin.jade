@@ -1,6 +1,12 @@
 extends layout
 
 block content
+    script(src='/javascripts/socket.io.js')
+    script(src='/javascripts/ticket_client.js')
+    script(type='text/javascript').
+        var sessionUser = "#{sessionUser}";
+        var sessionRole = "#{sessionRole}";
+
     div.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
         div.container-fluid
             div.navbar-header
