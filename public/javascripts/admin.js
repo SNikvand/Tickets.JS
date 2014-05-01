@@ -2,42 +2,96 @@ angular
     .module('admin',[
         'ui.router'
     ])
-    .config(['$urlRouterProvider','$stateProvider', function($urlRouterProvider,$stateProvider) {
+    .config(['$urlRouterProvider','$stateProvider', function($urlRouterProvider, $stateProvider) {
         $urlRouterProvider.otherwise('/');
 
         $stateProvider
             .state('home', {
                 url: '/',
                 templateUrl: '/template/home.html',
-                data: {pageid: "home"}
+                data: {pageid: "home"},
+                resolve: {
+                    verifyAccess: function(verifyAccess) {
+                        verifyAccess.checkPage(this.data.pageid);
+                    },
+                    delay: function($q, $timeout) {
+                        var deferred = $q.defer();
+                        $timeout(function() {
+                            deferred.resolve();
+                        }, 100);
+                        return deferred.promise;
+                    }
+                }
+            })
+            .state('restrict', {
+                url: '/restrict',
+                templateUrl: 'template/restrict.html',
+                data: {pageid: "restrict"}
             })
             .state('newuser', {
                 url: '/newuser',
                 templateUrl: '/template/newUser.html',
-                data: {pageid: "newuser"}
+                data: {pageid: "newuser"},
+                resolve: {
+                    verifyAccess: function(verifyAccess) {
+                        verifyAccess.checkPage(this.data.pageid);
+                    },
+                    delay: function($q, $timeout) {
+                        var deferred = $q.defer();
+                        $timeout(function() {
+                            deferred.resolve();
+                        }, 100);
+                        return deferred.promise;
+                    }
+                }
             })
             .state('viewtickets', {
                 url: '/viewtickets',
                 templateUrl: '/template/viewTickets.html',
-                data: {pageid: "viewtickets"}
+                data: {pageid: "viewtickets"},
+                resolve: {
+                    verifyAccess: function(verifyAccess) {
+                        verifyAccess.checkPage(this.data.pageid);
+                    },
+                    delay: function($q, $timeout) {
+                        var deferred = $q.defer();
+                        $timeout(function() {
+                            deferred.resolve();
+                        }, 100);
+                        return deferred.promise;
+                    }
+                }
             })
             .state('viewusers', {
                 url: '/viewusers',
                 templateUrl: '/template/viewUsers.html',
-                data: {pageid: "viewusers"}
+                data: {pageid: "viewusers"},
+                resolve: {
+                    verifyAccess: function(verifyAccess) {
+                        verifyAccess.checkPage(this.data.pageid);
+                    },
+                    delay: function($q, $timeout) {
+                        var deferred = $q.defer();
+                        $timeout(function() {
+                            deferred.resolve();
+                        }, 100);
+                        return deferred.promise;
+                    }
+                }
             })
     }])
-    .run(function($rootScope, $http) {
-        $rootScope.$on('$stateChangeStart',
-            function(event, toState, toParams, fromState, fromParams){
-                $http({method: "POST", url: "/verifyAccess", data: {pageid: toState.data.pageid},
-                    headers: {'Content-Type': 'application/json'}})
-                    .success(function(data) {
-                        console.log(data);
-                        if (data == "false") {
-                            console.log("access denied");
-                            event.preventDefault();
-                        }
-                    })
+    .service('verifyAccess', function($http, $state) {
+        this.checkPage = function(pageid) {
+            return $http({method: "POST", url: "/verifyAccess", data: {pageid: pageid},
+                headers: {'Content-Type': 'application/json'}})
+                .success(function (data) {
+                    console.log(data);
+                    if (data.toString() == "false") {
+                        console.log("rejected");
+                        $state.go('restrict');
+                    } else if (data.toString() == "true") {
+                        console.log("resolved");
+                    }
             });
+        };
     });

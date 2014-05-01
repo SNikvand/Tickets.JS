@@ -55,7 +55,7 @@ app.post('/login', function(req, res) {
 
     res.redirect('/admin');
 });
-app.post('/logout', function(req, res) {
+app.get('/logout', function(req, res) {
     req.session.destroy(function() {
         res.redirect('/');
     });
