@@ -1,90 +1,79 @@
 extends layout
 
 block content
-    script(src='/javascripts/socket.io.js')
-    script(src='/javascripts/ticket_client.js')
-    script(type='text/javascript').
-        var sessionUser = "#{sessionUser}";
-        var sessionRole = "#{sessionRole}";
-        var sessionDepts = "#{sessionDepts}";
+    if session.role != "Admin" && session.role != "Manager" && session.role != "IT User"
+        script(type='text/javascript').
+            console.log("error: not logged in");
+            window.location.replace('/');
+    else
+        script(src='/javascripts/socket.io.js')
+        script(src='/javascripts/ticket_client.js')
+        script(type='text/javascript').
+            var sessionUser = "#{session.user}";
+            var sessionRole = "#{session.role}";
+            var sessionDepts = "#{session.depts}";
 
-    div.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
-        div.container-fluid
-            div.navbar-header
-                button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
-                    span.sr-only Toggle Navigation
-                    span.icon-bar
-                    span.icon-bar
-                    span.icon-bar
-                a.navbar-brand(href='#') Wei To Ticket
-            div.navbar-collapse.collapse
-                ul.nav.navbar-nav.navbar-right
-                    li
-                        a(href='#') Dashboard
-                    li
-                        a(href='#') Settings
-                    li
-                        a(href='#') Profile
-                    li
-                        a(href='#') Help
+        div.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+            div.container-fluid
+                div.navbar-header
+                    button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+                        span.sr-only Toggle Navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href='#') Wei To Ticket
+                div.navbar-collapse.collapse
+                    ul.nav.navbar-nav.navbar-right
+                        li
+                            a(href='#') Dashboard
+                        li
+                            a(href='#') Settings
+                        li
+                            a(href='#') Profile
+                        li
+                            a(href='#') Help
 
-    div.container-fluid(ng-app='admin')
-        div.row
-            div.col-sm-3.col-md-2.sidebar.t-spaceIcons(ng-controller="panelController")
-                h3 Overview
-                ul.nav.nav-sidebar
-                    li(ng-class="{active:isActive('/overview')}")
-                        a(href="#/overview")
-                            span.glyphicon.glyphicon-cloud
-                            | Welcome
-                    li(ng-class="{active:isActive('/viewtickets')}")
-                        a(href="#/viewtickets")
-                            span.glyphicon.glyphicon-th-large
-                            | View Tickets
-                    li(ng-class="{active:isActive('/newticket')}")
-                        a(href="#/newticket")
-                            span.glyphicon.glyphicon-plus
-                            | New Ticket
-                    li(ng-class="{active:isActive('/searchticket')}")
-                        a(href="#/searchticket")
-                            span.glyphicon.glyphicon-search
-                            | Search Ticket
-                h3 Departments
-                ul.nav.nav-sidebar
-                    li
-                        a(href="#/overview")
-                            span.glyphicon.glyphicon-folder-open
-                            | Info Tech
-                    li
-                        a(href="#/viewtickets")
-                            span.glyphicon.glyphicon-folder-close
-                            | Sales
-                    li
-                        a(href="#/newticket")
-                            span.glyphicon.glyphicon-folder-close
-                            | Accounting
-                    li
-                        a(href="#/searchticket")
-                            span.glyphicon.glyphicon-folder-close
-                            | Marketing
-                h3 Control Panel
-                ul.nav.nav-sidebar
-                    li(ng-class="{active:isActive('/viewusers')}")
-                        a(href="#/viewusers")
-                            span.glyphicon.glyphicon-user
-                            | View Users
-                    li(ng-class="{active:isActive('/newuser')}")
-                        a(href="#/newuser")
-                            span.glyphicon.glyphicon-certificate
-                            | New User
-                    li(ng-class="{active:isActive('/settings/mail')}")
-                        a(href="#/settings/mail")
-                            span.glyphicon.glyphicon-envelope
-                            | Mail Settings
-                    li(ng-class="{active:isActive('/settings')}")
-                        a(href="#/settings")
-                            span.glyphicon.glyphicon-cog
-                            | Other Settings
-                hr
-            div.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                div(ng-view)
+        div.container-fluid(ng-app='admin')
+            div.rowng-controller="sessionController"
+                div.col-sm-3.col-md-2.sidebar.t-spaceIcons
+                    h3 Overview
+                    ul.nav.nav-sidebar
+                        li(ui-sref-active='active')
+                            a(ui-sref='home')
+                                span.glyphicon.glyphicon-cloud
+                                | Welcome
+                        li(ui-sref-active='active')
+                            a(ui-sref='viewtickets')
+                                span.glyphicon.glyphicon-th-large
+                                | View Tickets
+                        li(ui-sref-active='active')
+                            a(ui-sref='')
+                                span.glyphicon.glyphicon-plus
+                                | New Ticket
+                        li(ui-sref-active='active')
+                            a(ui-sref='')
+                                span.glyphicon.glyphicon-search
+                                | Search Ticket
+                    h3 Control Panel
+                    ul.nav.nav-sidebar
+                        li(ui-sref-active='active')
+                            a(ui-sref='viewusers')
+                                span.glyphicon.glyphicon-user
+                                | View Users
+                        li(ui-sref-active='active')
+                            a(ui-sref='newuser')
+                                span.glyphicon.glyphicon-certificate
+                                | New User
+                        li(ui-sref-active='active')
+                            a(ui-sref='')
+                                span.glyphicon.glyphicon-envelope
+                                | Mail Settings
+                        li(ui-sref-active='active')
+                            a(ui-sref='')
+                                span.glyphicon.glyphicon-cog
+                                | Other Settings
+                    hr
+                    div.t-bottom
+                        p.text-center Created By The Wei Team
+                div.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+                    div(ui-view)
