@@ -8,6 +8,7 @@ var routes = require('./routes');
 var admin = require('./routes/admin');
 var http = require('http');
 var path = require('path');
+var permissions = require('./lib/permissions.js');
 
 var app = express();
 
@@ -22,6 +23,13 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser('M3ZZ0-S0PR4N0'));
 app.use(express.session());
+
+// grants client access to session variables
+app.use(function(req, res, next){
+    res.locals.session = req.session;
+    next();
+});
+
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -45,21 +53,18 @@ app.post('/login', function(req, res) {
     req.session.role = req.body.role;
     req.session.depts = req.body.depts;
 
-    // grant client access to session variables
-    app.locals.sessionUser = req.session.user;
-    app.locals.sessionRole = req.session.role;
-    app.locals.sessionDepts = req.session.depts;
-
     res.redirect('/admin');
 });
 app.post('/logout', function(req, res) {
-    delete app.locals.sessionUser;
-    delete app.locals.sessionRole;
-    delete app.locals.sessionDepts;
-
     req.session.destroy(function() {
         res.redirect('/');
     });
+});
+
+app.post('/verifyAccess', function(req, res) {
+    var role = req.session.role;
+    var pageid = req.body.pageid.toString();
+    res.send(permissions.checkRestriction(pageid, role));
 });
 
 var server = http.createServer(app).listen(app.get('port'), function(){

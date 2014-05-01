@@ -5,7 +5,7 @@ block content
   p Welcome to #{title}
 
   // SESSIONS TEST
-  if sessionUser
+  if session.role
       p You are logged in as #{sessionUser} as #{sessionRole}.
       p
       form(method='post', action='/logout')
