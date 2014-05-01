@@ -25,6 +25,8 @@ block content
                 div.navbar-collapse.collapse
                     ul.nav.navbar-nav.navbar-right
                         li
+                            a(href='/logout') Logout
+                        li
                             a(href='#') Dashboard
                         li
                             a(href='#') Settings
@@ -34,7 +36,7 @@ block content
                             a(href='#') Help
 
         div.container-fluid(ng-app='admin')
-            div.rowng-controller="sessionController"
+            div.row
                 div.col-sm-3.col-md-2.sidebar.t-spaceIcons
                     h3 Overview
                     ul.nav.nav-sidebar
