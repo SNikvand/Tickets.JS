@@ -70,19 +70,19 @@ function initializeAdmin() {
     // get main list
     socket.emit('getTicketsAdmin3', noFilters, null, "include", "exclude", 5);
     socket.on('displayTicketsAdmin3', function(ticketList) {
-        $('#admin3').append(generateList(ticketList));
+        $('#admin3').html(generateList(ticketList));
     });
 
     // get expired list
     socket.emit('getTicketsAdmin2', noFilters, null, "exclude", "only", 5);
     socket.on('displayTicketsAdmin2', function(ticketList) {
-        $('#admin2').append(generateList(ticketList));
+        $('#admin2').html(generateList(ticketList));
     });
 
     // get soon-to-expire list
     socket.emit('getTicketsAdmin1', noFilters, null, "exclude", "exclude", 5);
     socket.on('displayTicketsAdmin1', function(ticketList) {
-        $('#admin1').append(generateList(ticketList));
+        $('#admin1').html(generateList(ticketList));
     });
 }
 
@@ -103,19 +103,19 @@ function initializeManager() {
     // get main list
     socket.emit('getTicketsManager3', deptFilters, null, "include", "exclude", 5);
     socket.on('displayTicketsManager3', function(ticketList) {
-        $('#manager3').append(generateList(ticketList));
+        $('#manager3').html(generateList(ticketList));
     });
 
     // get expired list
     socket.emit('getTicketsManager2', deptFilters, null, "exclude", "only", 5);
     socket.on('displayTicketsManager2', function(ticketList) {
-        $('#manager2').append(generateList(ticketList));
+        $('#manager2').html(generateList(ticketList));
     });
 
     // get soon-to-expire list
     socket.emit('getTicketsManager1', deptFilters, null, "exclude", "exclude", 5);
     socket.on('displayTicketsManager1', function(ticketList) {
-        $('#manager1').append(generateList(ticketList));
+        $('#manager1').html(generateList(ticketList));
     });
 }
 
@@ -136,19 +136,19 @@ function initializeITUser() {
     // get assigned list
     socket.emit('getTicketsITUser3', itFilters, null, "include", "exclude", 5);
     socket.on('displayTicketsITUser3', function(ticketList) {
-        $('#ituser3').append(generateList(ticketList));
+        $('#ituser3').html(generateList(ticketList));
     });
 
     // get expired list
     socket.emit('getTicketsITUser2', itFilters, null, "exclude", "only", 5);
     socket.on('displayTicketsITUser2', function(ticketList) {
-        $('#ituser2').append(generateList(ticketList));
+        $('#ituser2').html(generateList(ticketList));
     });
 
     // get soon-to-expire list
     socket.emit('getTicketsITUser1', itFilters, null, "exclude", "exclude", 5);
     socket.on('displayTicketsITUser1', function(ticketList) {
-        $('#ituser1').append(generateList(ticketList));
+        $('#ituser1').html(generateList(ticketList));
     });
 }
 
