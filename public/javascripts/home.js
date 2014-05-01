@@ -165,8 +165,5 @@ $(document).ready(function() {
         case "Admin":
             initializeAdmin();
             break;
-        default:
-            console.log("error: forbidden");
-        // this should never happen, but if it does, redirect back to index login page
     }
 });
