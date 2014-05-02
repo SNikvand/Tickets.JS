@@ -5,7 +5,11 @@
 
 var express = require('express');
 var routes = require('./routes');
-var admin = require('./routes/admin');
+//var route_admin = require('./routes/admin');
+var route_welcome = require('./routes/admin/welcome');
+var route_viewTickets = require('./routes/admin/viewTickets');
+var route_viewUsers = require('./routes/admin/viewUsers');
+var route_newUser = require('./routes/admin/newUser');
 var http = require('http');
 var path = require('path');
 var permissions = require('./lib/permissions.js');
@@ -39,7 +43,10 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/admin', admin.index);
+app.get('/admin', route_welcome.index);
+app.get('/admin/viewTickets', route_viewTickets.index);
+app.get('/admin/viewUsers', route_viewUsers.index);
+app.get('/admin/newUser', route_newUser.index);
 
 app.post('/login', function(req, res) {
     // AUTHENTICATION: check req.body.username and req.body.password against the database
