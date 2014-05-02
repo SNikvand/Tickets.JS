@@ -5,11 +5,14 @@
 
 var express = require('express');
 var routes = require('./routes');
+
 //var route_admin = require('./routes/admin');
 var route_welcome = require('./routes/admin/welcome');
 var route_viewTickets = require('./routes/admin/viewTickets');
 var route_viewUsers = require('./routes/admin/viewUsers');
 var route_newUser = require('./routes/admin/newUser');
+var route_restrict = require('./routes/admin/restrict');
+
 var http = require('http');
 var path = require('path');
 var permissions = require('./lib/permissions.js');
@@ -42,11 +45,27 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+var getAccess = function(pageid) {
+    return function(req, res, next) {
+        var role = req.session.role;
+        if (role != "Admin" && role != "Manager" && role != "IT User") {
+            res.redirect('/');
+        }
+        if (permissions.checkRestriction(pageid, role) == false) {
+            res.locals.access = false;
+        } else {
+            res.locals.access = true;
+        }
+        next();
+    }
+}
+
 app.get('/', routes.index);
-app.get('/admin', route_welcome.index);
-app.get('/admin/viewTickets', route_viewTickets.index);
-app.get('/admin/viewUsers', route_viewUsers.index);
-app.get('/admin/newUser', route_newUser.index);
+app.get('/admin', getAccess("admin"), route_welcome.index);
+app.get('/admin/viewTickets', getAccess("viewTickets"), route_viewTickets.index);
+app.get('/admin/viewUsers', getAccess("viewUsers"), route_viewUsers.index);
+app.get('/admin/newUser', getAccess("newUser"), route_newUser.index);
+app.get('/admin/restrict', route_restrict.index);
 
 app.post('/login', function(req, res) {
     // AUTHENTICATION: check req.body.username and req.body.password against the database
@@ -81,12 +100,6 @@ app.get('/logout', function(req, res) {
     req.session.destroy(function() {
         res.redirect('/');
     });
-});
-
-app.post('/verifyAccess', function(req, res) {
-    var role = req.session.role;
-    var pageid = req.body.pageid.toString();
-    res.send(permissions.checkRestriction(pageid, role));
 });
 
 var server = http.createServer(app).listen(app.get('port'), function(){

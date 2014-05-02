@@ -1,27 +1,57 @@
 extends ../admin
 
 block panel
-  div
-    h3 Overview
-      hr
-    p
-      | New Tickets Since Your Last Login:
-      a(href='#') 10
-    p
-      | Tickets That Belong To You:
-      a(href='#') 5
-      br
-      br
-      br
-      h4 Expired Tickets
-      hr
-      br
-      br
-      br
-      h4 Tickets Due Today
-      hr
-      br
-      br
-      br
-      h4 Assigned Tickets
-      hr
+  div(id="welcome")
+    p(id="welcomeUser")
+    p(id="newTickets" style="display: none;") 
+    p(id="totalTickets" style="display: none;")
+    p(id="newAssigned" style="display: none;")
+    p(id="totalAssigned" style="display: none;")
+
+  div(id="adminHome" class="homeTickets" style="display: none;")
+    h4 Tickets Nearly Due
+    hr(class="homeHr")
+    div(id="admin1" class="ticketList")
+    br
+
+    h4 Expired Tickets
+    hr(class="homeHr")
+    div(id="admin2" class="ticketList")  
+    br
+
+    h4 Most Recent Tickets
+    hr(class="homeHr")
+    div(id="admin3" class="ticketList")
+    br
+
+  div(id="managerHome" class="homeTickets" style="display: none;")
+    h4 Tickets Nearly Due
+    hr(class="homeHr")
+    div(id="manager1" class="ticketList")
+    br
+      
+    h4 Expired Tickets
+    hr(class="homeHr")
+    div(id="manager2" class="ticketList")
+    br
+      
+    h4 Most Recent Tickets
+    hr(class="homeHr")
+    div(id="manager3" class="ticketList")
+    br
+
+  div(id="ituserHome" class="homeTickets" style="display: none;")
+    h4 Tickets Nearly Due
+    hr(class="homeHr")
+    div(id="ituser1" class="ticketList")
+    br
+    h4 Expired Tickets
+    hr(class="homeHr")
+    div(id="ituser2" class="ticketList")
+    br
+    h4 Recently Assigned
+    hr(class="homeHr")
+    div(id="ituser3" class="ticketList")
+    br
+
+  script(src="/javascripts/home.js")

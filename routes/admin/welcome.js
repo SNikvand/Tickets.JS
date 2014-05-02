@@ -1,4 +1,9 @@
 
 exports.index = function(req, res) {
-    res.render('admin/welcome', {activeMenu: 'welcome'});
+    if (res.locals.access == false) {
+        console.log("error: forbidden");
+        res.redirect('/admin/restrict');
+    } else {
+        res.render('admin/welcome', {activeMenu: 'welcome'});
+    }
 };
