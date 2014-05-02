@@ -2,6 +2,9 @@ angular
     .module('admin',[
         'ui.router'
     ])
+    .controller('ViewTicketsCtrl', function($scope, $stateParams) {
+        console.log("testVar: " + $stateParams.testVar + " " + $stateParams.testVar2);
+    })
     .config(['$urlRouterProvider','$stateProvider', function($urlRouterProvider, $stateProvider) {
         $urlRouterProvider.otherwise('/');
 
@@ -46,8 +49,9 @@ angular
                 }
             })
             .state('viewtickets', {
-                url: '/viewtickets',
+                url: '/viewtickets/{testVar}/{testVar2}',
                 templateUrl: '/template/viewTickets.html',
+                controller: 'ViewTicketsCtrl',
                 data: {pageid: "viewtickets"},
                 resolve: {
                     verifyAccess: function(verifyAccess) {
