@@ -12,6 +12,8 @@ block content
             var sessionUser = "#{session.user}";
             var sessionRole = "#{session.role}";
             var sessionDepts = "#{session.depts}";
+        - var testArray = [1, 2, "c"];
+        - var testJson = {a: 1, b: 2};
 
         div.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
             div.container-fluid
@@ -45,7 +47,11 @@ block content
                                 span.glyphicon.glyphicon-cloud
                                 | Welcome
                         li(ui-sref-active='active')
-                            a(ui-sref='viewtickets')
+                            // different parameters are passed into viewtickets depending on role
+                            // managers can only view tickets in their own department
+                            // it users can only view assigned tickets
+                            //a(ui-sref='viewtickets({filters: #{session.filters}, searchParams: null, includeCompleted: include, includeExpired: include, amount: null})')
+                            a(ui-sref='viewtickets({testVar: "#{session.depts}", testVar2: "#{testArray}"})')
                                 span.glyphicon.glyphicon-th-large
                                 | View Tickets
                         li(ui-sref-active='active')
