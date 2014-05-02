@@ -21,47 +21,47 @@ block content
                     li
                         a(href='#') Help
 
-    div.container-fluid(ng-app='admin')
+    div.container-fluid
         div.row
             div.col-sm-3.col-md-2.sidebar.t-spaceIcons
                 h3 Overview
                 ul.nav.nav-sidebar
-                    li(ui-sref-active='active')
-                        a(ui-sref='home')
+                    li(class=(activeMenu === 'welcome' ? 'active' : ''))
+                        a(href="/admin")
                             span.glyphicon.glyphicon-cloud
                             | Welcome
-                    li(ui-sref-active='active')
-                        a(ui-sref='viewtickets')
+                    li(class=(activeMenu === 'viewTickets' ? 'active' : ''))
+                        a(href="/admin/viewTickets")
                             span.glyphicon.glyphicon-th-large
                             | View Tickets
-                    li(ui-sref-active='active')
-                        a(ui-sref='')
+                    li(class=(activeMenu === 'newTicket' ? 'active' : ''))
+                        a(href="#")
                             span.glyphicon.glyphicon-plus
                             | New Ticket
-                    li(ui-sref-active='active')
-                        a(ui-sref='')
+                    li(class=(activeMenu === 'searchTicket' ? 'active' : ''))
+                        a(href="#")
                             span.glyphicon.glyphicon-search
                             | Search Ticket
                 h3 Control Panel
                 ul.nav.nav-sidebar
-                    li(ui-sref-active='active')
-                        a(ui-sref='viewusers')
+                    li(class=(activeMenu === 'viewUsers' ? 'active' : ''))
+                        a(href="/admin/viewUsers")
                             span.glyphicon.glyphicon-user
                             | View Users
-                    li(ui-sref-active='active')
-                        a(ui-sref='newuser')
+                    li(class=(activeMenu === 'newUser' ? 'active' : ''))
+                        a(href="/admin/newUser")
                             span.glyphicon.glyphicon-certificate
                             | New User
-                    li(ui-sref-active='active')
-                        a(ui-sref='')
+                    li(class=(activeMenu === 'mailSettings' ? 'active' : ''))
+                        a(href="#")
                             span.glyphicon.glyphicon-envelope
                             | Mail Settings
-                    li(ui-sref-active='active')
-                        a(ui-sref='')
+                    li(class=(activeMenu === 'otherSettings' ? 'active' : ''))
+                        a(href="#")
                             span.glyphicon.glyphicon-cog
                             | Other Settings
                 hr
                 div.t-bottom
                     p.text-center Created By The Wei Team
             div.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                div(ui-view)
+                block panel

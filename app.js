@@ -5,7 +5,11 @@
 
 var express = require('express');
 var routes = require('./routes');
-var admin = require('./routes/admin');
+//var route_admin = require('./routes/admin');
+var route_welcome = require('./routes/admin/welcome');
+var route_viewTickets = require('./routes/admin/viewTickets');
+var route_viewUsers = require('./routes/admin/viewUsers');
+var route_newUser = require('./routes/admin/newUser');
 var http = require('http');
 var path = require('path');
 
@@ -31,7 +35,10 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/admin', admin.index);
+app.get('/admin', route_welcome.index);
+app.get('/admin/viewTickets', route_viewTickets.index);
+app.get('/admin/viewUsers', route_viewUsers.index);
+app.get('/admin/newUser', route_newUser.index);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

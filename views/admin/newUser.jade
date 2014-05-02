@@ -1,0 +1,76 @@
+extends ../admin
+
+block panel
+  div
+    h3.form-signin-heading New user registration
+    hr
+    form.form-signin(role='form')
+      div.form-group
+        label(for='firstname') First Name
+        input#firstname.form-control(type='text', placeholder='John', required='required', autofocus='autofocus')
+      div.form-group
+        label(for='lastname') Last Name
+        input#lastname.form-control(type='text', placeholder='Smith', required='required')
+      div.form-group
+        label(for='email') Email Address
+        input#email.form-control(type='email', placeholder='You@Example.com', required='required')
+      div.form-group
+        label(for='password') Password
+        input#password.form-control(type='password', placeholder='Password', required='required')
+      div.form-group
+        label(for='cpassword') Confirm Password
+        input#cpassword.form-control(type='password', placeholder='Confirm password', required='required')
+      #passwordnotmatch.alert.alert-danger(style='display: none;')
+        | Password did not match, please try again
+      script.
+        $('#cpassword').keyup(function() {
+            if ($('#cpassword').val() != $('#password').val()) {
+              $("#passwordnotmatch").show();
+          } else {
+              $("#passwordnotmatch").hide();
+          }
+        });
+
+        function permission(){
+            $(".dropdown-menu li a").click(function(){
+                $(".btn:first-child").text($(this).text());
+                $(".btn:first-child").val($(this).text());
+                if ($(this).text() == 'Administrator') {
+                    $("#depart").hide("slow");
+                    $("#admintext").show();
+                } else {
+                    $("#depart").show();
+                    $("#admintext").hide("slow");
+                }
+            });
+        }
+      .btn-group(style='margin-bottom: 10px;')
+        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', onclick='permission()', style='width: 300px; height: 40px;')
+          | Permission
+          span.caret
+        ul.dropdown-menu(role='menu')
+          li
+            a(href='#') Administrator
+          li
+            a(href='#') Manager
+          li
+            a(href='#') IT team
+      br
+      #depart(style='margin-bottom: 10px;')
+        label(for='name') Department
+        br
+        label.checkbox-inline
+          input(type='checkbox', value='sales')
+          | Sales
+        label.checkbox-inline
+          input(type='checkbox', value='it')
+          | IT
+        label.checkbox-inline
+          input(type='checkbox', value='hr')
+          | HR
+        label.checkbox-inline
+          input(type='checkbox', value='cs')
+          | Customer service
+      #admintext.alert.alert-danger(style='display: none;')
+        | Warning: Administrator is automatically granted permissions to all departments
+      button.btn.btn-lg.btn-primary.btn-block(type='submit') Register
