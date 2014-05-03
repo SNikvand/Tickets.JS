@@ -21,45 +21,45 @@ block content
                     li
                         a(href='#') Help
 
-    div.container-fluid
+    div.container-fluid(ng-app='admin')
         div.row
-            div.col-sm-3.col-md-2.sidebar.t-spaceIcons
+            div.col-sm-3.col-md-2.sidebar.t-spaceIcons(ng-controller="panelController")
                 h3 Overview
                 ul.nav.nav-sidebar
-                    li(class=(activeMenu === 'welcome' ? 'active' : ''))
-                        a(href="/admin")
+                    li(ng-class="{active:isActive('/overview')}")
+                        a(href="#/overview")
                             span.glyphicon.glyphicon-cloud
                             | Welcome
-                    li(class=(activeMenu === 'viewTickets' ? 'active' : ''))
-                        a(href="/admin/viewTickets")
+                    li(ng-class="{active:isActive('/viewtickets')}")
+                        a(href="#/viewtickets")
                             span.glyphicon.glyphicon-th-large
                             | View Tickets
-                    li(class=(activeMenu === 'newTicket' ? 'active' : ''))
-                        a(href="#")
+                    li(ng-class="{active:isActive('/newticket')}")
+                        a(href="#/newticket")
                             span.glyphicon.glyphicon-plus
                             | New Ticket
-                    li(class=(activeMenu === 'searchTicket' ? 'active' : ''))
-                        a(href="#")
+                    li(ng-class="{active:isActive('/searchticket')}")
+                        a(href="#/searchticket")
                             span.glyphicon.glyphicon-search
                             | Search Ticket
                 h3 Control Panel
                 ul.nav.nav-sidebar
-                    li(class=(activeMenu === 'viewUsers' ? 'active' : ''))
-                        a(href="/admin/viewUsers")
+                    li(ng-class="{active:isActive('/viewusers')}")
+                        a(href="#/viewusers")
                             span.glyphicon.glyphicon-user
                             | View Users
-                    li(class=(activeMenu === 'newUser' ? 'active' : ''))
-                        a(href="/admin/newUser")
+                    li(ng-class="{active:isActive('/newuser')}")
+                        a(href="#/newuser")
                             span.glyphicon.glyphicon-certificate
                             | New User
-                    li(class=(activeMenu === 'mailSettings' ? 'active' : ''))
-                        a(href="#")
+                    li(ng-class="{active:isActive('/settings/mail')}")
+                        a(href="#/settings/mail")
                             span.glyphicon.glyphicon-envelope
                             | Mail Settings
-                    li(class=(activeMenu === 'otherSettings' ? 'active' : ''))
-                        a(href="#")
+                    li(ng-class="{active:isActive('/settings')}")
+                        a(href="#/settings")
                             span.glyphicon.glyphicon-cog
                             | Other Settings
                 hr
             div.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                block panel
+                div(ng-view)
