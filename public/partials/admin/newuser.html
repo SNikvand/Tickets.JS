@@ -8,7 +8,7 @@
         <form role="form">
             <div class="form-group">
                 <label for="firstname">First Name</label>
-                <input type="text" name="firstname" id="firstname" class="form-control" ng-model="firstname" placeholder="John"/>
+                <input type="text" name="firstname" id="firstname" class="form-control" placeholder="John"/>
             </div>
             <div class="form-group">
                 <label for="lastname">Last Name</label>
@@ -28,8 +28,43 @@
                 <br/>
                 <input type="password" name="cpassword" id="cpassword" class="form-control" placeholder="Password Confirmation"/>
             </div>
-            <br/><br/>
-            <button type="submit" class="btn btn-primary">Create Users</button>
+            <br/>
+            <div id="passwordnotmatch" style="display:none" class="alert alert-danger">
+                Password did not match, please try again
+            </div>
+            <br/>
+            <div class="btn-group" style="margin-bottom:10px">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" onclick="permission()" style="width:300px;height:40px">
+                    Permission <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="">Administrator</a></li>
+                    <li><a href="">Manager</a></li>
+                    <li><a href="">IT team</a></li>
+                </ul>
+            </div>
+            <br />
+            <div id="depart" style="margin-bottom:10px">
+                <label for="name">Department</label>
+                <br />
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="sales"> Sales
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="it"> IT
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="hr"> HR
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="cs"> Customer service
+                </label>
+            </div>
+            <div id="admintext" style="display:none" class="alert alert-danger">
+                Warning: Administrator is automatically granted permissions to all departments
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
         </form>
         </div>
     </user-creation>

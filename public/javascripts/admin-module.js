@@ -90,8 +90,26 @@ adminModule.directive('userCreation', function() {
         restrict: 'E',
         link: function(scope, element, attrs) {
             //JQuery functions can go in here
-            $('#firstname').keypress(function() {
-                console.log("test");
+            $("#cpassword").keyup(function() {
+                if ($('#cpassword').val() != $('#password').val())
+                    $("#passwordnotmatch").show();
+                else
+                    $("#passwordnotmatch").hide();
+            });
+
+            $(".dropdown-toggle").on('click', function() {
+                $(".dropdown-menu li a").click(function(){
+                    $(".btn:first-child").text($(this).text());
+                    $(".btn:first-child").val($(this).text());
+                    if ($(this).text() == 'Administrator') {
+                        $("#depart").hide("slow");
+                        $("#admintext").show();
+                    }
+                    else {
+                        $("#depart").show();
+                        $("#admintext").hide("slow");
+                    }
+                });
             });
         }
     }
