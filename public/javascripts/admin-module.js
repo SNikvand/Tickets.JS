@@ -84,3 +84,15 @@ adminModule.controller('mailsettingsController', function($scope) {
 adminModule.controller('settingsController', function($scope) {
 
 });
+
+adminModule.directive('userCreation', function() {
+    return {
+        restrict: 'E',
+        link: function(scope, element, attrs) {
+            //JQuery functions can go in here
+            $('#firstname').keypress(function() {
+                console.log("test");
+            });
+        }
+    }
+});
