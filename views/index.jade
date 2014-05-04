@@ -1,34 +1,13 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-
-  // SESSIONS TEST
-  if session.role
-      p You are logged in as #{sessionUser} as #{sessionRole}.
-      p
-      form(method='post', action='/logout')
-          input(type='submit', value='Logout')
-
-      // pass session variables to javascript
-      script(type='text/javascript').
-        var sessionUser = "#{sessionUser}";
-        var sessionRole = "#{sessionRole}";
-  else
-      form(method='post', action='/login')
-          p
-              input(type='text', name='user')
-          p
-              select(name='role')
-                option(value='IT User') IT User
-                option(value='Manager') Manager
-                option(value='Admin') Admin
-          p
-              select(name='depts')
-                  option(value='Finances') Finances
-                  option(value='Management') Management
-                  option(value='Records') Records
-          p
-              input(type='submit', value='Login')
-  // END SESSIONS TEST
+  .container
+    form.form-signin(role='form')
+      h2.form-signin-heading Please sign in
+      input.form-control(type='email', placeholder='Email address', required='required', autofocus='autofocus')
+      input.form-control(type='password', placeholder='Password', required='required')
+      label.checkbox
+        input(type='checkbox', value='remember-me')
+        | Remember me
+      button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
+      a.btn.btn-lg.btn-primary.btn-block(href='/admin/#/overview') Go To Admin Page
