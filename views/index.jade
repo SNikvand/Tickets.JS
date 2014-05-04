@@ -11,3 +11,7 @@ block content
         | Remember me
       button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
       a.btn.btn-lg.btn-primary.btn-block(href='/admin/#/overview') Go To Admin Page
+
+    p(style='margin: auto;')
+      form(method='post', action='/login')
+        input(type='submit', value='Test Login')

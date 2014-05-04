@@ -1,24 +1,28 @@
 <div>
     <div>
-        <h3>Overview</h3>
-        <hr/>
-        <p>New tickets since your last login: <a href="">5</a></p>
-        <p>Tickets that belong to you: <a href="">10</a></p>
-        <br/><br/>
+        <div welcome-info>
+
+        </div>
     </div>
-    <div>
-        <h4>Expired Tickets</h4>
-        <hr/>
-        <br/><br/>
-    </div>
-    <div>
-        <h4>Assigned Tickets</h4>
-        <hr/>
-        <br><br/>
-    </div>
-    <div>
-        <h4>Due Tickets</h4>
-        <hr/>
-        <br/><br/>
-    </div>
+    <br/>
+    <over-tickets>
+        <div>
+            <h4>Tickets Nearly Due</h4>
+            <hr/>
+            <div id="overview1" class="ticketList"></div>
+            <br/>
+        </div>
+        <div>
+            <h4>Expired Tickets</h4>
+            <hr/>
+            <div id="overview2" class="ticketList"></div>
+            <br/>
+        </div>
+        <div>
+            <h4>Recently Assigned Tickets</h4>
+            <hr/>
+            <div id="overview3" class="ticketList"></div>
+            <br/>
+        </div>
+    </over-tickets>
 </div>

@@ -1,6 +1,14 @@
 extends layout
 
 block content
+    if session.role != "Admin" && session.role != "Manager" && session.role != "IT User"
+        script(type='text/javascript').
+            console.log("error: not logged in");
+            window.location.replace('/');
+    else
+        script(src='/javascripts/socket.io.js')
+        script(src='/javascripts/ticket_client.js')
+
     div.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
         div.container-fluid
             div.navbar-header
@@ -13,6 +21,8 @@ block content
             div.navbar-collapse.collapse
                 ul.nav.navbar-nav.navbar-right
                     li
+                        a(href='/logout') Log Out
+                    li
                         a(href='#') Dashboard
                     li
                         a(href='#') Settings
@@ -21,7 +31,7 @@ block content
                     li
                         a(href='#') Help
 
-    div.container-fluid(ng-app='admin')
+    div.container-fluid(ng-app='admin', ng-controller='sessionController')
         div.row
             div.col-sm-3.col-md-2.sidebar.t-spaceIcons(ng-controller="panelController")
                 h3 Overview

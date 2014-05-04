@@ -48,10 +48,11 @@ app.post('/login', function(req, res) {
     // if admin, depts return "all"
     // if IT user, depts return "none" or "null"
 
+    // if authentication successful, proceed. otherwise redirect to index with error message
     // set the sessions
-    req.session.user = req.body.user;
-    req.session.role = req.body.role;
-    req.session.depts = ["Finance", "Management"];
+    req.session.user = "Matt";                     // placeholder--to be retrieved from form
+    req.session.role = "IT User";                  // placeholder--to be retrieved from db
+    req.session.depts = ["Finance", "Management"]; // placeholder--to be retrieved from db
 
     // configure default filter parameters
     if (req.session.role == "Admin") {
@@ -70,13 +71,24 @@ app.post('/login', function(req, res) {
 
     res.redirect('/admin');
 });
+
 app.get('/logout', function(req, res) {
     req.session.destroy(function() {
         res.redirect('/');
     });
 });
 
-http.createServer(app).listen(app.get('port'), function(){
+app.get('/getSession', function(req, res) {
+    res.json(req.session);
+});
+
+app.post('/verifyAccess', function(req, res) {
+    var role = req.session.role;
+    var pageid = req.body.pageid.toString();
+    res.send(permissions.checkRestriction(pageid, role));
+});
+
+var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
