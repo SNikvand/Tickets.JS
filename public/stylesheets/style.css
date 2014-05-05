@@ -75,7 +75,23 @@ body {
     margin-top: 0;
 }
 
+.ticketList table {
+    width: 100%;
+    border: 1px solid #dbdbdb;
+}
 
+.ticketList th {
+    background-color: #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+    height: 35px;
+    padding-left: 10px;
+}
+
+.ticketList td {
+    border-bottom: 1px solid #dbdbdb;
+    height: 35px;
+    padding-left: 10px;
+}
 /*
  * Placeholder dashboard ideas
  */
