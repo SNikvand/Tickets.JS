@@ -52,7 +52,7 @@ app.post('/login', function(req, res) {
     // set the sessions
     req.session.user = "Matt";                  // placeholder--to be retrieved from form
     req.session.role = "Admin";                 // placeholder--to be retrieved from db
-    req.session.depts = ["Finance", "Info Tech", "Management"];
+    req.session.dept = ["Finance", "Info Tech", "Management"];
                                                 // placeholder--to be retrieved from db
 
     // configure default filter parameters
@@ -61,7 +61,7 @@ app.post('/login', function(req, res) {
             assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
         req.session.filters = adminFilter;
     } else if (req.session.role == "Manager") {
-        var managerFilter = {dept: req.session.depts, priority: null, submittedBy: null, clientEmail: null,
+        var managerFilter = {dept: req.session.dept, priority: null, submittedBy: null, clientEmail: null,
             assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
         req.session.filters = managerFilter;
     } else if (req.session.role == "IT User") {
