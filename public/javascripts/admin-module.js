@@ -181,12 +181,13 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
     }
 
     $scope.resetViewParams = function() {
+        console.log("panel test: " + JSON.stringify($scope.session));
         ticketParams.resetParams($scope.session);
     }
 });
 
 adminModule.controller('overviewController', function($scope) {
-
+    console.log("base session test: "  + JSON.stringify($scope.session));
 });
 
 adminModule.controller('restrictController', function($scope) {
@@ -215,7 +216,10 @@ adminModule.service('verifyAccess', function($http, $location) {
 });
 
 adminModule.service('ticketParams', function($location) {
-    var filters = {};
+    var viewfilters = {};
+    for (var x in viewfilters) {
+        viewfilters[x] = null;
+    }
     var searchParams = {};
     var includeCompleted = true;
     var includeExpired = true;
@@ -228,14 +232,14 @@ adminModule.service('ticketParams', function($location) {
             formdata.assignedTo = session.user;
         }
 
-        filters.dept = formdata.dept;
-        filters.priority = formdata.priority;
-        filters.assignedTo = formdata.assignedTo;
-        filters.alteredBy = formdata.alteredBy;
-        filters.submittedBy = formdata.submittedBy;
-        filters.clientEmail = formdata.clientEmail;
-        // filters.dateCreated = formdata.dateCreated;
-        // filters.dataAltered = formdata.dateAltered;
+        viewfilters.dept = formdata.dept;
+        viewfilters.priority = formdata.priority;
+        viewfilters.assignedTo = formdata.assignedTo;
+        viewfilters.alteredBy = formdata.alteredBy;
+        viewfilters.submittedBy = formdata.submittedBy;
+        viewfilters.clientEmail = formdata.clientEmail;
+        // viewfilters.dateCreated = formdata.dateCreated;
+        // viewfilters.dataAltered = formdata.dateAltered;
 
         searchParams.keywords = formdata.keywords;
         searchParams.inTitle = formdata.searchTitle;
@@ -246,11 +250,14 @@ adminModule.service('ticketParams', function($location) {
 
         amount = formdata.amount;
 
+        console.log("search test: " + JSON.stringify(formdata));
         $location.path('/viewtickets');
     };
 
     this.resetParams = function(session) {
-        filters = session.filters;
+        for (var x in viewfilters) {
+            viewfilters[x] = null;
+        }
         searchParams = {};
         includeCompleted = true;
         includeExpired = true;
@@ -259,9 +266,8 @@ adminModule.service('ticketParams', function($location) {
     }
 
     this.reqTickets = function() {
-        console.log(JSON.stringify(filters));
-        console.log(JSON.stringify(searchParams));
-        socket.emit('getTicketsView', filters, searchParams, includeCompleted, includeExpired, null);
+        console.log("view test: " +  JSON.stringify(viewfilters));
+        socket.emit('getTicketsView', viewfilters, searchParams, includeCompleted, includeExpired, null);
     };
 });
 
@@ -389,7 +395,20 @@ adminModule.directive('overTickets', function() {
         restrict: 'E',
         link: function(scope, element, attrs) {
             var role = scope.session.role;
-            var defFilters = scope.session.filters;
+            var defFilters;
+
+            // configure default filter parameters
+            if (scope.session.role == "Admin") {
+                defFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
+                    assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
+            } else if (scope.session.role == "Manager") {
+                defFilters = {dept: scope.session.dept, priority: null, submittedBy: null, clientEmail: null,
+                    assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
+            } else if (scope.session.role == "IT User") {
+                defFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
+                    assignedTo: scope.session.user, alteredBy: null, dateCreated: null, dateAltered: null};
+            }
+
             var getMessages, displayMessages;
             if (role == "Admin") {
                 getMessages = ['getTicketsAdmin1', 'getTicketsAdmin2', 'getTicketsAdmin3'];

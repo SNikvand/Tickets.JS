@@ -55,21 +55,6 @@ app.post('/login', function(req, res) {
     req.session.dept = ["Finance", "Info Tech", "Management"];
                                                 // placeholder--to be retrieved from db
 
-    // configure default filter parameters
-    if (req.session.role == "Admin") {
-        var adminFilter = {dept: null, priority: null, submittedBy: null, clientEmail: null,
-            assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
-        req.session.filters = adminFilter;
-    } else if (req.session.role == "Manager") {
-        var managerFilter = {dept: req.session.dept, priority: null, submittedBy: null, clientEmail: null,
-            assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
-        req.session.filters = managerFilter;
-    } else if (req.session.role == "IT User") {
-        var ituserFilter = {dept: null, priority: null, submittedBy: null, clientEmail: null,
-            assignedTo: req.session.user, alteredBy: null, dateCreated: null, dateAltered: null};
-        req.session.filters = ituserFilter;
-    }
-
     res.redirect('/admin');
 });
 
