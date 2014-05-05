@@ -41,7 +41,7 @@ block content
                             span.glyphicon.glyphicon-cloud
                             | Welcome
                     li(ng-class="{active:isActive('/viewtickets')}")
-                        a(href="#/viewtickets")
+                        a(href="#/viewtickets", ng-click="resetViewParams()")
                             span.glyphicon.glyphicon-th-large
                             | View Tickets
                     li(ng-class="{active:isActive('/newticket')}")

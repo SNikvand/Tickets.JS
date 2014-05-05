@@ -175,9 +175,13 @@ adminModule.controller('sessionController', function($scope, $http) {
         });
 });
 
-adminModule.controller('panelController', function($scope, $location) {
+adminModule.controller('panelController', function($scope, $location, ticketParams) {
     $scope.isActive = function(route) {
         return route === $location.path();
+    }
+
+    $scope.resetViewParams = function() {
+        ticketParams.resetParams($scope.session);
     }
 });
 
@@ -193,67 +197,6 @@ adminModule.controller('viewticketsController', function($scope, ticketParams) {
     ticketParams.reqTickets();
 
     $scope.newtickets = [];
-
-    /*$scope.generateList = function(ticketList) {
-        var listMarkup = '';
-
-        listMarkup += '<table><tr>' +
-            '<th>Priority</th>' +
-            '<th>Title</th>' +
-            '<th>Department</th>' +
-            '<th>Assigned To</th>' +
-            '<th>Date Created</th>' +
-            '<th>Date Altered</th>' +
-            '</tr>';
-
-        // for new tickets that pop in while the user is on the page
-        listMarkup += '<tr ng-repeat="ticket in newtickets">' +
-            '<td>{{ ticket.priority }}</td>' +
-            '<td>{{ ticket.title }}</td>' +
-            '<td>{{ ticket.dept }}</td>' +
-            '<td>{{ ticket.assignedTo }}</td>' +
-            '<td>{{ ticket.dateCreated }}</td>' +
-            '<td>{{ ticket.dateAltered }}</td>' +
-            '</tr>';
-
-        for (var x in ticketList) {
-            listMarkup += '<tr>';
-
-            switch (ticketList[x].priority) {
-                case 1:
-                    listMarkup += '<td class="priority1">1</td>';
-                    break;
-                case 2:
-                    listMarkup += '<td class="priority2">2</td>';
-                    break;
-                case 3:
-                    listMarkup += '<td class="priority3">3</td>';
-                    break;
-                case 4:
-                    listMarkup += '<td class="priority4">4</td>';
-                    break;
-                case 5:
-                    listMarkup += '<td class="priority5">5</td>';
-                    break;
-                default:
-                    console.log("error: invalid priority level");
-            }
-
-            listMarkup += ticketList[x].title == null ? '<td></td>' : '<td>' + ticketList[x].title + '</td>';
-            listMarkup += ticketList[x].dept == null ? '<td></td>' : '<td>' + ticketList[x].dept + '</td>';
-            listMarkup += ticketList[x].assignedTo == null ? '<td></td>' : '<td>' + ticketList[x].assignedTo + '</td>';
-
-            // dates will probably be parsed differently
-            listMarkup += ticketList[x].dateCreated == null ? '<td></td>' : '<td>' + ticketList[x].dateCreated + '</td>';
-            listMarkup += ticketList[x].dateAltered == null ? '<td></td>' : '<td>' + ticketList[x].dateAltered + '</td>';
-
-            listMarkup += '</tr>';
-        }
-
-        listMarkup += '</table>';
-
-        return listMarkup;
-    };*/
 });
 
 // server-side authentication
@@ -274,8 +217,8 @@ adminModule.service('verifyAccess', function($http, $location) {
 adminModule.service('ticketParams', function($location) {
     var filters = {};
     var searchParams = {};
-    var includeCompleted = false;
-    var includeExpired = false;
+    var includeCompleted = true;
+    var includeExpired = true;
     var amount = null;
 
     this.setParams = function(session, formdata) {
@@ -306,7 +249,18 @@ adminModule.service('ticketParams', function($location) {
         $location.path('/viewtickets');
     };
 
+    this.resetParams = function(session) {
+        filters = session.filters;
+        searchParams = {};
+        includeCompleted = true;
+        includeExpired = true;
+        amount = null;
+        console.log("resetted");
+    }
+
     this.reqTickets = function() {
+        console.log(JSON.stringify(filters));
+        console.log(JSON.stringify(searchParams));
         socket.emit('getTicketsView', filters, searchParams, includeCompleted, includeExpired, null);
     };
 });
@@ -364,8 +318,19 @@ adminModule.controller('viewuserController', function($scope) {
 
 });
 
-adminModule.controller('newuserController', function($scope) {
+adminModule.controller('newuserController', function($scope, $location) {
+    $scope.register = function() {
+        if ($scope.role == "Admin") {
+            $scope.dept = null;
+        }
 
+        // for testing purposes only, dept is null
+        $scope.dept = null;
+        // end testing
+
+        socket.emit('setUser', $scope.firstname, $scope.lastname, $scope.username, $scope.email, $scope.password, $scope.role, $scope.dept);
+        $location.path('/viewusers');
+    }
 });
 
 adminModule.controller('mailsettingsController', function($scope) {
@@ -547,6 +512,8 @@ adminModule.directive('userCreation', function() {
                 $(".dropdown-menu li a").click(function(){
                     $(".btn:first-child").text($(this).text());
                     $(".btn:first-child").val($(this).text());
+                    scope.role = $(this).text();
+
                     if ($(this).text() == 'Administrator') {
                         $("#depart").hide("slow");
                         $("#admintext").show();
