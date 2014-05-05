@@ -189,8 +189,12 @@ adminModule.controller('restrictController', function($scope) {
 
 });
 
-adminModule.controller('viewticketsController', function($scope) {
-    $scope.generateList = function(ticketList) {
+adminModule.controller('viewticketsController', function($scope, ticketParams) {
+    ticketParams.reqTickets();
+
+    $scope.newtickets = [];
+
+    /*$scope.generateList = function(ticketList) {
         var listMarkup = '';
 
         listMarkup += '<table><tr>' +
@@ -200,6 +204,16 @@ adminModule.controller('viewticketsController', function($scope) {
             '<th>Assigned To</th>' +
             '<th>Date Created</th>' +
             '<th>Date Altered</th>' +
+            '</tr>';
+
+        // for new tickets that pop in while the user is on the page
+        listMarkup += '<tr ng-repeat="ticket in newtickets">' +
+            '<td>{{ ticket.priority }}</td>' +
+            '<td>{{ ticket.title }}</td>' +
+            '<td>{{ ticket.dept }}</td>' +
+            '<td>{{ ticket.assignedTo }}</td>' +
+            '<td>{{ ticket.dateCreated }}</td>' +
+            '<td>{{ ticket.dateAltered }}</td>' +
             '</tr>';
 
         for (var x in ticketList) {
@@ -239,6 +253,61 @@ adminModule.controller('viewticketsController', function($scope) {
         listMarkup += '</table>';
 
         return listMarkup;
+    };*/
+});
+
+// server-side authentication
+adminModule.service('verifyAccess', function($http, $location) {
+    this.checkPage = function(pageid) {
+        return $http({method: "POST", url: "/verifyAccess", data: {pageid: pageid},
+            headers: {'Content-Type': 'application/json'}})
+            .success(function (data) {
+                if (data.toString() == "false") {
+                    $location.path('/restrict');
+                } else if (data.toString() == "true") {
+                    // do nothing
+                }
+            });
+    };
+});
+
+adminModule.service('ticketParams', function($location) {
+    var filters = {};
+    var searchParams = {};
+    var includeCompleted = false;
+    var includeExpired = false;
+    var amount = null;
+
+    this.setParams = function(session, formdata) {
+        if (session.role == "Manager") {
+            formdata.dept = session.dept;
+        } else if (session.role == "IT User") {
+            formdata.assignedTo = session.user;
+        }
+
+        filters.dept = formdata.dept;
+        filters.priority = formdata.priority;
+        filters.assignedTo = formdata.assignedTo;
+        filters.alteredBy = formdata.alteredBy;
+        filters.submittedBy = formdata.submittedBy;
+        filters.clientEmail = formdata.clientEmail;
+        // filters.dateCreated = formdata.dateCreated;
+        // filters.dataAltered = formdata.dateAltered;
+
+        searchParams.keywords = formdata.keywords;
+        searchParams.inTitle = formdata.searchTitle;
+        searchParams.inBody = formdata.searchBody;
+
+        includeCompleted = formdata.completedSelection;
+        includeExpired = formdata.expiredSelection;
+
+        amount = formdata.amount;
+
+        $location.path('/viewtickets');
+    };
+
+    this.reqTickets = function() {
+        socket.emit('getTicketsView', filters, searchParams, includeCompleted, includeExpired, null);
     };
 });
 
@@ -246,12 +315,49 @@ adminModule.controller('ticketController', function($scope) {
 
 });
 
-adminModule.controller('newticketController', function($scope) {
+adminModule.controller('newticketController', function($scope, $location) {
+    $scope.submit = function() {
+        socket.emit('setTicket', null, $scope.title, $scope.dept, $scope.body, $scope.priority, $scope.user, $scope.email,
+        null, null, null, null, null, null);
 
+        $location.path('/viewtickets');
+    }
 });
 
-adminModule.controller('searchticketController', function($scope) {
-    $scope.departments = $scope.session.depts;
+adminModule.controller('searchticketController', function($scope, ticketParams) {
+    $scope.dept = null;
+    $scope.assignedTo = null;
+    $scope.alteredBy = null;
+    $scope.submittedBy = null;
+    $scope.clientEmail = null;
+    $scope.keywords = null;
+    $scope.searchTitle = false;
+    $scope.searchBody = false;
+    $scope.expiredSelection = 'includeExpired';
+    $scope.completedSelection = 'includeCompleted';
+    $scope.priority = null;
+
+    $scope.search = function() {
+        var formdata = {
+            dept: $scope.dept,
+            priority: $scope.priority,
+            assignedTo: $scope.assignedTo,
+            alteredBy: $scope.alteredBy,
+            submittedBy: $scope.submittedBy,
+            clientEmail: $scope.clientEmail,
+            // dateCreated: $scope.dateCreated, -- not implemented yet
+            // dateAltered: $scope.dateAltered, -- not implemented yet
+
+            keywords: $scope.keywords,
+            searchTitle: $scope.searchTitle,
+            searchBody: $scope.searchBody,
+            expiredSelection: $scope.expiredSelection,
+            completedSelection: $scope.completedSelection,
+            amount: null
+        }
+
+        ticketParams.setParams($scope.session, formdata);
+    };
 });
 
 adminModule.controller('viewuserController', function($scope) {
@@ -268,21 +374,6 @@ adminModule.controller('mailsettingsController', function($scope) {
 
 adminModule.controller('settingsController', function($scope) {
 
-});
-
-// server-side authentication
-adminModule.service('verifyAccess', function($http, $location) {
-    this.checkPage = function(pageid) {
-        return $http({method: "POST", url: "/verifyAccess", data: {pageid: pageid},
-            headers: {'Content-Type': 'application/json'}})
-            .success(function (data) {
-                if (data.toString() == "false") {
-                    $location.path('/restrict');
-                } else if (data.toString() == "true") {
-                    // do nothing
-                }
-            });
-    };
 });
 
 adminModule.directive('welcomeInfo', function() {
@@ -349,47 +440,93 @@ adminModule.directive('overTickets', function() {
             // get main list
             socket.emit(getMessages[0], defFilters, null, "include", "exclude", 5);
             socket.on(displayMessages[0], function(ticketList) {
-                $('#overview3').html(scope.generateList(ticketList)); // replace with function to populate overview tables
+                //$('#overview3').html(scope.generateList(ticketList)); // replace with function to populate overview tables
             });
 
             // get expired list
             socket.emit(getMessages[1], defFilters, null, "exclude", "only", 5);
             socket.on(displayMessages[1], function(ticketList) {
-                $('#overview2').html(scope.generateList(ticketList)); // replace with function to populate overview tables
+                //$('#overview2').html(scope.generateList(ticketList)); // replace with function to populate overview tables
             });
 
             // get soon-to-expire list
             socket.emit(getMessages[2], defFilters, null, "exclude", "exclude", 5);
             socket.on(displayMessages[2], function(ticketList) {
-                $('#overview1').html(scope.generateList(ticketList)); // replace with function to populate overview tables
+                //$('#overview1').html(scope.generateList(ticketList)); // replace with function to populate overview tables
             });
         }
     }
 });
 
-adminModule.directive('searchTickets', function($location, $timeout) {
+adminModule.directive('viewTickets', function() {
+    return {
+        restrict: 'E',
+        link: function(scope, element, attrs) {
+            socket.on('displayTicketsView', function(ticketList) {
+                scope.maintickets = ticketList;
+                scope.$apply();
+            });
+
+            socket.on('newTicket', function(newid) {
+                socket.emit('getTicket', newid);
+                socket.on('displayTicket',
+                    function(title, dept, description, priority, submittedBy, clientEmail,
+                        assignedTo, alteredBy, dateCreated, dateDue, dateAltered, dateCompleted) {
+                        scope.newtickets.push({
+                            priority: priority, title: title, dept: dept, assignedTo: assignedTo,
+                            dateCreated: dateCreated, dateAltered: dateAltered
+                        });
+                        scope.$apply();
+                    });
+            });
+        }
+    }
+});
+
+adminModule.directive('newTicket', function() {
+    return {
+        restrict: 'E',
+        link: function(scope, element, attrs) {
+            scope.isUser = function() {
+                if (scope.session.role == "Admin" || scope.session.role == "Manager" || scope.session.role == "IT User") {
+                    scope.user = scope.session.user;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+});
+
+adminModule.directive('searchTickets', function($location) {
     return {
         restrict: 'E',
         link: function(scope, element, attrs) {
             scope.isOnlyExpired = function() {
-                return scope.expiredSelection === 'onlyExpired';
+                if (scope.expiredSelection === 'onlyExpired') {
+                    scope.completedSelection = 'excludeCompleted';
+                    return true;
+                } else {
+                    return false;
+                }
             }
             scope.isOnlyCompleted = function() {
-                return scope.completedSelection === 'onlyCompleted';
+                if(scope.completedSelection === 'onlyCompleted') {
+                    scope.expiredSelection = 'excludeExpired';
+                    return true;
+                } else {
+                    return false;
+                }
             }
 
-            scope.search = function() {
-                /*console.log(scope.dept);
-                console.log(scope.assignedTo);
-                console.log(scope.alteredBy);
-                console.log(scope.submittedBy);
-                console.log(scope.clientEmail);
-                console.log(scope.keywords);
-                console.log(scope.searchTitle);
-                console.log(scope.searchBody);
-                console.log(scope.expiredSelection);
-                console.log(scope.completedSelection);*/
-            }
+            $(".dropdown-toggle").on('click', function() {
+                $(".dropdown-menu li a").click(function(){
+                    $(".btn:first-child").text($(this).text());
+                    $(".btn:first-child").val($(this).text());
+                    scope.priority = $(this).text();
+                });
+            });
         }
     }
 });
