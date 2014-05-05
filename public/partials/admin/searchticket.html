@@ -1,6 +1,83 @@
 <div>
     <div>
-        <h3>Search For a Ticket</h3>
+        <h3>Search Tickets</h3>
         <hr/>
+        <search-tickets ng-init="expiredSelection = 'includeExpired'; completedSelection = 'includeCompleted'; searchTitle = 'false'; searchBody = 'false';">
+            <div class="form-signin" style="float: left;">
+                <form role="form">
+                    <div class="form-group">
+                        <label for="dept">Department</label>
+                        <input id="dept" ng-model="dept" placeholder="Search by department" class="form-control" type="text">
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-start; width: 750px;">
+                        <div class="form-group">
+                            <label for="assignedTo">Assigned To</label>
+                            <input id="assignedTo" ng-model="assignedTo" placeholder="Search by user assigned" class="form-control" type="text">
+                        </div>
+
+                        <div class="form-group" style="margin-left: 25px;">
+                            <label class="control-label" for="alteredBy">Altered By</label>
+                            <input id="alteredBy" ng-model="alteredBy" placeholder="Search by altering user" class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-start; width: 750px;">
+                        <div class="form-group">
+                            <label class="control-label" for="submittedBy">Submitted By</label>
+                            <input id="submittedBy" ng-model="submittedBy" placeholder="Search by client" class="form-control" type="text">
+                        </div>
+
+                        <div class="form-group" style="margin-left: 25px;">
+                            <label class="control-label" for="clientEmail">Client Email</label>
+                            <input id="clientEmail" ng-model="clientEmail" placeholder="Search by client email" class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="keywords">Keywords</label>
+                        <input id="keywords" ng-model="keywords" placeholder="Search by keywords" class="form-control" type="text">
+                        <p class="help-block">(Separate words by spaces)</p>
+                    </div>
+
+                    <div class="form-group" style="margin-top: -12px;">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" ng-model="searchTitle" ng-true-value="true" ng-false-value="false"> In title
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" ng-model="searchBody" ng-true-value="true" ng-false-value="false"> In body/description
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Expired Tickets</label><br/>
+                        <label class="checkbox-inline">
+                            <input type="radio" ng-disabled="isOnlyCompleted()" ng-model="expiredSelection" name="expired" value="includeExpired"> Include
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="radio" ng-disabled="isOnlyCompleted()" ng-model="expiredSelection" name="expired" value="excludeExpired"> Exclude
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="radio" ng-disabled="isOnlyCompleted()" ng-model="expiredSelection" name="expired" value="onlyExpired"> Only
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Completed Tickets</label><br/>
+                        <label class="checkbox-inline">
+                            <input type="radio" ng-disabled="isOnlyExpired()" ng-model="completedSelection" name="completed" value="includeCompleted"> Include
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="radio" ng-disabled="isOnlyExpired()" ng-model="completedSelection" name="completed" value="excludeCompleted"> Exclude
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="radio" ng-disabled="isOnlyExpired()" ng-model="completedSelection" name="completed" value="onlyCompleted"> Only
+                        </label>
+                    </div>
+
+                    <button class="btn btn-lg btn-primary btn-block" ng-click="search()">Search</button>
+                </form>
+            </div>
+        </search-tickets>
     </div>
 </div>

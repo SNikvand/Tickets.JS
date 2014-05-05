@@ -46,12 +46,14 @@ app.post('/login', function(req, res) {
     // DATABASE FUNCTION: retrieve role from database for this user
     // DATABASE FUNCTION: retrieve set of departments assigned to this user
     // if admin, depts return "all"
-    // if IT user, depts return "none" or "null"
+    // if manager or IT user, depts return all departments assigned for that user
 
+    // if authentication successful, proceed. otherwise redirect to index with error message
     // set the sessions
-    req.session.user = req.body.user;
-    req.session.role = req.body.role;
-    req.session.depts = ["Finance", "Management"];
+    req.session.user = "Matt";                  // placeholder--to be retrieved from form
+    req.session.role = "Admin";                 // placeholder--to be retrieved from db
+    req.session.depts = ["Finance", "Info Tech", "Management"];
+                                                // placeholder--to be retrieved from db
 
     // configure default filter parameters
     if (req.session.role == "Admin") {
@@ -70,10 +72,15 @@ app.post('/login', function(req, res) {
 
     res.redirect('/admin');
 });
+
 app.get('/logout', function(req, res) {
     req.session.destroy(function() {
         res.redirect('/');
     });
+});
+
+app.get('/getSession', function(req, res) {
+    res.json(req.session);
 });
 
 app.post('/verifyAccess', function(req, res) {

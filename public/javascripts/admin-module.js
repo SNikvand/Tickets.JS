@@ -50,7 +50,7 @@ adminModule.config(function($routeProvider,$locationProvider) {
                 }
             }
         })
-        .when('/viewtickets/:ticketid', {
+        .when('/viewtickets/ticket/:ticketid', {
             templateUrl: '/partials/admin/ticket.html',
             controller: 'ticketController',
             resolve: {
@@ -171,7 +171,6 @@ adminModule.config(function($routeProvider,$locationProvider) {
 adminModule.controller('sessionController', function($scope, $http) {
     $http({method: "GET", url: "/getSession", headers: {'Content-Type': 'application/json'}})
         .success(function (data) {
-            console.log("session received");
             $scope.session = data;
         });
 });
@@ -183,6 +182,14 @@ adminModule.controller('panelController', function($scope, $location) {
 });
 
 adminModule.controller('overviewController', function($scope) {
+
+});
+
+adminModule.controller('restrictController', function($scope) {
+
+});
+
+adminModule.controller('viewticketsController', function($scope) {
     $scope.generateList = function(ticketList) {
         var listMarkup = '';
 
@@ -235,14 +242,6 @@ adminModule.controller('overviewController', function($scope) {
     };
 });
 
-adminModule.controller('restrictController', function($scope) {
-
-});
-
-adminModule.controller('viewticketsController', function($scope) {
-
-});
-
 adminModule.controller('ticketController', function($scope) {
 
 });
@@ -252,7 +251,7 @@ adminModule.controller('newticketController', function($scope) {
 });
 
 adminModule.controller('searchticketController', function($scope) {
-
+    $scope.departments = $scope.session.depts;
 });
 
 adminModule.controller('viewuserController', function($scope) {
@@ -350,20 +349,47 @@ adminModule.directive('overTickets', function() {
             // get main list
             socket.emit(getMessages[0], defFilters, null, "include", "exclude", 5);
             socket.on(displayMessages[0], function(ticketList) {
-                $('#overview3').html(scope.generateList(ticketList));
+                $('#overview3').html(scope.generateList(ticketList)); // replace with function to populate overview tables
             });
 
             // get expired list
             socket.emit(getMessages[1], defFilters, null, "exclude", "only", 5);
             socket.on(displayMessages[1], function(ticketList) {
-                $('#overview2').html(scope.generateList(ticketList));
+                $('#overview2').html(scope.generateList(ticketList)); // replace with function to populate overview tables
             });
 
             // get soon-to-expire list
             socket.emit(getMessages[2], defFilters, null, "exclude", "exclude", 5);
             socket.on(displayMessages[2], function(ticketList) {
-                $('#overview1').html(scope.generateList(ticketList));
+                $('#overview1').html(scope.generateList(ticketList)); // replace with function to populate overview tables
             });
+        }
+    }
+});
+
+adminModule.directive('searchTickets', function($location, $timeout) {
+    return {
+        restrict: 'E',
+        link: function(scope, element, attrs) {
+            scope.isOnlyExpired = function() {
+                return scope.expiredSelection === 'onlyExpired';
+            }
+            scope.isOnlyCompleted = function() {
+                return scope.completedSelection === 'onlyCompleted';
+            }
+
+            scope.search = function() {
+                /*console.log(scope.dept);
+                console.log(scope.assignedTo);
+                console.log(scope.alteredBy);
+                console.log(scope.submittedBy);
+                console.log(scope.clientEmail);
+                console.log(scope.keywords);
+                console.log(scope.searchTitle);
+                console.log(scope.searchBody);
+                console.log(scope.expiredSelection);
+                console.log(scope.completedSelection);*/
+            }
         }
     }
 });
