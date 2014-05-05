@@ -216,11 +216,9 @@ adminModule.service('verifyAccess', function($http, $location) {
 });
 
 adminModule.service('ticketParams', function($location) {
-    var viewfilters = {};
-    for (var x in viewfilters) {
-        viewfilters[x] = null;
-    }
-    var searchParams = {};
+    var viewfilters = {dept: null, priority: null, assignedTo: null, alteredBy: null, submittedBy: null, clientEmail: null,
+        dateCreated: null, dateAltered: null};
+    var searchParams = {keywords: null, inTitle: true, inBody: true};
     var includeCompleted = true;
     var includeExpired = true;
     var amount = null;
@@ -258,7 +256,7 @@ adminModule.service('ticketParams', function($location) {
         for (var x in viewfilters) {
             viewfilters[x] = null;
         }
-        searchParams = {};
+        searchParams = {keywords: null, inTitle: false, inBody: false};
         includeCompleted = true;
         includeExpired = true;
         amount = null;
@@ -267,6 +265,10 @@ adminModule.service('ticketParams', function($location) {
 
     this.reqTickets = function() {
         console.log("view test: " +  JSON.stringify(viewfilters));
+        console.log("view test (search): " + JSON.stringify(searchParams));
+        console.log("view test (includeCompleted): " + includeCompleted);
+        console.log("view test (includeExpired): " + includeExpired);
+        console.log("view test (amount): " + amount);
         socket.emit('getTicketsView', viewfilters, searchParams, includeCompleted, includeExpired, null);
     };
 });
