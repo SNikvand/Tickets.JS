@@ -214,8 +214,6 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
     }
 
     $scope.viewTicketsByDept = function(name) {
-        console.log("test: " + name);
-
         var formdata = {
             dept: name,
             priority: null,
@@ -234,7 +232,7 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
             amount: null
         };
 
-        ticketParams.setParams($scope.session, formdata);
+        ticketParams.setParams($scope.session, formdata, true);
         $location.path('/viewtickets');
     }
 
@@ -292,9 +290,9 @@ adminModule.service('ticketParams', function($location) {
     var includeExpired = true;
     var amount = null;
 
-    this.setParams = function(session, formdata) {
-        if (session.role == "Manager") {
-            formdata.dept = session.dept; // FIX THIS !!!
+    this.setParams = function(session, formdata, frompanel) {
+        if (session.role == "Manager" && frompanel == false) {
+            formdata.dept = session.dept;
         } else if (session.role == "IT User") {
             formdata.assignedTo = session.user;
         }
@@ -387,7 +385,7 @@ adminModule.controller('searchticketController', function($scope, ticketParams) 
             amount: null
         }
 
-        ticketParams.setParams($scope.session, formdata);
+        ticketParams.setParams($scope.session, formdata, false);
     };
 });
 

@@ -56,9 +56,9 @@ block content
                 ul.nav.nav-sidebar
                     // | <li ng-repeat="dept in departments"><a href="" ng-click="viewTicketsByDept({{ dept }})">{{ dept }}</a></li>
 
-                    li(ng-repeat="dept in departments")
-                        a(ng-click="viewTicketsByDept({{ dept }})")
-                            span.glyphicon.glyphicon-folder-open
+                    li(ng-repeat="dept in userdept")
+                        a(href="", ng-click="viewTicketsByDept(dept)")
+                            span.glyphicon.glyphicon-folder-close
                             | {{ dept }}
 
                     //li
