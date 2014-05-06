@@ -7,98 +7,52 @@
         <br/><br/>
     </div>
     <div class="row ticketList">
-        <div class="col-sm-4">
-            <h4>Expired Tickets</h4>
-            <hr/>
-            <table>
-                <tr>
-                    <th>Priority</th>
-                    <th>Subject</th>
-                </tr>
-                <tr class="bg-danger">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr class="bg-success">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr class="bg-warning">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr class="bg-info">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-            </table>
-            <br/><br/>
-        </div>
-        <div class="col-sm-4">
-            <h4>Assigned Tickets</h4>
-            <hr/>
-            <table>
-                <tr>
-                    <th>Priority</th>
-                    <th>Subject</th>
-                </tr>
-                <tr class="bg-danger">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr class="bg-success">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr class="bg-warning">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr class="bg-info">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-            </table>
-            <br><br/>
-        </div>
-        <div class="col-sm-4">
-            <h4>Due Tickets</h4>
-            <hr/>
-            <table>
-                <tr>
-                    <th>Priority</th>
-                    <th>Subject</th>
-                </tr>
-                <tr class="bg-danger">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr class="bg-success">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr class="bg-warning">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-                <tr class="bg-info">
-                    <td>1</td>
-                    <td>Plz Halp! Mouse Nut Warking</td>
-                </tr>
-            </table>
-            <br/><br/>
-        </div>
+        <over-tickets>
+            <div class="col-sm-4">
+                <h4>{{ overview1 }}</h4>
+                <hr/>
+                <table>
+                    <tr>
+                        <th>Priority</th>
+                        <th>Subject</th>
+                    </tr>
+                    <tr ng-repeat="ticket in ticketList1">
+                        <td>{{ ticket.priority }}</td>
+                        <td>{{ ticket.title }}</td>
+                    </tr>
+                </table>
+                <br/><br/>
+            </div>
+            <div class="col-sm-4">
+                <h4>{{ overview2 }}</h4>
+                <hr/>
+                <table>
+                    <tr>
+                        <th>Priority</th>
+                        <th>Subject</th>
+                    </tr>
+                    <tr ng-repeat="ticket in ticketList2">
+                        <td>{{ ticket.priority }}</td>
+                        <td>{{ ticket.title }}</td>
+                    </tr>
+                </table>
+                <br><br/>
+            </div>
+            <div class="col-sm-4">
+                <h4>{{ overview3 }}</h4>
+                <hr/>
+                <table>
+                    <tr>
+                        <th>Priority</th>
+                        <th>Subject</th>
+                    </tr>
+                    <tr ng-repeat="ticket in ticketList3">
+                        <td>{{ ticket.priority }}</td>
+                        <td>{{ ticket.title }}</td>
+                    </tr>
+                </table>
+                <br/><br/>
+            </div>
+        </over-tickets>
     </div>
 </div>

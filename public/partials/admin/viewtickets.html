@@ -14,16 +14,16 @@
                     <th>Date Altered</th>
                 </tr>
 
-                <tr ng-repeat="ticket in newtickets">
-                    <td>{{ ticket.priority }}</td>
-                    <td>{{ ticket.title }}</td>
-                    <td>{{ ticket.dept }}</td>
-                    <td>{{ ticket.assignedTo }}</td>
-                    <td>{{ ticekt.dateCreated }}</td>
-                    <td>{{ ticket.dateAltered }}</td>
-                </tr>
-
                 <view-tickets>
+                    <tr ng-repeat="ticket in newtickets">
+                        <td>{{ ticket.priority }}</td>
+                        <td>{{ ticket.title }}</td>
+                        <td>{{ ticket.dept }}</td>
+                        <td>{{ ticket.assignedTo }}</td>
+                        <td>{{ ticekt.dateCreated }}</td>
+                        <td>{{ ticket.dateAltered }}</td>
+                    </tr>
+
                     <tr ng-repeat="ticket in maintickets">
                         <td>{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>

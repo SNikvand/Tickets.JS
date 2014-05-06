@@ -80,6 +80,14 @@ block content
                         a(href="#/newuser")
                             span.glyphicon.glyphicon-certificate
                             | New User
+                    li(ng-class="{active:isActive('/viewdepts')}")
+                        a(href="#/viewdepts")
+                            span.glyphicon.glyphicon-user
+                            | View Departments
+                    li(ng-class="{active:isActive('/newdept')}")
+                        a(href="#/newdept")
+                            span.glyphicon.glyphicon-certificate
+                            | New Department
                     li(ng-class="{active:isActive('/settings/mail')}")
                         a(href="#/settings/mail")
                             span.glyphicon.glyphicon-envelope

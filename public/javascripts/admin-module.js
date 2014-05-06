@@ -130,6 +130,38 @@ adminModule.config(function($routeProvider,$locationProvider) {
                 }
             }
         })
+        .when('/viewdepts', {
+            templateUrl: '/partials/admin/viewdepts.html',
+            controller: 'viewdeptController',
+            resolve: {
+                verifyAccess: function(verifyAccess) {
+                    verifyAccess.checkPage("viewdepts");
+                },
+                delay: function($q, $timeout) {
+                    var deferred = $q.defer();
+                    $timeout(function() {
+                        deferred.resolve();
+                    }, 100);
+                    return deferred.promise;
+                }
+            }
+        })
+        .when('/newdept', {
+            templateUrl: '/partials/admin/newdept.html',
+            controller: 'newdeptController',
+            resolve: {
+                verifyAccess: function(verifyAccess) {
+                    verifyAccess.checkPage("newdept");
+                },
+                delay: function($q, $timeout) {
+                    var deferred = $q.defer();
+                    $timeout(function() {
+                        deferred.resolve();
+                    }, 100);
+                    return deferred.promise;
+                }
+            }
+        })
         .when('/settings/mail', {
             templateUrl: '/partials/admin/mailsettings.html',
             controller: 'mailsettingsController',
@@ -342,6 +374,17 @@ adminModule.controller('newuserController', function($scope, $location) {
     }
 });
 
+adminModule.controller('viewdeptController', function($scope) {
+    socket.emit('getDepts', null);
+});
+
+adminModule.controller('newdeptController', function($scope, $location) {
+    $scope.create = function() {
+        socket.emit('setDept', $scope.deptname, $scope.manager);
+        $location.path('/viewdepts');
+    }
+});
+
 adminModule.controller('mailsettingsController', function($scope) {
 
 });
@@ -425,21 +468,24 @@ adminModule.directive('overTickets', function() {
             }
 
             // get main list
-            socket.emit(getMessages[0], defFilters, null, "include", "exclude", 5);
+            socket.emit(getMessages[0], defFilters, null, "exclude", "include", 5);
             socket.on(displayMessages[0], function(ticketList) {
-                //$('#overview3').html(scope.generateList(ticketList)); // replace with function to populate overview tables
+                scope.ticketList1 = ticketList;
+                scope.$apply();
             });
 
             // get expired list
             socket.emit(getMessages[1], defFilters, null, "exclude", "only", 5);
             socket.on(displayMessages[1], function(ticketList) {
-                //$('#overview2').html(scope.generateList(ticketList)); // replace with function to populate overview tables
+                scope.ticketList2 = ticketList;
+                scope.$apply();
             });
 
             // get soon-to-expire list
             socket.emit(getMessages[2], defFilters, null, "exclude", "exclude", 5);
             socket.on(displayMessages[2], function(ticketList) {
-                //$('#overview1').html(scope.generateList(ticketList)); // replace with function to populate overview tables
+                scope.ticketList3 = ticketList;
+                scope.$apply();
             });
         }
     }
@@ -476,6 +522,18 @@ adminModule.directive('viewUsers', function() {
         link: function(scope, element, attrs) {
             socket.on('displayUsers', function(userList) {
                 scope.mainusers = userList;
+                scope.$apply();
+            });
+        }
+    }
+});
+
+adminModule.directive('viewDepts', function() {
+    return {
+        restrict: 'E',
+        link: function(scope, element, attrs) {
+            socket.on('displayDepts', function(deptList) {
+                scope.departments = deptList;
                 scope.$apply();
             });
         }

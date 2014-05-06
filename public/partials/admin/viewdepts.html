@@ -1,0 +1,22 @@
+<div>
+    <div>
+        <h3>View Departments</h3>
+        <hr/>
+
+        <div id="deptsList" class="ticketList" style="width: 50%;">
+            <table>
+                <tr>
+                    <th>Dept. Name</th>
+                    <th>Manager</th>
+                </tr>
+
+                <view-depts>
+                    <tr ng-repeat="dept in departments">
+                        <td>{{ dept.name }}</td>
+                        <td>{{ dept.manager }}</td>
+                    </tr>
+                </view-depts>
+            </table>
+        </div>
+    </div>
+</div>

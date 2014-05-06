@@ -1,0 +1,21 @@
+<div>
+    <div>
+        <h3>Create a New Department</h3>
+        <hr/>
+    </div>
+    <dept-creation>
+        <div class="form-signin">
+            <form role="form">
+                <div class="form-group">
+                    <label for="deptname">Department</label>
+                    <input type="text" ng-model="deptname" id="deptname" class="form-control" placeholder="Department"/>
+                </div>
+                <div class="form-group">
+                    <label for="manager">Manager</label>
+                    <input type="text" ng-model="manager" id="manager" class="form-control" placeholder="Manager"/>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" ng-click="create()" type="submit">Submit</button>
+            </form>
+        </div>
+    </dept-creation>
+</div>
