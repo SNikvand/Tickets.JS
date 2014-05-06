@@ -230,6 +230,15 @@ adminModule.controller('viewticketsController', function($scope, ticketParams) {
     ticketParams.reqTickets();
 
     $scope.newtickets = [];
+    if ($scope.session.role == "IT User") {
+        $scope.displayProp = 'none';
+    } else {
+        $scope.displayProp = 'table-cell';
+    }
+
+    $scope.deleteTicket = function(id) {
+        // emit socket to database to delete ticket marked 'id'
+    }
 });
 
 // server-side authentication
@@ -356,6 +365,10 @@ adminModule.controller('searchticketController', function($scope, ticketParams) 
 
 adminModule.controller('viewuserController', function($scope) {
     socket.emit('getUsers', null);
+
+    $scope.deleteUser = function(id) {
+        // emit socket to database to delete user marked 'id'
+    }
 });
 
 adminModule.controller('newuserController', function($scope, $location) {
@@ -376,6 +389,10 @@ adminModule.controller('newuserController', function($scope, $location) {
 
 adminModule.controller('viewdeptController', function($scope) {
     socket.emit('getDepts', null);
+
+    $scope.deleteDept = function(id) {
+        // emit socket to database to delete department marked 'id'
+    }
 });
 
 adminModule.controller('newdeptController', function($scope, $location) {
@@ -495,6 +512,10 @@ adminModule.directive('viewTickets', function() {
     return {
         restrict: 'E',
         link: function(scope, element, attrs) {
+            if (scope.session.role != "IT User") {
+                $('#controlheader').css('display', 'table-cell');
+            }
+
             socket.on('displayTicketsView', function(ticketList) {
                 scope.maintickets = ticketList;
                 scope.$apply();
@@ -503,10 +524,10 @@ adminModule.directive('viewTickets', function() {
             socket.on('newTicket', function(newid) {
                 socket.emit('getTicket', newid);
                 socket.on('displayTicket',
-                    function(title, dept, description, priority, submittedBy, clientEmail,
+                    function(id, title, dept, description, priority, submittedBy, clientEmail,
                         assignedTo, alteredBy, dateCreated, dateDue, dateAltered, dateCompleted) {
                         scope.newtickets.push({
-                            priority: priority, title: title, dept: dept, assignedTo: assignedTo,
+                            id: id, priority: priority, title: title, dept: dept, assignedTo: assignedTo,
                             dateCreated: dateCreated, dateAltered: dateAltered
                         });
                         scope.$apply();

@@ -5,17 +5,20 @@
 
         <div id="mainTickets" class="ticketList">
             <table>
-                <tr>
-                    <th>Priority</th>
-                    <th>Title</th>
-                    <th>Department</th>
-                    <th>Assigned To</th>
-                    <th>Date Created</th>
-                    <th>Date Altered</th>
-                </tr>
-
                 <view-tickets>
+                    <tr>
+                        <th style="display: {{ displayProp }}; width: 100px"></th>
+                        <th>Priority</th>
+                        <th>Title</th>
+                        <th>Department</th>
+                        <th>Assigned To</th>
+                        <th>Date Created</th>
+                        <th>Date Altered</th>
+                    </tr>
+
                     <tr ng-repeat="ticket in newtickets">
+                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.id }}">Detail</a>
+                            | <a href="deleteTicket({{ ticket.id }})">Delete</a></td>
                         <td>{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
                         <td>{{ ticket.dept }}</td>
@@ -25,6 +28,8 @@
                     </tr>
 
                     <tr ng-repeat="ticket in maintickets">
+                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.id }}">Detail</a>
+                            | <a href="deleteTicket({{ ticket.id }})">Delete</a></td>
                         <td>{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
                         <td>{{ ticket.dept }}</td>

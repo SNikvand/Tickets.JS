@@ -6,6 +6,7 @@
         <div id="usersList" class="ticketList">
             <table>
                 <tr>
+                    <th style="width: 75px"></th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Username</th>
@@ -16,6 +17,7 @@
 
                 <view-users>
                     <tr ng-repeat="user in mainusers">
+                        <td><a href="deleteUser({{ user.id }})">Delete</a></td>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
                         <td>{{ user.username }}</td>

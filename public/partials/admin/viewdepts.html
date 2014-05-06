@@ -6,12 +6,14 @@
         <div id="deptsList" class="ticketList" style="width: 50%;">
             <table>
                 <tr>
+                    <th style="width: 75px;"></th>
                     <th>Dept. Name</th>
                     <th>Manager</th>
                 </tr>
 
                 <view-depts>
                     <tr ng-repeat="dept in departments">
+                        <td><a href="deleteDept({{ dept.id }})">Delete</a></td>
                         <td>{{ dept.name }}</td>
                         <td>{{ dept.manager }}</td>
                     </tr>
