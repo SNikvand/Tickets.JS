@@ -323,7 +323,7 @@ adminModule.controller('searchticketController', function($scope, ticketParams) 
 });
 
 adminModule.controller('viewuserController', function($scope) {
-
+    socket.emit('getUsers', null);
 });
 
 adminModule.controller('newuserController', function($scope, $location) {
@@ -333,6 +333,7 @@ adminModule.controller('newuserController', function($scope, $location) {
         }
 
         // for testing purposes only, dept is null
+        // to do: finalize the form for selecting departments to assign to a user
         $scope.dept = null;
         // end testing
 
@@ -464,6 +465,18 @@ adminModule.directive('viewTickets', function() {
                         });
                         scope.$apply();
                     });
+            });
+        }
+    }
+});
+
+adminModule.directive('viewUsers', function() {
+    return {
+        restrict: 'E',
+        link: function(scope, element, attrs) {
+            socket.on('displayUsers', function(userList) {
+                scope.mainusers = userList;
+                scope.$apply();
             });
         }
     }

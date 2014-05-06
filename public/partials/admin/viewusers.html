@@ -1,6 +1,30 @@
 <div>
     <div>
-        <h3>Userlist</h3>
+        <h3>View Users</h3>
         <hr/>
+
+        <div id="usersList" class="ticketList">
+            <table>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Username</th>
+                    <th>Email Address</th>
+                    <th>Password</th>
+                    <th>Role</th>
+                </tr>
+
+                <view-users>
+                    <tr ng-repeat="user in mainusers">
+                        <td>{{ user.firstname }}</td>
+                        <td>{{ user.lastname }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.password }}</td>
+                        <td>{{ user.role }}</td>
+                    </tr>
+                </view-users>
+            </table>
+        </div>
     </div>
 </div>
