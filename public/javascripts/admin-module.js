@@ -204,12 +204,38 @@ adminModule.controller('sessionController', function($scope, $http) {
     $http({method: "GET", url: "/getSession", headers: {'Content-Type': 'application/json'}})
         .success(function (data) {
             $scope.session = data;
+            $scope.userdept = $scope.session.dept;
         });
 });
 
 adminModule.controller('panelController', function($scope, $location, ticketParams) {
     $scope.isActive = function(route) {
         return route === $location.path();
+    }
+
+    $scope.viewTicketsByDept = function(name) {
+        console.log("test: " + name);
+
+        var formdata = {
+            dept: name,
+            priority: null,
+            assignedTo: null,
+            alteredBy: null,
+            submittedBy: null,
+            clientEmail: null,
+            // dateCreated: $scope.dateCreated, -- not implemented yet
+            // dateAltered: $scope.dateAltered, -- not implemented yet
+
+            keywords: null,
+            searchTitle: true,
+            searchBody: true,
+            expiredSelection: true,
+            completedSelection: true,
+            amount: null
+        };
+
+        ticketParams.setParams($scope.session, formdata);
+        $location.path('/viewtickets');
     }
 
     $scope.resetViewParams = function() {
@@ -226,7 +252,7 @@ adminModule.controller('restrictController', function($scope) {
 
 });
 
-adminModule.controller('viewticketsController', function($scope, ticketParams) {
+adminModule.controller('viewticketsController', function($scope, $location, ticketParams) {
     ticketParams.reqTickets();
 
     $scope.newtickets = [];
@@ -238,6 +264,8 @@ adminModule.controller('viewticketsController', function($scope, ticketParams) {
 
     $scope.deleteTicket = function(id) {
         // emit socket to database to delete ticket marked 'id'
+        // notifyjs notification here that item has been deleted
+        $location.path('/viewtickets');
     }
 });
 
@@ -266,7 +294,7 @@ adminModule.service('ticketParams', function($location) {
 
     this.setParams = function(session, formdata) {
         if (session.role == "Manager") {
-            formdata.dept = session.dept;
+            formdata.dept = session.dept; // FIX THIS !!!
         } else if (session.role == "IT User") {
             formdata.assignedTo = session.user;
         }
@@ -368,6 +396,8 @@ adminModule.controller('viewuserController', function($scope) {
 
     $scope.deleteUser = function(id) {
         // emit socket to database to delete user marked 'id'
+        // notifyjs notification here that item has been deleted
+        $location.path('/viewtickets');
     }
 });
 
@@ -392,6 +422,8 @@ adminModule.controller('viewdeptController', function($scope) {
 
     $scope.deleteDept = function(id) {
         // emit socket to database to delete department marked 'id'
+        // notifyjs notification here that item has been deleted
+        $location.path('/viewtickets');
     }
 });
 

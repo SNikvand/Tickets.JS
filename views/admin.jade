@@ -54,22 +54,22 @@ block content
                             | Search Ticket
                 h3 Departments
                 ul.nav.nav-sidebar
-                    li
-                        a(href="#/overview")
+                    // | <li ng-repeat="dept in departments"><a href="" ng-click="viewTicketsByDept({{ dept }})">{{ dept }}</a></li>
+
+                    li(ng-repeat="dept in departments")
+                        a(ng-click="viewTicketsByDept({{ dept }})")
                             span.glyphicon.glyphicon-folder-open
-                            | Info Tech
-                    li
-                        a(href="#/viewtickets")
-                            span.glyphicon.glyphicon-folder-close
-                            | Sales
-                    li
-                        a(href="#/newticket")
-                            span.glyphicon.glyphicon-folder-close
-                            | Accounting
-                    li
-                        a(href="#/searchticket")
-                            span.glyphicon.glyphicon-folder-close
-                            | Marketing
+                            | {{ dept }}
+
+                    //li
+                    //    a(href="#/newticket")
+                    //        span.glyphicon.glyphicon-folder-close
+                    //        | Accounting
+                    //li
+                    //    a(href="#/searchticket")
+                    //        span.glyphicon.glyphicon-folder-close
+                    //        | Marketing
+
                 h3 Control Panel
                 ul.nav.nav-sidebar
                     li(ng-class="{active:isActive('/viewusers')}")
