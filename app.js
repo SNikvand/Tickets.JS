@@ -9,7 +9,7 @@ var route_admin = require('./routes/admin');
 var http = require('http');
 var path = require('path');
 var permissions = require('./lib/permissions.js');
-
+var portal = require('./routes/portal')
 var app = express();
 
 // all environments
@@ -40,6 +40,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/admin', route_admin.index);
+app.get('/portal', portal.portal);
 
 app.post('/login', function(req, res) {
     // AUTHENTICATION: check req.body.username and req.body.password against the database
