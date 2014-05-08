@@ -3,5 +3,5 @@
  */
 
 exports.portal = function(req, res) {
-    res.render('portal', {});
+    res.render('portal', {title: 'SMTP TEST'});
 };
