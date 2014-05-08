@@ -194,6 +194,22 @@ adminModule.config(function($routeProvider,$locationProvider) {
                 }
             }
         })
+        .when('/replyticket', {
+            templateUrl: '/partials/admin/replyticket.html',
+            //controller: 'replyticketController',
+            resolve: {
+                verifyAccess: function(verifyAccess) {
+                    verifyAccess.checkPage("replyticket");
+                },
+                delay: function($q, $timeout) {
+                    var deferred = $q.defer();
+                    $timeout(function() {
+                        deferred.resolve();
+                    }, 100);
+                    return deferred.promise;
+                }
+            }
+        })
         .otherwise({
             redirectTo: '/overview'
         });
@@ -594,11 +610,18 @@ adminModule.directive('viewDepts', function() {
             socket.on('displayDepts', function(deptList) {
                 scope.departments = {};
 
-                for (var x in deptList) {
-                    scope.departments[deptList[x].name].push(deptList[x].manager);
+                for (var dept in deptList) {
+                    console.log("name: " + deptList[dept].name);
+                    console.log("manager: " + deptList[dept].manager);
+
+                    if (!scope.departments[deptList[dept].name]) {
+                        scope.departments[deptList[dept].name] = {id: null, name: null, managers: []};
+                        // scope.departments[deptList[dept].name].id = ___ // get department id
+                        scope.departments[deptList[dept].name].name = deptList[dept].name;
+                    }
+                    scope.departments[deptList[dept].name].managers.push(deptList[dept].manager);
                 }
 
-                scope.departments = deptList;
                 scope.$apply();
             });
         }
@@ -681,6 +704,36 @@ adminModule.directive('userCreation', function() {
                     scope.role = $(this).text();
                 });
             });
+        }
+    }
+});
+
+adminModule.directive('replyTicket', function() {
+    return {
+        restrict: 'E',
+        link: function(scope, element, attrs) {
+            //JQuery functions can go in here
+            $("#piority").click(function() {
+                if($("#piority").val() == "1"){
+                    $("#piority").css("background-color", "#FA6666");
+                }
+                if($("#piority").val() == "2"){
+                    $("#piority").css("background-color", "#FF7307");
+                }
+                if($("#piority").val() == "3"){
+                    $("#piority").css("background-color", "#FFEF07");
+                }
+                if($("#piority").val() == "4"){
+                    $("#piority").css("background-color", "#64A227");
+                }
+                if($("#piority").val() == "5"){
+                    $("#piority").css("background-color", "#7EEB12");
+                }
+                if($("#piority").val() == "6"){
+                    $("#piority").css("background-color", "#12ECEC");
+                }
+            });
+
         }
     }
 });

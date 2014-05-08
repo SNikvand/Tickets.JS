@@ -3,7 +3,7 @@
         <h3>View Departments</h3>
         <hr/>
 
-        <div id="deptsList" class="ticketList" style="width: 50%;">
+        <div id="deptsList" class="ticketList">
             <table>
                 <tr>
                     <th style="width: 75px;"></th>
@@ -14,8 +14,8 @@
                 <view-depts>
                     <tr ng-repeat="dept in departments">
                         <td><a href="deleteDept({{ dept.id }})">Delete</a></td>
-                        <td>{{ dept }}</td>
-                        <td><span ng-repeat="manager in dept">{{ manager }}&nbsp;</span></td>
+                        <td>{{ dept.name }}</td>
+                        <td>|&nbsp;&nbsp;<span ng-repeat="manager in dept.managers">{{ manager }}&nbsp;&nbsp;|&nbsp;&nbsp;</span></td>
                     </tr>
                 </view-depts>
             </table>
