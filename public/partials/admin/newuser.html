@@ -7,16 +7,8 @@
         <div class="form-signin">
         <form role="form">
             <div class="form-group">
-                <label for="firstname">First Name</label>
-                <input type="text" ng-model="firstname" id="firstname" class="form-control" placeholder="John"/>
-            </div>
-            <div class="form-group">
-                <label for="lastname">Last Name</label>
-                <input type="text" ng-model="lastname" id="lastname" class="form-control" placeholder="Smith"/>
-            </div>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" ng-model="username" id="username" class="form-control" placeholder="Shorthand Login Name"/>
+                <label for="name">Username</label>
+                <input type="text" ng-model="name" id="name" class="form-control" placeholder="Login and Display Name"/>
             </div>
             <div class="form-group">
                 <label for="email">Email Address</label>
@@ -42,26 +34,6 @@
                     <li><a href="">Manager</a></li>
                     <li><a href="">IT User</a></li>
                 </ul>
-            </div>
-            <br />
-            <div id="depart" style="margin-bottom:10px">
-                <label for="name">Department</label>
-                <br />
-                <label class="checkbox-inline">
-                    <input type="checkbox" value="sales"> Sales
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" value="it"> IT
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" value="hr"> HR
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" value="cs"> Customer service
-                </label>
-            </div>
-            <div id="admintext" style="display:none" class="alert alert-danger">
-                Warning: Administrator is automatically granted permissions to all departments
             </div>
 
             <button class="btn btn-lg btn-primary btn-block" ng-click="register()" type="submit">Register</button>

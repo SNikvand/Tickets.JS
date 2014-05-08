@@ -66,26 +66,39 @@
                     <div class="form-group">
                         <label>Completed Tickets</label><br/>
                         <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isOnlyExpired()" ng-model="completedSelection" name="completed" value="includeCompleted"> Include
+                            <input type="radio" ng-disabled="isCompletedDisabled()" ng-model="completedSelection" name="completed" value="includeCompleted"> Include
                         </label>
                         <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isOnlyExpired()" ng-model="completedSelection" name="completed" value="excludeCompleted"> Exclude
+                            <input type="radio" ng-disabled="isCompletedDisabled()" ng-model="completedSelection" name="completed" value="excludeCompleted"> Exclude
                         </label>
                         <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isOnlyExpired()" ng-model="completedSelection" name="completed" value="onlyCompleted"> Only
+                            <input type="radio" ng-disabled="isCompletedDisabled()" ng-model="completedSelection" name="completed" value="onlyCompleted"> Only
                         </label>
                     </div>
 
                     <div class="form-group">
                         <label>Expired Tickets</label><br/>
                         <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isOnlyCompleted()" ng-model="expiredSelection" name="expired" value="includeExpired"> Include
+                            <input type="radio" ng-disabled="isExpiredDisabled()" ng-model="expiredSelection" name="expired" value="includeExpired"> Include
                         </label>
                         <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isOnlyCompleted()" ng-model="expiredSelection" name="expired" value="excludeExpired"> Exclude
+                            <input type="radio" ng-disabled="isExpiredDisabled()" ng-model="expiredSelection" name="expired" value="excludeExpired"> Exclude
                         </label>
                         <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isOnlyCompleted()" ng-model="expiredSelection" name="expired" value="onlyExpired"> Only
+                            <input type="radio" ng-disabled="isExpiredDisabled()" ng-model="expiredSelection" name="expired" value="onlyExpired"> Only
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Archived Tickets</label><br/>
+                        <label class="checkbox-inline">
+                            <input type="radio" ng-disabled="isArchivedDisabled()" ng-model="archivedSelection" name="archived" value="includeArchived"> Include
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="radio" ng-disabled="isArchivedDisabled()" ng-model="archivedSelection" name="archived" value="excludeArchived"> Exclude
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="radio" ng-disabled="isArchivedDisabled()" ng-model="archivedSelection" name="archived" value="onlyArchived"> Only
                         </label>
                     </div>
 

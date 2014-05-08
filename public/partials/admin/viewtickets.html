@@ -17,8 +17,8 @@
                     </tr>
 
                     <tr ng-repeat="ticket in newtickets">
-                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.id }}">Detail</a>
-                            | <a href="deleteTicket({{ ticket.id }})">Delete</a></td>
+                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">Detail</a>
+                            | <a href="deleteTicket({{ ticket.id }}, {{ ticket.isArchive }})">Delete</a></td>
                         <td>{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
                         <td>{{ ticket.dept }}</td>
@@ -28,8 +28,8 @@
                     </tr>
 
                     <tr ng-repeat="ticket in maintickets">
-                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.id }}">Detail</a>
-                            | <a href="deleteTicket({{ ticket.id }})">Delete</a></td>
+                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">Detail</a>
+                            | <a href="deleteTicket({{ ticket.id }}, {{ ticket.isArchive }})">Delete</a></td>
                         <td>{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
                         <td>{{ ticket.dept }}</td>
