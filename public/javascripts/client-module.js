@@ -3,22 +3,19 @@
  */
 var clientModule = angular.module('client', ['ngRoute']);
 
-//routing configuration for the portal page.
+
+
 clientModule.config(function($routeProvider,$locationProvider) {
     $routeProvider
-        .when('/newticket', { // default route
+        .when('/newticket', {
             templateUrl: '/partials/client/newticket.html',
             controller: 'newticketController'
         })
-        .when('/test', { // route when user has a Hash value for a previously made ticket.
-            templateUrl: '/partials/client/testclient.html',
-            controller: 'viewticketController'
-        })
-        .when('/viewticket', {      // route sent to after ticket creation.  May be a placeholder till hash is working.
+        .when('/viewticket/:hash', {
             templateUrl: '/partials/client/viewticket.html',
             controller: 'viewticketController'
         })
-        .otherwise({      // redirect if improper route entered.
+        .otherwise({
             redirectTo: '/newticket'
         });
 });
@@ -29,8 +26,7 @@ clientModule.controller('newticketController', function($scope, $location) {
         socket.emit('setTicket', null, $scope.title, $scope.dept, $scope.body, $scope.priority, $scope.user, $scope.email,
             null, null, null, null, null, null, false);
 
-        $location.path('/viewticket'); // routes to a view of the newly created ticket.
-
+        $location.path('/viewtickets');
     }
 });
 
