@@ -9,25 +9,21 @@ clientModule.config(function($routeProvider,$locationProvider) {
     $routeProvider
         .when('/newticket', {
             templateUrl: '/partials/client/newticket.html',
-            controller: 'overviewController',
-            resolve: {
-                verifyAccess: function(verifyAccess) {
-                    verifyAccess.checkPage("overview");
-                },
-                delay: function($q, $timeout) {
-                    var deferred = $q.defer();
-                    $timeout(function() {
-                        deferred.resolve();
-                    }, 100);
-                    return deferred.promise;
-                }
-            }
+            controller: 'newticketController'
         })
-        .when('/submitedticket.')
+        .when('/viewticket/:hash', {
+            templateUrl: '/partials/client/viewticket.html',
+            controller: 'viewticketController'
+        })
+        .otherwise({
+            redirectTo: '/newticket'
+        });
+});
 
-
-
-clientModule.controller('restrictController', function($scope) {
+clientModule.controller('newticketController', function($scope) {
 
 });
 
+clientModule.controller('viewticketController', function($scope) {
+
+});
