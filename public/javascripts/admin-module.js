@@ -66,6 +66,22 @@ adminModule.config(function($routeProvider,$locationProvider) {
                 }
             }
         })
+        .when('/viewtickets/department/:dept', {
+            templateUrl: '/partials/admin/viewtickets.html',
+            controller: 'viewticketsController',
+            resolve: {
+                verifyAccess: function(verifyAccess) { // should use separate function to verify ticket page
+                    verifyAccess.checkPage("dept");
+                },
+                delay: function($q, $timeout) {
+                    var deferred = $q.defer();
+                    $timeout(function() {
+                        deferred.resolve();
+                    }, 100);
+                    return deferred.promise;
+                }
+            }
+        })
         .when('/newticket', {
             templateUrl: '/partials/admin/newticket.html',
             controller: 'newticketController',
@@ -233,7 +249,7 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
         };
 
         ticketParams.setParams($scope.session, formdata, true);
-        $location.path('/viewtickets');
+        //$location.path('/viewtickets');
     }
 
     $scope.resetViewParams = function() {
