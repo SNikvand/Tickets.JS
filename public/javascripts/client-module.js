@@ -1,6 +1,3 @@
-/**
- * Created by Chris on 08/05/2014.
- */
 var clientModule = angular.module('client', ['ngRoute']);
 
 
@@ -21,9 +18,24 @@ clientModule.config(function($routeProvider,$locationProvider) {
 });
 
 clientModule.controller('newticketController', function($scope) {
+    $scope.submit = function() {
+        socket.emit('setTicket', null, $scope.title, $scope.dept, $scope.body, $scope.priority, $scope.user, $scope.email,
+            null, null, null, null, null, null, false);
 
+        $location.path('/viewtickets');
+    }
 });
 
 clientModule.controller('viewticketController', function($scope) {
 
+});
+
+clientModule.directive('newTicket', function() {
+    $(".dropdown-toggle").on('click', function() {
+        $(".dropdown-menu li a").click(function(){
+            $(".btn:first-child").text($(this).text());
+            $(".btn:first-child").val($(this).text());
+            scope.priority = $(this).text();
+        });
+    });
 });

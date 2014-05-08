@@ -56,9 +56,9 @@ block content
                 ul.nav.nav-sidebar
                     // | <li ng-repeat="dept in departments"><a href="" ng-click="viewTicketsByDept({{ dept }})">{{ dept }}</a></li>
 
-                    li(ng-repeat="dept in userdept",ng-class="{active:isActive('/viewtickets/department/{{dept}}')}")
-                        a(href="#/viewtickets/department/{{dept}}",ng-click="viewTicketsByDept(dept)")
-                            span.glyphicon(ng-class="isActive('/viewtickets/department/{{dept}}') ? 'glyphicon-folder-open' : 'glyphicon-folder-close'")
+                    li(ng-repeat="dept in userdept")
+                        a(href="", ng-click="viewTicketsByDept(dept)")
+                            span.glyphicon.glyphicon-folder-close
                             | {{ dept }}
 
                     //li
