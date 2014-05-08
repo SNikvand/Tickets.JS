@@ -1,10 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<div>
+    <div>
+        <h3>Create a New Ticket</h3>
+        <hr/>
 
-</body>
-</html>
+        <new-ticket>
+            <div class="form-signin">
+                <form role="form">
+                    <div class="form-group">
+                        <label class="control-group">Title</label>
+                        <input id="title" ng-model="title" placeholder="Ticket title" class="form-control" type="text" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-group">Dept</label>
+                        <input id="dept" ng-model="dept" placeholder="Department" class="form-control" type="text" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-group">User</label>
+                        <input ng-disabled="isUser()" id="user" ng-model="user" placeholder="Your first and last name" class="form-control" type="text" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-group">E-mail Address</label>
+                        <input id="email" ng-model="email" placeholder="Your email address" class="form-control" type="text" required>
+                    </div>
+
+                    <label class="control-label">Priority</label><br/>
+                    <div class="btn-group" style="margin-bottom:15px">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:100px;height:40px">
+                            Priority <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="">1</a></li>
+                            <li><a href="">2</a></li>
+                            <li><a href="">3</a></li>
+                            <li><a href="">4</a></li>
+                            <li><a href="">5</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-group">Description</label>
+                        <textarea id="body" ng-model="body" placeholder="Description/explanation of ticket issue" class="form-control" rows="3" required>
+
+                        </textarea>
+                    </div>
+
+                    <button class="btn btn-lg btn-primary btn-block" ng-click="submit()">Submit Ticket</button>
+                </form>
+            </div>
+        </new-ticket>
+    </div>
+</div>
