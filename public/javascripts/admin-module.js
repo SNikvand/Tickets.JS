@@ -227,7 +227,7 @@ adminModule.controller('sessionController', function($scope, $http) {
 adminModule.controller('panelController', function($scope, $location, ticketParams) {
     $scope.isActive = function(route) {
         return route === $location.path();
-    }
+    };
 
     $scope.viewTicketsByDept = function(name) {
         var formdata = {
@@ -250,7 +250,7 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
 
         ticketParams.setParams($scope.session, formdata, true);
         $location.path('/viewtickets');
-    }
+    };
 
     $scope.resetViewParams = function() {
         console.log("panel test: " + JSON.stringify($scope.session));
@@ -304,7 +304,7 @@ adminModule.service('verifyAccess', function($http, $location) {
 adminModule.service('ticketParams', function($location) {
     var viewfilters = {dept: null, priority: null, assignedTo: null, alteredBy: null, submittedBy: null, clientEmail: null,
         dateCreated: null, dateAltered: null};
-    var searchParams = {keywords: null, inTitle: true, inBody: true};
+    var searchParams = {keywords: null, inTitle: false, inBody: false};
     var includeCompleted = 'includeCompleted';
     var includeExpired = 'includeExpired';
     var includeArchived = 'excludeArchived';
@@ -350,7 +350,7 @@ adminModule.service('ticketParams', function($location) {
         includeArchive = false;
         amount = null;
         console.log("resetted");
-    }
+    };
 
     this.reqTickets = function() {
         console.log("view test: " +  JSON.stringify(viewfilters));
@@ -416,7 +416,7 @@ adminModule.controller('searchticketController', function($scope, ticketParams) 
             completedSelection: $scope.completedSelection,
             archivedSelection: $scope.archivedSelection,
             amount: null
-        }
+        };
 
         ticketParams.setParams($scope.session, formdata, false);
     };
@@ -513,6 +513,7 @@ adminModule.directive('overTickets', function() {
         link: function(scope, element, attrs) {
             var role = scope.session.role;
             var defFilters;
+            var searchParams = {keywords: null, inTitle: false, inBody: false};
 
             // configure default filter parameters
             if (scope.session.role == "Admin") {
@@ -539,21 +540,21 @@ adminModule.directive('overTickets', function() {
             }
 
             // get main list
-            socket.emit(getMessages[0], defFilters, null, "excludeCompleted", "includeExpired", "excludeArchived", 5);
+            socket.emit(getMessages[0], defFilters, searchParams, "excludeCompleted", "includeExpired", "excludeArchived", 5);
             socket.on(displayMessages[0], function(ticketList) {
                 scope.ticketList1 = ticketList;
                 scope.$apply();
             });
 
             // get expired list
-            socket.emit(getMessages[1], defFilters, null, "excludeCompleted", "onlyExpired", "excludeArchived", 5);
+            socket.emit(getMessages[1], defFilters, searchParams, "excludeCompleted", "onlyExpired", "excludeArchived", 5);
             socket.on(displayMessages[1], function(ticketList) {
                 scope.ticketList2 = ticketList;
                 scope.$apply();
             });
 
             // get soon-to-expire list
-            socket.emit(getMessages[2], defFilters, null, "excludeCompleted", "excludeExpired", "excludeArchived", 5);
+            socket.emit(getMessages[2], defFilters, searchParams, "excludeCompleted", "excludeExpired", "excludeArchived", 5);
             socket.on(displayMessages[2], function(ticketList) {
                 scope.ticketList3 = ticketList;
                 scope.$apply();
@@ -655,7 +656,7 @@ adminModule.directive('searchTickets', function($location) {
                 } else {
                     return false;
                 }
-            }
+            };
             scope.isExpiredDisabled = function() {
                 if(scope.completedSelection === 'onlyCompleted' || scope.archivedSelection === 'onlyArchived') {
                     scope.expiredSelection = 'excludeExpired';
@@ -663,7 +664,7 @@ adminModule.directive('searchTickets', function($location) {
                 } else {
                     return false;
                 }
-            }
+            };
 
             scope.isArchivedDisabled = function() {
                 if(scope.completedSelection === 'excludeCompleted' || scope.expiredSelection === 'onlyExpired') {
@@ -672,7 +673,7 @@ adminModule.directive('searchTickets', function($location) {
                 } else {
                     return false;
                 }
-            }
+            };
 
             $(".dropdown-toggle").on('click', function() {
                 $(".dropdown-menu li a").click(function(){
