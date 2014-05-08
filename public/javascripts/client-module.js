@@ -1,3 +1,6 @@
+/**
+ * Created by Chris on 08/05/2014.
+ */
 var clientModule = angular.module('client', ['ngRoute']);
 
 //routing configuration for the portal page.
