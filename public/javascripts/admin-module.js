@@ -408,7 +408,7 @@ adminModule.controller('ticketController', function($scope, $routeParams) {
 
     socket.emit('getTicket', $routeParams.ticketid, $routeParams.isArchive);
     socket.on('displayTicket', function(hash, title, department, description, priority, author, author_email, assigned_to, altered_by,
-        create_date, due_date, altered_date, complete_date) {
+                                        create_date, due_date, altered_date, complete_date) {
 
         $scope.id = hash;
         $scope.title = title;
@@ -431,7 +431,7 @@ adminModule.controller('ticketController', function($scope, $routeParams) {
 adminModule.controller('newticketController', function($scope, $location) {
     $scope.submit = function() {
         socket.emit('setTicket', null, $scope.title, $scope.dept, $scope.body, $scope.priority, $scope.user, $scope.email,
-        null, null, null, null, null, null, false);
+            null, null, null, null, null, null, false);
 
         $location.path('/viewtickets');
     }
@@ -523,7 +523,7 @@ adminModule.directive('welcomeInfo', function() {
         template:
             '<p>Welcome, {{ session.user }}!</p>' +
             '<p>{{ lastLoginInfo }}' +
-            ' <a href="{{ lastLoginLink }}">{{ lastLoginNumber }}' + 
+            ' <a href="{{ lastLoginLink }}">{{ lastLoginNumber }}' +
             '</a>' +
             '<p>{{ totalInfo }}' +
             ' <a href="{{ totalLink }}">{{ totalNumber }}' +
@@ -640,7 +640,7 @@ adminModule.directive('viewTickets', function() {
                 socket.emit('getTicket', newid, false);
                 socket.on('displayTicket',
                     function(id, title, dept, description, priority, submittedBy, clientEmail,
-                        assignedTo, alteredBy, dateCreated, dateDue, dateAltered, dateCompleted) {
+                             assignedTo, alteredBy, dateCreated, dateDue, dateAltered, dateCompleted) {
                         scope.newtickets.push({
                             id: id, priority: priority, title: title, dept: dept, assignedTo: assignedTo,
                             dateCreated: dateCreated, dateAltered: dateAltered
