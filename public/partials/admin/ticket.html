@@ -6,11 +6,25 @@
     <div class="form-reply">
         <form role="form">
             <div class = "replyTicket">
-                <label for="name">Ticket number: 1</label><br />
-                <label for="name">Assigned to: John Smith</label><br />
-                <label for="name">Date: Jun/04/2014</label><br />
+
+                <p>Ticket ID: {{ id }}</p>
+                <p>Title: {{ title }}</p>
+                <p>Department: {{ department }}</p>
+                <p>Priority: {{ priority }}</p>
+                <p>Due Date: {{ due_date }}</p>
+                <br/>
+
+                <p>Author: {{ author }}</p>
+                <p>Author's Email: {{ email }}</p>
+                <p>Date Created: {{ create_date }}</p>
+                <br/>
+
+                <p>Assigned To: {{ assigned_to }}</p>
+                <p>Altered By: {{ altered_by }}</p>
+                <p>Date Altered: {{ altered_date }}</p>
+
                 <hr/>
-                <label for="name">Discription: Mouse not working</label><br />
+                <p>Description: {{ body }}</p><br />
             </div><br />
             <div class = "replyTicket">
                 <label for="name">Reply 1</label>

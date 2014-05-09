@@ -4,51 +4,62 @@
         <hr/>
         <p>New tickets since your last login: <a href="">5</a></p>
         <p>Tickets that belong to you: <a href="">10</a></p>
-        <br/><br/>
     </div>
     <div class="row ticketList">
-        <over-tickets>
-            <div class="col-sm-4">
-                <h4>{{ overview1 }}</h4>
-                <hr/>
+        <over-tickets style="display: flex; justify-content: space-around">
+            <div>
+                <h4 style="position: relative; top: 15px;">{{ overview1 }}</h4>
+                <hr style="position: relative; top: 5px;"/>
                 <table>
                     <tr>
-                        <th>Priority</th>
-                        <th>Subject</th>
+                        <th style="width: 50px"></th>
+                        <th style="width: 75px;">Priority</th>
+                        <th>Title</th>
+                        <th style="width: 100px;">Date Due</th>
                     </tr>
                     <tr ng-repeat="ticket in ticketList1">
-                        <td>{{ ticket.priority }}</td>
+                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">View</a></td>
+                        <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
+                        <td ng-bind="ticket.due_date.substr(0,10);"></td>
                     </tr>
                 </table>
                 <br/><br/>
             </div>
-            <div class="col-sm-4">
-                <h4>{{ overview2 }}</h4>
-                <hr/>
+            <div>
+                <h4 style="position: relative; top: 15px;">{{ overview2 }}</h4>
+                <hr style="position: relative; top: 5px;"/>
                 <table>
                     <tr>
-                        <th>Priority</th>
-                        <th>Subject</th>
+                        <th style="width: 50px"></th>
+                        <th style="width: 75px;">Priority</th>
+                        <th>Title</th>
+                        <th style="width: 100px;">Date Due</th>
                     </tr>
                     <tr ng-repeat="ticket in ticketList2">
-                        <td>{{ ticket.priority }}</td>
+                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">View</a></td>
+                        <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
+                        <td ng-bind="ticket.due_date.substr(0,10);"></td>
                     </tr>
                 </table>
                 <br><br/>
             </div>
-            <div class="col-sm-4">
-                <h4>{{ overview3 }}</h4>
-                <hr/>
+            <div>
+                <h4 style="position: relative; top: 15px;">{{ overview3 }}</h4>
+                <hr style="position: relative; top: 5px;"/>
                 <table>
                     <tr>
-                        <th>Priority</th>
-                        <th>Subject</th>
+                        <th style="width: 50px"></th>
+                        <th style="width: 75px;">Priority</th>
+                        <th>Title</th>
+                        <th style="width: 100px;">Date Completed</th>
                     </tr>
                     <tr ng-repeat="ticket in ticketList3">
-                        <td>{{ ticket.priority }}</td>
+                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">View</a></td>
+                        <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
+                        <td ng-bind="ticket.complete_date.substr(0,10);"></td>
                     </tr>
                 </table>
                 <br/><br/>

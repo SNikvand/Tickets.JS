@@ -258,8 +258,12 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
     }
 });
 
-adminModule.controller('overviewController', function($scope) {
+adminModule.controller('overviewController', function($scope, $location) {
     console.log("base session test: "  + JSON.stringify($scope.session));
+
+    $scope.overview1 = "Tickets Nearly Due";
+    $scope.overview2 = "Expired Tickets";
+    $scope.overview3 = "Recently Completed Tickets";
 });
 
 adminModule.controller('restrictController', function($scope) {
@@ -332,7 +336,7 @@ adminModule.service('ticketParams', function($location) {
 
         includeCompleted = formdata.completedSelection;
         includeExpired = formdata.expiredSelection;
-        includeArchive = formdata.archivedSelection;
+        includeArchived = formdata.archivedSelection;
 
         amount = formdata.amount;
 
@@ -347,7 +351,7 @@ adminModule.service('ticketParams', function($location) {
         searchParams = {keywords: null, inTitle: false, inBody: false};
         includeCompleted = true;
         includeExpired = true;
-        includeArchive = false;
+        includeArchived = false;
         amount = null;
         console.log("resetted");
     };
@@ -358,7 +362,7 @@ adminModule.service('ticketParams', function($location) {
         console.log("view test (includeCompleted): " + includeCompleted);
         console.log("view test (includeExpired): " + includeExpired);
         console.log("view test (amount): " + amount);
-        socket.emit('getTicketsView', viewfilters, searchParams, includeCompleted, includeExpired, includeArchive, null);
+        socket.emit('getTicketsView', viewfilters, searchParams, includeCompleted, includeExpired, includeArchived, null, "create_date", "desc");
     };
 });
 
@@ -367,10 +371,23 @@ adminModule.controller('ticketController', function($scope, $routeParams) {
     // using $routeParams.ticketid and $routeParams.isArchive
 
     socket.emit('getTicket', $routeParams.ticketid, $routeParams.isArchive);
-    socket.on('displayTicket', function(title, department, description, priority, author, author_email, assigned_to, altered_by,
+    socket.on('displayTicket', function(hash, title, department, description, priority, author, author_email, assigned_to, altered_by,
         create_date, due_date, altered_date, complete_date) {
 
-        // assign all parameters to scope, display on page
+        $scope.id = hash;
+        $scope.title = title;
+        $scope.author = author;
+        $scope.email = author_email;
+        $scope.create_date = create_date;
+        $scope.department = department;
+        $scope.body = description;
+        $scope.priority = priority;
+        $scope.due_date = due_date;
+        $scope.assigned_to = assigned_to;
+        $scope.altered_date = altered_date;
+        $scope.altered_by = altered_by;
+        $scope.complete_date = complete_date;
+        $scope.$apply();
     });
 
 });
@@ -539,22 +556,22 @@ adminModule.directive('overTickets', function() {
                 displayMessages = ['displayTicketsITUser1', 'displayTicketsITUser2', 'displayTicketsITUser3'];
             }
 
-            // get main list
-            socket.emit(getMessages[0], defFilters, searchParams, "excludeCompleted", "includeExpired", "excludeArchived", 5);
+            // get soon-to-expire list
+            socket.emit(getMessages[0], defFilters, searchParams, "excludeCompleted", "excludeExpired", "excludeArchived", 5, "due_date", "asc");
             socket.on(displayMessages[0], function(ticketList) {
                 scope.ticketList1 = ticketList;
                 scope.$apply();
             });
 
             // get expired list
-            socket.emit(getMessages[1], defFilters, searchParams, "excludeCompleted", "onlyExpired", "excludeArchived", 5);
+            socket.emit(getMessages[1], defFilters, searchParams, "excludeCompleted", "onlyExpired", "excludeArchived", 5, "due_date", "desc");
             socket.on(displayMessages[1], function(ticketList) {
                 scope.ticketList2 = ticketList;
                 scope.$apply();
             });
 
-            // get soon-to-expire list
-            socket.emit(getMessages[2], defFilters, searchParams, "excludeCompleted", "excludeExpired", "excludeArchived", 5);
+            // get completed list
+            socket.emit(getMessages[2], defFilters, searchParams, "onlyCompleted", "excludeExpired", "excludeArchived", 5, "complete_date", "desc");
             socket.on(displayMessages[2], function(ticketList) {
                 scope.ticketList3 = ticketList;
                 scope.$apply();
@@ -611,10 +628,9 @@ adminModule.directive('viewDepts', function() {
             socket.on('displayDepts', function(deptList) {
                 scope.departments = {};
 
-                for (var dept in deptList) {
-                    console.log("name: " + deptList[dept].name);
-                    console.log("manager: " + deptList[dept].manager);
+                console.log(JSON.stringify(deptList));
 
+                for (var dept in deptList) {
                     if (!scope.departments[deptList[dept].name]) {
                         scope.departments[deptList[dept].name] = {id: null, name: null, managers: []};
                         // scope.departments[deptList[dept].name].id = ___ // get department id

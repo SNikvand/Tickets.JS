@@ -12,30 +12,30 @@
                         <th>Title</th>
                         <th>Department</th>
                         <th>Assigned To</th>
-                        <th>Date Created</th>
-                        <th>Date Altered</th>
+                        <th>Date Due</th>
+                        <th>Date Completed</th>
                     </tr>
 
                     <tr ng-repeat="ticket in newtickets">
-                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">Detail</a>
-                            | <a href="deleteTicket({{ ticket.id }}, {{ ticket.isArchive }})">Delete</a></td>
-                        <td>{{ ticket.priority }}</td>
+                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">Detail</a>
+                            | <a href="deleteTicket({{ ticket.hash }}, {{ ticket.isArchive }})">Delete</a></td>
+                        <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
-                        <td>{{ ticket.dept }}</td>
-                        <td>{{ ticket.assignedTo }}</td>
-                        <td>{{ ticekt.dateCreated }}</td>
-                        <td>{{ ticket.dateAltered }}</td>
+                        <td>{{ ticket.department }}</td>
+                        <td>{{ ticket.assigned_to }}</td>
+                        <td>{{ ticket.due_date }}</td>
+                        <td>{{ ticket.complete_date }}</td>
                     </tr>
 
                     <tr ng-repeat="ticket in maintickets">
-                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">Detail</a>
-                            | <a href="deleteTicket({{ ticket.id }}, {{ ticket.isArchive }})">Delete</a></td>
-                        <td>{{ ticket.priority }}</td>
+                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">Detail</a>
+                            | <a href="deleteTicket({{ ticket.hash }}, {{ ticket.isArchive }})">Delete</a></td>
+                        <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
-                        <td>{{ ticket.dept }}</td>
-                        <td>{{ ticket.assignedTo }}</td>
-                        <td>{{ ticket.dateCreated }}</td>
-                        <td>{{ ticket.dateAltered }}</td>
+                        <td>{{ ticket.department }}</td>
+                        <td>{{ ticket.assigned_to }}</td>
+                        <td>{{ ticket.due_date }}</td>
+                        <td>{{ ticket.complete_date }}</td>
                     </tr>
                 </view-tickets>
             </table>
