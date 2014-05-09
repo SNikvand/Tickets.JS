@@ -7,13 +7,13 @@
                 <form role="form">
                     <div class="form-group">
                         <label for="dept">Department</label>
-                        <input id="dept" ng-model="dept" placeholder="Search by department" class="form-control" type="text">
+                        <input id="dept" ng-disabled="isManager()" ng-model="dept" placeholder="Search by department" class="form-control" type="text">
                     </div>
 
                     <div style="display: flex; justify-content: flex-start; width: 750px;">
                         <div class="form-group">
                             <label for="assignedTo">Assigned To</label>
-                            <input id="assignedTo" ng-model="assignedTo" placeholder="Search by user assigned" class="form-control" type="text">
+                            <input id="assignedTo" ng-disabled="isITUser()" ng-model="assignedTo" placeholder="Search by user assigned" class="form-control" type="text">
                         </div>
 
                         <div class="form-group" style="margin-left: 25px;">

@@ -77,7 +77,7 @@ app.get('/getSession', function(req, res) {
 app.post('/verifyAccess', function(req, res) {
     var role = req.session.role;
     var pageid = req.body.pageid.toString();
-    res.send(permissions.checkRestriction(pageid, role));
+    res.send(permissions.checkRestriction(pageid, role, res));
 });
 
 var server = http.createServer(app).listen(app.get('port'), function(){

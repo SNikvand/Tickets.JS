@@ -271,7 +271,7 @@ adminModule.controller('restrictController', function($scope) {
 });
 
 adminModule.controller('viewticketsController', function($scope, $location, ticketParams) {
-    ticketParams.reqTickets();
+    ticketParams.reqTickets($scope.session);
 
     $scope.newtickets = [];
     if ($scope.session.role == "IT User") {
@@ -327,6 +327,7 @@ adminModule.service('ticketParams', function($location) {
         viewfilters.alteredBy = formdata.alteredBy;
         viewfilters.submittedBy = formdata.submittedBy;
         viewfilters.clientEmail = formdata.clientEmail;
+
         // viewfilters.dateCreated = formdata.dateCreated;
         // viewfilters.dataAltered = formdata.dateAltered;
 
@@ -344,10 +345,17 @@ adminModule.service('ticketParams', function($location) {
         $location.path('/viewtickets');
     };
 
-    this.resetParams = function(session) {
+    this.resetParams = function(session, frompanel) {
         for (var x in viewfilters) {
             viewfilters[x] = null;
         }
+
+        if (session.role == "Manager") {
+            viewfilters.dept = session.dept;
+        } else if (session.role == "IT User") {
+            viewfilters.assignedTo = session.user;
+        }
+
         searchParams = {keywords: null, inTitle: false, inBody: false};
         includeCompleted = true;
         includeExpired = true;
@@ -356,7 +364,13 @@ adminModule.service('ticketParams', function($location) {
         console.log("resetted");
     };
 
-    this.reqTickets = function() {
+    this.reqTickets = function(session) {
+        if (session.role == "Manager") {
+            viewfilters.dept = session.dept;
+        } else if (session.role == "IT User") {
+            viewfilters.assignedTo = session.user;
+        }
+
         console.log("view test: " +  JSON.stringify(viewfilters));
         console.log("view test (search): " + JSON.stringify(searchParams));
         console.log("view test (includeCompleted): " + includeCompleted);
@@ -665,6 +679,22 @@ adminModule.directive('searchTickets', function($location) {
     return {
         restrict: 'E',
         link: function(scope, element, attrs) {
+            scope.isManager = function() {
+                if (scope.session.role == "Manager") {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            scope.isITUser = function() {
+                if (scope.session.role == "IT User") {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
             scope.isCompletedDisabled = function() {
                 if (scope.expiredSelection === 'onlyExpired') {
                     scope.completedSelection = 'excludeCompleted';
