@@ -700,6 +700,14 @@ adminModule.directive('newTicket', function() {
                     return false;
                 }
             }
+
+            $(".dropdown-toggle").on('click', function() {
+                $(".dropdown-menu li a").click(function(){
+                    $(".btn:first-child").text($(this).text());
+                    $(".btn:first-child").val($(this).text());
+                    scope.priority = $(this).text();
+                });
+            });
         }
     }
 });
