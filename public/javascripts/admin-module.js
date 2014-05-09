@@ -237,12 +237,13 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
             alteredBy: null,
             submittedBy: null,
             clientEmail: null,
+
             // dateCreated: $scope.dateCreated, -- not implemented yet
             // dateAltered: $scope.dateAltered, -- not implemented yet
 
             keywords: null,
-            searchTitle: true,
-            searchBody: true,
+            searchTitle: false,
+            searchBody: false,
             expiredSelection: true,
             completedSelection: true,
             amount: null
@@ -316,7 +317,14 @@ adminModule.service('ticketParams', function($location) {
 
     this.setParams = function(session, formdata, frompanel) {
         if (session.role == "Manager" && frompanel == false) {
-            formdata.dept = session.dept;
+            // stringify the departments
+            var stringDepts = "";
+            for (var x in session.dept) {
+                stringDepts += session.dept[x] + " ";
+            }
+            stringDepts = stringDepts.trim();
+
+            formdata.dept = stringDepts;
         } else if (session.role == "IT User") {
             formdata.assignedTo = session.user;
         }
@@ -351,7 +359,14 @@ adminModule.service('ticketParams', function($location) {
         }
 
         if (session.role == "Manager") {
-            viewfilters.dept = session.dept;
+            // stringify the departments
+            var stringDepts = "";
+            for (var x in session.dept) {
+                stringDepts += session.dept[x] + " ";
+            }
+            stringDepts = stringDepts.trim();
+
+            viewfilters.dept = stringDepts;
         } else if (session.role == "IT User") {
             viewfilters.assignedTo = session.user;
         }
@@ -366,7 +381,14 @@ adminModule.service('ticketParams', function($location) {
 
     this.reqTickets = function(session) {
         if (session.role == "Manager") {
-            viewfilters.dept = session.dept;
+            // stringify the departments
+            var stringDepts = "";
+            for (var x in session.dept) {
+                stringDepts += session.dept[x] + " ";
+            }
+            stringDepts = stringDepts.trim();
+
+            viewfilters.dept = stringDepts;
         } else if (session.role == "IT User") {
             viewfilters.assignedTo = session.user;
         }
@@ -546,12 +568,19 @@ adminModule.directive('overTickets', function() {
             var defFilters;
             var searchParams = {keywords: null, inTitle: false, inBody: false};
 
+            // stringify the departments
+            var stringDepts = "";
+            for (var x in scope.session.dept) {
+                stringDepts += scope.session.dept[x] + " ";
+            }
+            stringDepts = stringDepts.trim();
+
             // configure default filter parameters
             if (scope.session.role == "Admin") {
                 defFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
                     assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
             } else if (scope.session.role == "Manager") {
-                defFilters = {dept: scope.session.dept, priority: null, submittedBy: null, clientEmail: null,
+                defFilters = {dept: stringDepts, priority: null, submittedBy: null, clientEmail: null,
                     assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
             } else if (scope.session.role == "IT User") {
                 defFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
