@@ -68,7 +68,7 @@ adminModule.config(function($routeProvider,$locationProvider) {
         })
         .when('/viewtickets/department/:dept', {
             templateUrl: '/partials/admin/viewtickets.html',
-            controller: 'viewticketsController',
+            controller: 'viewticketsDeptController',
             resolve: {
                 verifyAccess: function(verifyAccess) { // should use separate function to verify ticket page
                     verifyAccess.checkPage("dept");
@@ -266,7 +266,7 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
         };
 
         ticketParams.setParams($scope.session, formdata, true);
-        $location.path('/viewtickets');
+        //$location.path('/viewtickets');
     };
 
     $scope.resetViewParams = function() {
@@ -288,7 +288,27 @@ adminModule.controller('restrictController', function($scope) {
 });
 
 adminModule.controller('viewticketsController', function($scope, $location, ticketParams) {
-    ticketParams.reqTickets($scope.session);
+    ticketParams.reqTickets($scope.session, false);
+
+    $scope.newtickets = [];
+    if ($scope.session.role == "IT User") {
+        $scope.displayProp = 'none';
+    } else {
+        $scope.displayProp = 'table-cell';
+    }
+
+    $scope.deleteTicket = function(id, isArchive) {
+        // emit socket to database to delete ticket marked 'id'
+        // notifyjs notification here that item has been deleted
+
+        // 'isArchive' checks which table the ticket is in
+
+        $location.path('/viewtickets');
+    }
+});
+
+adminModule.controller('viewticketsDeptController', function($scope, $location, $routeParams, ticketParams) {
+    ticketParams.reqTickets($scope.session, true);
 
     $scope.newtickets = [];
     if ($scope.session.role == "IT User") {
@@ -369,7 +389,7 @@ adminModule.service('ticketParams', function($location) {
         $location.path('/viewtickets');
     };
 
-    this.resetParams = function(session, frompanel) {
+    this.resetParams = function(session) {
         for (var x in viewfilters) {
             viewfilters[x] = null;
         }
@@ -395,8 +415,8 @@ adminModule.service('ticketParams', function($location) {
         console.log("resetted");
     };
 
-    this.reqTickets = function(session) {
-        if (session.role == "Manager") {
+    this.reqTickets = function(session, fromPanel) {
+        if (session.role == "Manager" && fromPanel == false) {
             // stringify the departments
             var stringDepts = "";
             for (var x in session.dept) {
