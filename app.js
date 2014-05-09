@@ -42,20 +42,26 @@ app.get('/', routes.index);
 app.get('/admin', route_admin.index);
 
 app.post('/login', function(req, res) {
-    // AUTHENTICATION: check req.body.username and req.body.password against the database
-    // DATABASE FUNCTION: retrieve role from database for this user
-    // DATABASE FUNCTION: retrieve set of departments assigned to this user
-    // if admin, depts return "all"
-    // if manager or IT user, depts return all departments assigned for that user
+    // authenticates username and password
+    authenticate(req.body.username, req.body.password);
 
-    // if authentication successful, proceed. otherwise redirect to index with error message
-    // set the sessions
-    req.session.user = "Matt";                  // placeholder--to be retrieved from form
-    req.session.role = "Admin";                 // placeholder--to be retrieved from db
-    req.session.dept = ["Finance", "Info Tech", "Management"];
-                                                // placeholder--to be retrieved from db
+    function authenticate(user, pass) {
+        ticket_server.authenticateLogin(user, pass, authCallback);
+    };
 
-    res.redirect('/admin');
+    function authCallback(sendback) {
+        console.log(JSON.stringify(sendback));
+
+        if (sendback.isValid == false) {
+            console.log("false");
+            res.render('index', {issue: sendback.issue})
+        } else {
+            req.session.user = req.body.username;
+            req.session.role = sendback.userRole;
+            req.session.dept = sendback.userDepts;
+            res.redirect('/admin');
+        }
+    }
 });
 
 app.get('/logout', function(req, res) {
