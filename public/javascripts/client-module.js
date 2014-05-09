@@ -1,33 +1,32 @@
 var clientModule = angular.module('client', ['ngRoute']);
 
-
-
-
+//routing configuration for the portal page.
 clientModule.config(function($routeProvider,$locationProvider) {
     $routeProvider
-        .when('/newticket', {
+        .when('/newticket', { // default route
             templateUrl: '/partials/client/newticket.html',
             controller: 'newticketController'
         })
-        .when('/viewticket/:hash', {
+        .when('/viewticket/:hash', { // route when user has a Hash value for a previously made ticket.
             templateUrl: '/partials/client/viewticket.html',
             controller: 'viewticketController'
         })
-        .when('/viewticket', {
+        .when('/viewticket', {      // route sent to after ticket creation.  May be a placeholder till hash is working.
             templateUrl: '/partials/client/viewticket.html',
             controller: 'viewticketController'
         })
-        .otherwise({
+        .otherwise({      // redirect if improper route entered.
             redirectTo: '/newticket'
         });
 });
 
+// new ticket controller
 clientModule.controller('newticketController', function($scope, $location) {
-    $scope.submit = function() {
+    $scope.submit = function() { // when submit is pressed sends the data in the fields
         socket.emit('setTicket', null, $scope.title, $scope.dept, $scope.body, $scope.priority, $scope.user, $scope.email,
             null, null, null, null, null, null, false);
 
-        $location.path('/viewticket');
+        $location.path('/viewticket'); // routes to a view of the newly created ticket.
 
     }
 });
@@ -36,6 +35,7 @@ clientModule.controller('viewticketController', function($scope) {
 
 });
 
+// this directive controls the drop-down options on the new ticket page.
 clientModule.directive('newTicket', function($location) {
     return {
         restrict: 'E',
