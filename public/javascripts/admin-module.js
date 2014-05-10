@@ -693,6 +693,8 @@ adminModule.directive('viewUsers', function() {
         restrict: 'E',
         link: function(scope, element, attrs) {
             socket.on('displayUsers', function(userList) {
+                console.log(JSON.stringify(scope.mainusers));
+
                 scope.mainusers = userList;
                 scope.$apply();
             });
