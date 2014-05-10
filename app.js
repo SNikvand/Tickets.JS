@@ -9,6 +9,7 @@ var route_admin = require('./routes/admin');
 var http = require('http');
 var path = require('path');
 var permissions = require('./lib/permissions.js');
+var md5 = require( 'MD5' );
 
 var app = express();
 
@@ -46,7 +47,7 @@ app.post('/login', function(req, res) {
     authenticate(req.body.username, req.body.password);
 
     function authenticate(user, pass) {
-        ticket_server.authenticateLogin(user, pass, authCallback);
+        ticket_server.authenticateLogin(user, md5(pass), authCallback);
     };
 
     function authCallback(sendback) {
