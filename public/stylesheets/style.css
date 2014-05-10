@@ -123,6 +123,18 @@ body {
     margin-top: 0;
 }
 
+/*
+ * "home" template styling. Added by Matt
+ */
+
+.homeTickets {
+    margin-top: 25px;
+}
+
+.homeHr {
+    margin-top: 0;
+}
+
 .ticketList table {
     width: 100%;
     border: 1px solid #dbdbdb;
@@ -140,6 +152,28 @@ body {
     height: 35px;
     padding-left: 10px;
 }
+
+/*.ticketList td.priority1 {
+    background-color: #FF6161;
+}
+
+.ticketList td.priority2 {
+    background-color: #FFC561;
+}
+
+.ticketList td.priority3 {
+    background-color: #FFFF61;
+}
+
+.ticketList td.priority4 {
+    background-color: #61B0FF;
+}
+
+.ticketList td.priority5 {
+    background-color: #61FF61;
+}*/
+
+
 /*
  * Placeholder dashboard ideas
  */
