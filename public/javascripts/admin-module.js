@@ -514,13 +514,19 @@ adminModule.controller('searchticketController', function($scope, ticketParams) 
     };
 });
 
-adminModule.controller('viewuserController', function($scope) {
+adminModule.controller('viewuserController', function($scope, $timeout, $route) {
     socket.emit('getUsers', null);
 
-    $scope.deleteUser = function(id) {
-        // emit socket to database to delete user marked 'id'
-        // notifyjs notification here that item has been deleted
-        $location.path('/viewtickets');
+    $scope.storeDelete = function(id) {
+        $scope.id = id;
+    }
+
+    $scope.deleteUser = function() {
+        socket.emit('deleteUser', $scope.id);
+
+        $timeout(function() {
+            $route.reload();
+        }, 500);
     }
 });
 
@@ -560,7 +566,6 @@ adminModule.controller('viewdeptController', function($scope, $timeout, $route) 
         socket.emit('deleteDept', $scope.id);
 
         $scope.session.dept.splice($scope.session.dept.indexOf($scope.name), 1);
-        console.log(JSON.stringify($scope.session.dept));
 
         $timeout(function() {
             $route.reload();
@@ -723,9 +728,8 @@ adminModule.directive('viewUsers', function() {
         restrict: 'E',
         link: function(scope, element, attrs) {
             socket.on('displayUsers', function(userList) {
-                console.log(JSON.stringify(scope.mainusers));
-
                 scope.mainusers = userList;
+
                 scope.$apply();
             });
         }

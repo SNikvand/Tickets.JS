@@ -3,6 +3,21 @@
         <h3>View Users</h3>
         <hr/>
 
+        <div class="modal fade deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width: 350px;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h4>Are you sure you want to delete this user?</h4>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>&nbsp;&nbsp;
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deleteUser()">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="usersList" class="ticketList">
             <table>
                 <tr>
@@ -15,7 +30,9 @@
 
                 <view-users>
                     <tr ng-repeat="user in mainusers">
-                        <td><a href="" ng-click="deleteUser(user.id)">Delete</a></td>
+                        <td style="display: {{ displayProp }};">
+                            Edit | <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(user.id)">Delete</a>
+                        </td>
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.password }}</td>
