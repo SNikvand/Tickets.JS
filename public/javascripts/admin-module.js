@@ -516,6 +516,43 @@ adminModule.controller('searchticketController', function($scope, ticketParams) 
 
 adminModule.controller('viewuserController', function($scope, $timeout, $route) {
     socket.emit('getUsers', null);
+    $scope.isEdit = null;
+
+    // edited fields
+    $scope.newName = null;
+    $scope.newRole = null;
+
+    $scope.setRole = function(role) {
+        $scope.newRole = role;
+    }
+
+    $scope.saveEdits = function() {
+        socket.emit('setUser', $scope.isEdit, $scope.newName, null, null, $scope.newRole);
+
+        $timeout(function() {
+            $route.reload();
+        }, 500);
+    }
+
+    $scope.toggleEdit = function(user) {
+        if ($scope.isEdit != user.id) {
+            $scope.isEdit = user.id;
+            $scope.newName = user.name;
+            $scope.newRole = user.type;
+        } else {
+            $scope.isEdit = null;
+            $scope.newName = null;
+            $scope.newRole = null;
+        }
+
+        console.log("currently editing: " + $scope.isEdit);
+        console.log("new name: " + $scope.newName);
+        console.log("new role: " + $scope.newRole);
+    }
+
+    $scope.checkIfEdit = function(id) {
+        return $scope.isEdit == id;
+    }
 
     $scope.storeDelete = function(id) {
         $scope.id = id;

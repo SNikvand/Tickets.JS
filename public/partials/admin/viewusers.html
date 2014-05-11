@@ -30,13 +30,44 @@
 
                 <view-users>
                     <tr ng-repeat="user in mainusers">
-                        <td style="display: {{ displayProp }};">
-                            Edit | <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(user.id)">Delete</a>
+                        <!-- options -->
+                        <td style="display: {{ displayProp }};" ng-hide="checkIfEdit(user.id) == true">
+                            <a href="" ng-click="toggleEdit(user)">Edit</a>
+                            | <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(user.id)">Delete</a>
                         </td>
-                        <td>{{ user.name }}</td>
+                            <td ng-hide="checkIfEdit(user.id) == false">
+                                <div style="height: 80px; position: relative; right: 15px; display: flex;
+                                    flex-direction: column; justify-content: space-around; align-items: center;">
+
+                                    <div><button type="button" class="btn btn-default"
+                                            style="height: 30px;" ng-click="saveEdits()">Save</button></div>
+                                    <div><button type="button" class="btn btn-default"
+                                            style="height: 30px;" ng-click="toggleEdit(user)">Cancel</button></div>
+                                </div>
+                            </td>
+
+                        <!-- data fields -->
+                        <td ng-show="checkIfEdit(user.id) == false">{{ user.name }}</td>
+                            <td ng-hide="checkIfEdit(user.id) == false">
+                                <input type="text" ng-model="$parent.newName">
+                            </td>
+
                         <td>{{ user.email }}</td>
                         <td>{{ user.password }}</td>
-                        <td>{{ user.type }}</td>
+
+                        <td ng-show="checkIfEdit(user.id) == false">{{ user.type }}</td>
+                            <td ng-hide="checkIfEdit(user.id) == false">
+                                <div class="btn-group" style="position: relative; right: 10px;">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:90px;height:30px">
+                                        {{ $parent.newRole }} <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="" ng-click="setRole('Admin')">Admin</a></li>
+                                        <li><a href="" ng-click="setRole('Manager')">Manager</a></li>
+                                        <li><a href="" ng-click="setRole('IT User')">IT User</a></li>
+                                    </ul>
+                                </div>
+                            </td>
                     </tr>
                 </view-users>
             </table>
