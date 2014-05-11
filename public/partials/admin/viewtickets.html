@@ -7,7 +7,7 @@
             <table>
                 <view-tickets>
                     <tr>
-                        <th style="display: {{ displayProp }}; width: 100px"></th>
+                        <th style="display: width: 110px"></th>
                         <th>Priority</th>
                         <th>Title</th>
                         <th>Department</th>
@@ -17,8 +17,8 @@
                     </tr>
 
                     <tr ng-repeat="ticket in newtickets">
-                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">Detail</a>
-                            | <a href="deleteTicket({{ ticket.hash }}, {{ ticket.isArchive }})">Delete</a></td>
+                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">Detail</a>
+                            <span style="display: {{ displayProp }};">| <a href="deleteTicket({{ ticket.hash }}, {{ ticket.isArchive }})">Delete</a></span></td>
                         <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
                         <td>{{ ticket.department }}</td>
@@ -28,8 +28,8 @@
                     </tr>
 
                     <tr ng-repeat="ticket in maintickets">
-                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">Detail</a>
-                            | <a href="deleteTicket({{ ticket.hash }}, {{ ticket.isArchive }})">Delete</a></td>
+                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">Detail</a>
+                            <span style="display: {{ displayProp }};">| <a href="deleteTicket({{ ticket.hash }}, {{ ticket.isArchive }})">Delete</a></span></td>
                         <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
                         <td>{{ ticket.department }}</td>

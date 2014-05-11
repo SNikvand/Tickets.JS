@@ -294,7 +294,7 @@ adminModule.controller('viewticketsController', function($scope, $location, tick
     if ($scope.session.role == "IT User") {
         $scope.displayProp = 'none';
     } else {
-        $scope.displayProp = 'table-cell';
+        $scope.displayProp = 'inline';
     }
 
     $scope.deleteTicket = function(id, isArchive) {
@@ -314,7 +314,7 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
     if ($scope.session.role == "IT User") {
         $scope.displayProp = 'none';
     } else {
-        $scope.displayProp = 'table-cell';
+        $scope.displayProp = 'inline';
     }
 
     $scope.deleteTicket = function(id, isArchive) {
