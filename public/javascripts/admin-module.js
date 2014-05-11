@@ -303,11 +303,6 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
     }
 
     $scope.deleteTicket = function() {
-        // emit socket to database to delete ticket marked 'id'
-        // notifyjs notification here that item has been deleted
-
-        // 'isArchive' checks which table the ticket is in
-
         socket.emit('deleteTicket', $scope.id, $scope.isArchive);
 
         $timeout(function() {
@@ -326,15 +321,17 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
         $scope.displayProp = 'inline';
     }
 
-    $scope.deleteTicket = function(id, isArchive) {
-        // emit socket to database to delete ticket marked 'id'
-        // notifyjs notification here that item has been deleted
+    $scope.storeDelete = function(id, isArchive) {
+        $scope.id = id;
+        $scope.isArchive = isArchive;
+    }
 
-        // 'isArchive' checks which table the ticket is in
+    $scope.deleteTicket = function() {
+        socket.emit('deleteTicket', $scope.id, $scope.isArchive);
 
-        socket.emit('deleteTicket', id, isArchive);
-
-        $route.reload();
+        $timeout(function() {
+            $route.reload();
+        }, 500);
     }
 });
 
@@ -440,11 +437,6 @@ adminModule.service('ticketParams', function($location) {
             viewfilters.assignedTo = session.user;
         }
 
-        console.log("view test: " +  JSON.stringify(viewfilters));
-        console.log("view test (search): " + JSON.stringify(searchParams));
-        console.log("view test (includeCompleted): " + includeCompleted);
-        console.log("view test (includeExpired): " + includeExpired);
-        console.log("view test (amount): " + amount);
         socket.emit('getTicketsView', viewfilters, searchParams, includeCompleted, includeExpired, includeArchived, null, "create_date", "desc");
     };
 });
@@ -539,13 +531,40 @@ adminModule.controller('newuserController', function($scope, $location) {
     }
 });
 
-adminModule.controller('viewdeptController', function($scope) {
+adminModule.controller('viewdeptController', function($scope, $timeout, $route) {
     socket.emit('getDepts');
 
-    $scope.deleteDept = function(id) {
-        // emit socket to database to delete department marked 'id'
-        // notifyjs notification here that item has been deleted
-        $location.path('/viewtickets');
+    if ($scope.session.role == "IT User") {
+        $scope.displayProp = 'none';
+    } else {
+        $scope.displayProp = 'table-cell';
+    }
+
+    $scope.stringifyUsers = function(users) {
+        var list = "";
+        for (var i = 0; i < users.length; i++) {
+            list += users[i];
+            if (i != users.length-1)
+                list += ", ";
+        }
+
+        return list;
+    }
+
+    $scope.storeDelete = function(id, name) {
+        $scope.id = id;
+        $scope.name = name;
+    }
+
+    $scope.deleteDept = function() {
+        socket.emit('deleteDept', $scope.id);
+
+        $scope.session.dept.splice($scope.session.dept.indexOf($scope.name), 1);
+        console.log(JSON.stringify($scope.session.dept));
+
+        $timeout(function() {
+            $route.reload();
+        }, 500);
     }
 });
 
@@ -718,18 +737,7 @@ adminModule.directive('viewDepts', function() {
         restrict: 'E',
         link: function(scope, element, attrs) {
             socket.on('displayDepts', function(deptList) {
-                scope.departments = {};
-
-                console.log(JSON.stringify(deptList));
-
-                for (var dept in deptList) {
-                    if (!scope.departments[deptList[dept].name]) {
-                        scope.departments[deptList[dept].name] = {id: null, name: null, managers: []};
-                        // scope.departments[deptList[dept].name].id = ___ // get department id
-                        scope.departments[deptList[dept].name].name = deptList[dept].name;
-                    }
-                    scope.departments[deptList[dept].name].managers.push(deptList[dept].manager);
-                }
+                scope.departments = deptList;
 
                 scope.$apply();
             });

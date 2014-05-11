@@ -3,19 +3,38 @@
         <h3>View Departments</h3>
         <hr/>
 
+        <div class="modal fade deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width: 350px;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h4>Are you sure you want to delete this department?</h4>
+
+                        <p class="help-block">(All tickets under this department will also be deleted.)</p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>&nbsp;&nbsp;
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deleteDept()">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="deptsList" class="ticketList">
             <table>
                 <tr>
-                    <th style="width: 75px;"></th>
+                    <th style="width: 110px;"></th>
                     <th>Dept. Name</th>
                     <th>Managers</th>
                 </tr>
 
                 <view-depts>
                     <tr ng-repeat="dept in departments">
-                        <td><a href="" ng-click="deleteDept(dept.id)">Delete</a></td>
+                        <td style="display: {{ displayProp }};">
+                            Edit | <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(dept.id, dept.name)">Delete</a>
+                        </td>
                         <td>{{ dept.name }}</td>
-                        <td>|&nbsp;&nbsp;<span ng-repeat="manager in dept.managers">{{ manager }}&nbsp;&nbsp;|&nbsp;&nbsp;</span></td>
+                        <td ng-bind="stringifyUsers(dept.managers)"></td>
                     </tr>
                 </view-depts>
             </table>
