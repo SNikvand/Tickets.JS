@@ -3,6 +3,21 @@
         <h3>View Tickets</h3>
         <hr/>
 
+        <div class="modal fade deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width: 350px;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h4>Are you sure you want to delete?</h4>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>&nbsp;&nbsp;
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deleteTicket()">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="mainTickets" class="ticketList">
             <table>
                 <view-tickets>
@@ -18,7 +33,10 @@
 
                     <tr ng-repeat="ticket in newtickets">
                         <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">Detail</a>
-                            <span style="display: {{ displayProp }};">| <a href="deleteTicket({{ ticket.hash }}, {{ ticket.isArchive }})">Delete</a></span></td>
+                            <span style="display: {{ displayProp }};">|
+                                <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(ticket.hash, ticket.isArchive)">Delete</a>
+                            </span>
+                        </td>
                         <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
                         <td>{{ ticket.department }}</td>
@@ -29,7 +47,10 @@
 
                     <tr ng-repeat="ticket in maintickets">
                         <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">Detail</a>
-                            <span style="display: {{ displayProp }};">| <a href="deleteTicket({{ ticket.hash }}, {{ ticket.isArchive }})">Delete</a></span></td>
+                            <span style="display: {{ displayProp }};">|
+                                <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(ticket.hash, ticket.isArchive)">Delete</a>
+                            </span>
+                        </td>
                         <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
                         <td>{{ ticket.department }}</td>

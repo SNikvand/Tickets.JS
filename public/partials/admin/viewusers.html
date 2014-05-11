@@ -15,7 +15,7 @@
 
                 <view-users>
                     <tr ng-repeat="user in mainusers">
-                        <td><a href="deleteUser({{ user.id }})">Delete</a></td>
+                        <td><a href="" ng-click="deleteUser(user.id)">Delete</a></td>
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.password }}</td>

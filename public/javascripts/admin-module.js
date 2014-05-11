@@ -287,7 +287,7 @@ adminModule.controller('restrictController', function($scope) {
 
 });
 
-adminModule.controller('viewticketsController', function($scope, $location, ticketParams) {
+adminModule.controller('viewticketsController', function($scope, $timeout, $route, ticketParams) {
     ticketParams.reqTickets($scope.session, false);
 
     $scope.newtickets = [];
@@ -297,17 +297,26 @@ adminModule.controller('viewticketsController', function($scope, $location, tick
         $scope.displayProp = 'inline';
     }
 
-    $scope.deleteTicket = function(id, isArchive) {
+    $scope.storeDelete = function(id, isArchive) {
+        $scope.id = id;
+        $scope.isArchive = isArchive;
+    }
+
+    $scope.deleteTicket = function() {
         // emit socket to database to delete ticket marked 'id'
         // notifyjs notification here that item has been deleted
 
         // 'isArchive' checks which table the ticket is in
 
-        $location.path('/viewtickets');
+        socket.emit('deleteTicket', $scope.id, $scope.isArchive);
+
+        $timeout(function() {
+            $route.reload();
+        }, 500);
     }
 });
 
-adminModule.controller('viewticketsDeptController', function($scope, $location, $routeParams, ticketParams) {
+adminModule.controller('viewticketsDeptController', function($scope, $location, $route, $routeParams, ticketParams) {
     ticketParams.reqTickets($scope.session, true);
 
     $scope.newtickets = [];
@@ -323,7 +332,9 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
 
         // 'isArchive' checks which table the ticket is in
 
-        $location.path('/viewtickets');
+        socket.emit('deleteTicket', id, isArchive);
+
+        $route.reload();
     }
 });
 

@@ -13,7 +13,7 @@
 
                 <view-depts>
                     <tr ng-repeat="dept in departments">
-                        <td><a href="deleteDept({{ dept.id }})">Delete</a></td>
+                        <td><a href="" ng-click="deleteDept(dept.id)">Delete</a></td>
                         <td>{{ dept.name }}</td>
                         <td>|&nbsp;&nbsp;<span ng-repeat="manager in dept.managers">{{ manager }}&nbsp;&nbsp;|&nbsp;&nbsp;</span></td>
                     </tr>
