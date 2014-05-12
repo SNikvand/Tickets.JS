@@ -72,21 +72,24 @@ CREATE TABLE comments
 (
   id SERIAL NOT NULL,
   ticket_id INT NOT NULL,
-  author VARCHAR(255) NOT NULL,
+  user_id INT NOT NULL,
   created DATE NOT NULL,
   description TEXT NOT NULL,
   CONSTRAINT pk_commentID PRIMARY KEY (id),
-  CONSTRAINT fk_ticketID FOREIGN KEY (ticket_id) REFERENCES tickets(id)
+  CONSTRAINT fk_ticketID FOREIGN KEY (ticket_id) REFERENCES tickets(id),
+  CONSTRAINT fk_usersID FOREIGN KEY (user_id) REFERENCES users(id)
 )
 
 CREATE TABLE comments_archive
 (
   id SERIAL NOT NULL,
   ticket_id INT NOT NULL,
-  author VARCHAR(255) NOT NULL,
+  user_id INT NOT NULL,
   created DATE NOT NULL,
   description TEXT NOT NULL,
   CONSTRAINT pk_comment_archiveID PRIMARY KEY (id),
-  CONSTRAINT fk_ticket_archiveID FOREIGN KEY (ticket_id) REFERENCES tickets_archive(id)
+  CONSTRAINT fk_ticket_archiveID FOREIGN KEY (ticket_id) REFERENCES tickets_archive(id),
+  CONSTRAINT fk_usersID FOREIGN KEY (user_id) REFERENCES users(id)
 )
+
 
