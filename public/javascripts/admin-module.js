@@ -210,7 +210,7 @@ adminModule.config(function($routeProvider,$locationProvider) {
                 }
             }
         })
-        .when('/replyticket', {
+        /*.when('/replyticket', {
             templateUrl: '/partials/admin/replyticket.html',
             //controller: 'replyticketController',
             resolve: {
@@ -225,7 +225,7 @@ adminModule.config(function($routeProvider,$locationProvider) {
                     return deferred.promise;
                 }
             }
-        })
+        })*/
         .otherwise({
             redirectTo: '/overview'
         });
@@ -594,9 +594,34 @@ adminModule.service('ticketParams', function($location) {
     };
 });
 
-adminModule.controller('ticketController', function($scope, $routeParams) {
+adminModule.controller('ticketController', function($scope, $timeout, $route, $routeParams) {
     // retrieves ticket information
     // using $routeParams.ticketid and $routeParams.isArchive
+
+    socket.emit('getReplies', $routeParams.ticketid, $routeParams.isArchive);
+
+    $scope.showReply = false;
+    $scope.replyDesc = "";
+
+    $scope.toggleReply = function() {
+        if ($scope.showReply == false) {
+            $scope.showReply = true;
+        } else {
+            $scope.showReply = false;
+        }
+    }
+
+    $scope.submitReply = function() {
+        console.log("desc: " + $scope.replyDesc);
+        console.log("id: " + $routeParams.ticketid);
+        console.log("isArchive: " + $routeParams.isArchive);
+
+        socket.emit('setReply', $routeParams.ticketid, $routeParams.isArchive, $scope.session.user, $scope.replyDesc);
+
+        $timeout(function() {
+            $route.reload();
+        }, 500);
+    }
 
     socket.emit('getTicket', $routeParams.ticketid, $routeParams.isArchive);
     socket.on('displayTicket', function(hash, title, department, description, priority, author, author_email, assigned_to, altered_by,
@@ -1059,32 +1084,14 @@ adminModule.directive('userCreation', function() {
     }
 });
 
-adminModule.directive('replyTicket', function() {
+adminModule.directive('ticketReplies', function() {
     return {
         restrict: 'E',
         link: function(scope, element, attrs) {
-            //JQuery functions can go in here
-            $("#piority").click(function() {
-                if($("#piority").val() == "1"){
-                    $("#piority").css("background-color", "#FA6666");
-                }
-                if($("#piority").val() == "2"){
-                    $("#piority").css("background-color", "#FF7307");
-                }
-                if($("#piority").val() == "3"){
-                    $("#piority").css("background-color", "#FFEF07");
-                }
-                if($("#piority").val() == "4"){
-                    $("#piority").css("background-color", "#64A227");
-                }
-                if($("#piority").val() == "5"){
-                    $("#piority").css("background-color", "#7EEB12");
-                }
-                if($("#piority").val() == "6"){
-                    $("#piority").css("background-color", "#12ECEC");
-                }
+            socket.on('displayReplies', function(replyList) {
+                console.log(JSON.replyList);
+                scope.replies = replyList;
             });
-
         }
     }
 });
