@@ -7,8 +7,8 @@ clientModule.config(function($routeProvider,$locationProvider) {
             templateUrl: '/partials/client/newticket.html',
             controller: 'newticketController'
         })
-        .when('/viewticket/:hash', { // route when user has a Hash value for a previously made ticket.
-            templateUrl: '/partials/client/viewticket.html',
+        .when('/test', { // route when user has a Hash value for a previously made ticket.
+            templateUrl: '/partials/client/testclient.html',
             controller: 'viewticketController'
         })
         .when('/viewticket', {      // route sent to after ticket creation.  May be a placeholder till hash is working.

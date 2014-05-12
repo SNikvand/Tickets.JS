@@ -1,0 +1,64 @@
+body {
+  background-color: #eee;
+}
+
+.form-signin {
+  max-width: 760px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+
+}
+.form-signin input[type="password"] {
+
+}
+
+#piority{
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+	width:150px;
+	height:40px;
+	background-color:#FFEF07;
+}
+
+#assignuser{
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+	width:150px;
+	height:40px;
+}
+
+#submitbutton{
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+	width:150px;
+	height:40px;
+}
+
+#taTextElement{
+	height:140px;
+	width:710px;
+}
