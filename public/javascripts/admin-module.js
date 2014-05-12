@@ -594,7 +594,7 @@ adminModule.service('ticketParams', function($location) {
     };
 });
 
-adminModule.controller('ticketController', function($scope, $timeout, $route, $routeParams) {
+adminModule.controller('ticketController', function($scope, $timeout, $route, $location, $routeParams) {
     // retrieves ticket information
     // using $routeParams.ticketid and $routeParams.isArchive
 
@@ -1088,8 +1088,13 @@ adminModule.directive('ticketReplies', function() {
     return {
         restrict: 'E',
         link: function(scope, element, attrs) {
+            $('#toggleReply').on('click', function() {
+                $('html, body').animate({
+                    scrollTop: $("#replyForm").offset().top - 65
+                }, 250);
+            });
+
             socket.on('displayReplies', function(replyList) {
-                console.log(JSON.replyList);
                 scope.replies = replyList;
             });
         }
