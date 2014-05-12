@@ -60,12 +60,14 @@ app.post('/login', function(req, res) {
             req.session.user = req.body.username;
             req.session.role = sendback.userRole;
             req.session.dept = sendback.userDepts;
+            req.session.lastLogout = sendback.lastLogout;
             res.redirect('/admin');
         }
     }
 });
 
 app.get('/logout', function(req, res) {
+    ticket_server.setLogoutTime(req.session.user);
     req.session.destroy(function() {
         res.redirect('/');
     });

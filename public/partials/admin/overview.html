@@ -2,8 +2,41 @@
     <div>
         <h3>Overview</h3>
         <hr/>
-        <p>New tickets since your last login: <a href="">5</a></p>
-        <p>Tickets that belong to you: <a href="">10</a></p>
+
+        <ul class="nav nav-pills">
+            <li class="active"><a href="">New Tickets Since Last Login <span class="badge" ng-bind="lastLogout.numberOfTickets"></span></a></li>
+            <li ng-hide="session.role != 'IT User'"><a href="">Your Assigned Tickets <span class="badge">42</span></a></li>
+        </ul><br/>
+
+        <div class="ticketList">
+            <login-tickets>
+                <table>
+                    <tr>
+                        <th style="width: 50px"></th>
+                        <th>Priority</th>
+                        <th>Title</th>
+                        <th>Department</th>
+                        <th>Assigned To</th>
+                        <th>Date Due</th>
+                        <th>Date Completed</th>
+                    </tr>
+
+                    <tr ng-repeat="ticket in lastLogout.ticketList">
+                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">View</a></td>
+                        <td>
+                            <div style="display: flex; justify-content: center;">
+                                {{ ticket.priority }}
+                            </div>
+                        </td>
+                        <td>{{ ticket.title }}</td>
+                        <td>{{ ticket.department }}</td>
+                        <td>{{ ticket.assigned_to }}</td>
+                        <td>{{ ticket.due_date }}</td>
+                        <td>{{ ticket.complete_date }}</td>
+                    </tr>
+                </table>
+            </login-tickets>
+        </div>
     </div>
     <div class="row ticketList">
         <over-tickets style="display: flex; justify-content: space-around">

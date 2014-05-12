@@ -5,6 +5,7 @@ CREATE TABLE users
   email VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
   type VARCHAR(8) NOT NULL,
+  last_logout TIMESTAMP,
   CONSTRAINT pk_userID PRIMARY KEY (id)
 )
 
@@ -31,7 +32,7 @@ CREATE TABLE tickets
   title VARCHAR(255) NOT NULL,
   author VARCHAR(255) NOT NULL,
   author_email VARCHAR(255) NOT NULL,
-  create_date DATE NOT NULL,
+  create_date TIMESTAMP NOT NULL,
   department INT NOT NULL,
   description TEXT NOT NULL,
   priority INT NOT NULL,
@@ -53,7 +54,7 @@ CREATE TABLE tickets_archive
   title VARCHAR(255) NOT NULL,
   author VARCHAR(255) NOT NULL,
   author_email VARCHAR(255) NOT NULL,
-  create_date DATE NOT NULL,
+  create_date TIMESTAMP NOT NULL,
   department INT NOT NULL,
   description TEXT NOT NULL,
   priority INT NOT NULL,

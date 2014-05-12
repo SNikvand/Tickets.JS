@@ -278,6 +278,37 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
 adminModule.controller('overviewController', function($scope, $location) {
     console.log("base session test: "  + JSON.stringify($scope.session));
 
+    var role = $scope.session.role;
+    var defFilters;
+    var searchParams = {keywords: null, inTitle: false, inBody: false};
+
+    // last logout time
+    var lastLogout = $scope.session.lastLogout;
+
+    // stringify the departments
+    var stringDepts = "";
+    for (var x in $scope.session.dept) {
+        stringDepts += $scope.session.dept[x] + " ";
+    }
+    stringDepts = stringDepts.trim();
+
+    // configure default filter parameters
+    if ($scope.session.role == "Admin") {
+        defFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
+            assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null, lastLogout: lastLogout};
+    } else if ($scope.session.role == "Manager") {
+        defFilters = {dept: stringDepts, priority: null, submittedBy: null, clientEmail: null,
+            assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null, lastLogout: lastLogout};
+    } else if ($scope.session.role == "IT User") {
+        defFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
+            assignedTo: $scope.session.user, alteredBy: null, dateCreated: null, dateAltered: null, lastLogout: lastLogout};
+    }
+
+    $scope.lastLogout = {numberOfTickets: null, ticketList: null};
+
+    //filters, searchParams, includeCompleted, includeExpired, includeArchived, amount, orderBy, direction
+    socket.emit('getTicketsLogout', defFilters, searchParams, 'includeCompleted', 'includeExpired', 'includeArchived', null, "create_date", "desc");
+
     $scope.overview1 = "Tickets Nearly Due";
     $scope.overview2 = "Expired Tickets";
     $scope.overview3 = "Recently Completed Tickets";
@@ -925,6 +956,19 @@ adminModule.directive('overTickets', function() {
     }
 });
 
+adminModule.directive('loginTickets', function() {
+    return {
+        restrict: 'E',
+        link: function(scope, element, attrs) {
+            socket.on('displayTicketsLogout', function(ticketList) {
+                console.log("login tickets: " + JSON.stringify(ticketList));
+                scope.lastLogout.ticketList = ticketList;
+                scope.lastLogout.numberOfTickets = ticketList.length;
+                scope.$apply();
+            });
+        }
+    }
+});
 adminModule.directive('viewTickets', function() {
     return {
         restrict: 'E',
