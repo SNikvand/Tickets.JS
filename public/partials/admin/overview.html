@@ -4,11 +4,17 @@
         <hr/>
 
         <ul class="nav nav-pills">
-            <li class="active"><a href="">New Tickets Since Last Login <span class="badge" ng-bind="lastLogout.numberOfTickets"></span></a></li>
-            <li ng-hide="session.role != 'IT User'"><a href="">Your Assigned Tickets <span class="badge">42</span></a></li>
+            <li ng-class="{active:showLoginTickets == true}">
+                <a href="" ng-click="toggleLoginTickets()">New Tickets Since Last Login
+                    <span class="badge" ng-bind="lastLogout.numberOfTickets"></span></a>
+            </li>
+            <li ng-hide="session.role != 'IT User'" ng-class="{active:showAssignedTickets == true}">
+                <a href="" ng-click="toggleAssignedTickets()">Your Assigned Tickets
+                    <span class="badge" ng-bind="assignedTickets.numberOfTickets"></span></a>
+            </li>
         </ul><br/>
 
-        <div class="ticketList">
+        <div class="ticketList" ng-show="showLoginTickets == true">
             <login-tickets>
                 <table>
                     <tr>
@@ -36,6 +42,36 @@
                     </tr>
                 </table>
             </login-tickets>
+        </div>
+
+        <div class="ticketList" ng-show="showAssignedTickets == true">
+            <assigned-tickets>
+                <table>
+                    <tr>
+                        <th style="width: 50px"></th>
+                        <th>Priority</th>
+                        <th>Title</th>
+                        <th>Department</th>
+                        <th>Assigned To</th>
+                        <th>Date Due</th>
+                        <th>Date Completed</th>
+                    </tr>
+
+                    <tr ng-repeat="ticket in assignedTickets.ticketList">
+                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">View</a></td>
+                        <td>
+                            <div style="display: flex; justify-content: center;">
+                                {{ ticket.priority }}
+                            </div>
+                        </td>
+                        <td>{{ ticket.title }}</td>
+                        <td>{{ ticket.department }}</td>
+                        <td>{{ ticket.assigned_to }}</td>
+                        <td>{{ ticket.due_date }}</td>
+                        <td>{{ ticket.complete_date }}</td>
+                    </tr>
+                </table>
+            </assigned-tickets>
         </div>
     </div>
     <div class="row ticketList">

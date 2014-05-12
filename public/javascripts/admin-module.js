@@ -278,6 +278,9 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
 adminModule.controller('overviewController', function($scope, $location) {
     console.log("base session test: "  + JSON.stringify($scope.session));
 
+    $scope.showLoginTickets = false;
+    $scope.showAssignedTickets = false;
+
     var role = $scope.session.role;
     var defFilters;
     var searchParams = {keywords: null, inTitle: false, inBody: false};
@@ -305,9 +308,29 @@ adminModule.controller('overviewController', function($scope, $location) {
     }
 
     $scope.lastLogout = {numberOfTickets: null, ticketList: null};
+    $scope.assignedTickets = {numberOfTickets: null, ticketList: null};
 
-    //filters, searchParams, includeCompleted, includeExpired, includeArchived, amount, orderBy, direction
     socket.emit('getTicketsLogout', defFilters, searchParams, 'includeCompleted', 'includeExpired', 'includeArchived', null, "create_date", "desc");
+    socket.emit('getTicketsView', defFilters, searchParams, 'excludeCompleted', 'includeExpired', 'excludeArchived', null, "create_date", "desc");
+
+    $scope.toggleLoginTickets = function() {
+        if ($scope.showLoginTickets == false) {
+            $scope.showLoginTickets = true;
+            $scope.showAssignedTickets = false;
+            $scope.session.lastLogout = "loggedIn";
+        } else {
+            $scope.showLoginTickets = false;
+        }
+    }
+
+    $scope.toggleAssignedTickets = function() {
+        if ($scope.showAssignedTickets == false) {
+            $scope.showAssignedTickets = true;
+            $scope.showLoginTickets = false;
+        } else {
+            $scope.showAssignedTickets = false;
+        }
+    }
 
     $scope.overview1 = "Tickets Nearly Due";
     $scope.overview2 = "Expired Tickets";
@@ -677,6 +700,9 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
 });
 
 adminModule.controller('newticketController', function($scope, $location) {
+    $scope.session.lastLogout = "loggedIn";
+    console.log("logout time: " + $scope.session.lastLogout);
+
     $scope.submit = function() {
         socket.emit('setTicket', null, $scope.title, $scope.dept, $scope.body, $scope.priority, $scope.user, $scope.email,
             null, null, null, null, null, null, false);
@@ -969,6 +995,21 @@ adminModule.directive('loginTickets', function() {
         }
     }
 });
+
+adminModule.directive('assignedTickets', function() {
+    return {
+        restrict: 'E',
+        link: function(scope, element, attrs) {
+            socket.on('displayTicketsView', function(ticketList) {
+                console.log("assigned tickets: " + JSON.stringify(ticketList));
+                scope.assignedTickets.ticketList = ticketList;
+                scope.assignedTickets.numberOfTickets = ticketList.length;
+                scope.$apply();
+            });
+        }
+    }
+});
+
 adminModule.directive('viewTickets', function() {
     return {
         restrict: 'E',
