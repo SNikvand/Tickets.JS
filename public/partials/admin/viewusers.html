@@ -22,21 +22,21 @@
             <table>
                 <tr>
                     <th style="width: 110px"></th>
-                    <th>Name</th>
-                    <th>Email Address</th>
-                    <th>Password</th>
-                    <th>Role</th>
+                    <th>{{ heading1 }}</th>
+                    <th>{{ heading2 }}</th>
+                    <th>{{ heading3 }}</th>
+                    <th>{{ heading4 }}</th>
                 </tr>
 
                 <view-users>
                     <tr ng-repeat="user in mainusers">
                         <!-- options -->
                         <td style="display: {{ displayProp }};" ng-hide="checkIfEdit(user.id) == true">
-                            <a href="" ng-click="toggleEdit(user)">Edit</a>
-                            | <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(user.id)">Delete</a>
+                            <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(user.id)">Delete</a>
+                            | <a href="" ng-click="toggleEdit(user)">Edit</a>
                         </td>
                             <td ng-hide="checkIfEdit(user.id) == false">
-                                <div style="height: 80px; position: relative; right: 15px; display: flex;
+                                <div style="height: 100px; position: relative; right: 15px; display: flex;
                                     flex-direction: column; justify-content: space-around; align-items: center;">
 
                                     <div><button type="button" class="btn btn-default"
@@ -49,15 +49,14 @@
                         <!-- data fields -->
                         <td ng-show="checkIfEdit(user.id) == false">{{ user.name }}</td>
                             <td ng-hide="checkIfEdit(user.id) == false">
-                                <input type="text" ng-model="$parent.newName">
+                                <label class="control-label">Name</label><br/>
+                                <input type="text" ng-model="$parent.newName" style="width: 120px;">
                             </td>
 
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.password }}</td>
-
-                        <td ng-show="checkIfEdit(user.id) == false">{{ user.type }}</td>
+                        <td ng-show="checkIfEdit(user.id) == false">{{ user.email }}</td>
                             <td ng-hide="checkIfEdit(user.id) == false">
                                 <div class="btn-group" style="position: relative; right: 10px;">
+                                    <label class="control-label">Role</label><br/>
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:90px;height:30px">
                                         {{ $parent.newRole }} <span class="caret"></span>
                                     </button>
@@ -66,8 +65,13 @@
                                         <li><a href="" ng-click="setRole('Manager')">Manager</a></li>
                                         <li><a href="" ng-click="setRole('IT User')">IT User</a></li>
                                     </ul>
+
                                 </div>
                             </td>
+
+                        <td><span ng-show="checkIfEdit(user.id) == false">{{ user.password }}</span></td>
+
+                        <td><span ng-show="checkIfEdit(user.id) == false">{{ user.type }}</span></td>
                     </tr>
                 </view-users>
             </table>

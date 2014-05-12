@@ -297,6 +297,82 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
         $scope.displayProp = 'inline';
     }
 
+    $scope.isEdit = null;
+    $scope.isEditArchive = null;
+
+    // edited fields
+    $scope.newPriority = null;
+    $scope.newDept = null;
+    $scope.newAssignedTo = null;
+    $scope.isCompleted = false;
+    $scope.alteredBy = $scope.session.user
+
+    // headings
+    $scope.heading1 = "Priority";
+    $scope.heading2 = "Title";
+    $scope.heading3 = "Department";
+    $scope.heading4 = "Assigned To";
+    $scope.heading5 = "Date Due";
+    $scope.heading6 = "Date Completed";
+
+    $scope.setPriority = function(priority) {
+        $scope.newPriority = priority;
+    }
+
+    $scope.setDept = function(dept) {
+        $scope.newDept = dept;
+    }
+
+    $scope.saveEdits = function() {
+        console.log("isEdit: " + $scope.isEdit);
+        console.log("isEditArchive: " + $scope.isEditArchive);
+
+        socket.emit('setTicket', $scope.isEdit, null, $scope.newDept, null, $scope.newPriority, null, null,
+            $scope.newAssignedTo, $scope.alteredBy, null, null, null, $scope.isCompleted, $scope.isEditArchive);
+
+        $timeout(function() {
+            $route.reload();
+        }, 500);
+    }
+
+    $scope.toggleEdit = function(ticket) {
+        if ($scope.isEdit != ticket.hash || $scope.isEditArchive != ticket.isArchive) {
+            $scope.isEdit = ticket.hash;
+            $scope.isEditArchive = ticket.isArchive;
+            $scope.newPriority = ticket.priority;
+            $scope.newDept = ticket.department;
+            $scope.newAssignedTo = ticket.assigned_to;
+            $scope.isCompleted = (ticket.complete_date != null);
+
+            console.log("is completed: " + $scope.isCompleted);
+
+            $scope.heading1 = "";
+            $scope.heading2 = "";
+            $scope.heading3 = "";
+            $scope.heading4 = "";
+            $scope.heading5 = "";
+            $scope.heading6 = "";
+        } else {
+            $scope.isEdit = null;
+            $scope.isEditArchive = null;
+            $scope.newPriority = null;
+            $scope.newDept = null;
+            $scope.newAssignedTo = null;
+            $scope.isCompleted = false;
+
+            $scope.heading1 = "Priority";
+            $scope.heading2 = "Title";
+            $scope.heading3 = "Department";
+            $scope.heading4 = "Assigned To";
+            $scope.heading5 = "Date Due";
+            $scope.heading6 = "Date Completed";
+        }
+    }
+
+    $scope.checkIfEdit = function(id, isArchive) {
+        return ($scope.isEdit == id && $scope.isEditArchive == isArchive);
+    }
+
     $scope.storeDelete = function(id, isArchive) {
         $scope.id = id;
         $scope.isArchive = isArchive;
@@ -319,6 +395,83 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
         $scope.displayProp = 'none';
     } else {
         $scope.displayProp = 'inline';
+    }
+
+    $scope.isEdit = null;
+    $scope.isEditArchive = null;
+
+    // edited fields
+    $scope.newPriority = null;
+    $scope.newDept = null;
+    $scope.newAssignedTo = null;
+    $scope.isCompleted = null;
+    $scope.alteredBy = $scope.session.user
+
+    // headings
+    $scope.heading1 = "Priority";
+    $scope.heading2 = "Title";
+    $scope.heading3 = "Department";
+    $scope.heading4 = "Assigned To";
+    $scope.heading5 = "Date Due";
+    $scope.heading6 = "Date Completed";
+
+    $scope.setPriority = function(priority) {
+        $scope.newPriority = priority;
+    }
+
+    $scope.setDept = function(dept) {
+        $scope.newDept = dept;
+    }
+
+    $scope.saveEdits = function() {
+        socket.emit('setTicket', $scope.isEdit, null, $scope.newDept, null, $scope.newPriority, null, null,
+            $scope.newAssignedTo, $scope.alteredBy, null, null, null, $scope.isCompleted, $scope.isEditArchive);
+
+        $timeout(function() {
+            $route.reload();
+        }, 500);
+    }
+
+    $scope.toggleEdit = function(ticket) {
+        console.log("isEdit: " + $scope.isEdit);
+        console.log("isEditArchive: " + $scope.isEditArchive);
+        console.log("currently editing: " + ticket.hash);
+        console.log("is archive: " + ticket.isArchive);
+        console.log("is completed: " + ticket.complete_date);
+
+        if ($scope.isEdit != ticket.hash || $scope.isEditArchive != ticket.isArchive) {
+            $scope.isEdit = ticket.hash;
+            $scope.isEditArchive = ticket.isArchive;
+            $scope.newPriority = ticket.priority;
+            $scope.newDept = ticket.department;
+            $scope.newAssignedTo = ticket.assigned_to;
+            $scope.isCompleted = (ticket.complete_date != null ? true : false);
+
+            $scope.heading1 = "";
+            $scope.heading2 = "";
+            $scope.heading3 = "";
+            $scope.heading4 = "";
+            $scope.heading5 = "";
+            $scope.heading6 = "";
+        } else {
+            $scope.isEdit = null;
+            $scope.isEditArchive = null;
+            $scope.newPriority = null;
+            $scope.newDept = null;
+            $scope.newAssignedTo = null;
+            $scope.isCompleted = null;
+
+            $scope.heading1 = "Priority";
+            $scope.heading2 = "Title";
+            $scope.heading3 = "Department";
+            $scope.heading4 = "Assigned To";
+            $scope.heading5 = "Date Due";
+            $scope.heading6 = "Date Completed";
+        }
+    }
+
+    $scope.checkIfEdit = function(id, isArchive) {
+        return ($scope.isEdit == id && $scope.isEditArchive == isArchive);
     }
 
     $scope.storeDelete = function(id, isArchive) {
@@ -522,6 +675,12 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
     $scope.newName = null;
     $scope.newRole = null;
 
+    // headings
+    $scope.heading1 = "Name";
+    $scope.heading2 = "Email";
+    $scope.heading3 = "Password";
+    $scope.heading4 = "Role";
+
     $scope.setRole = function(role) {
         $scope.newRole = role;
     }
@@ -539,10 +698,20 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
             $scope.isEdit = user.id;
             $scope.newName = user.name;
             $scope.newRole = user.type;
+
+            $scope.heading1 = "";
+            $scope.heading2 = "";
+            $scope.heading3 = "";
+            $scope.heading4 = "";
         } else {
             $scope.isEdit = null;
             $scope.newName = null;
             $scope.newRole = null;
+
+            $scope.heading1 = "Name";
+            $scope.heading2 = "Email";
+            $scope.heading3 = "Password";
+            $scope.heading4 = "Role";
         }
 
         console.log("currently editing: " + $scope.isEdit);
