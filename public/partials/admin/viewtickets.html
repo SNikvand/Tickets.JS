@@ -46,9 +46,9 @@
                             <div style="height: 100px; position: relative; right: 15px; display: flex;
                                         flex-direction: column; justify-content: space-around; align-items: center;">
 
-                                <div><button type="button" class="btn btn-default"
+                                <div><button type="button" class="btn btn-success"
                                              style="height: 30px;" ng-click="saveEdits()">Save</button></div>
-                                <div><button type="button" class="btn btn-default"
+                                <div><button type="button" class="btn btn-primary"
                                              style="height: 30px;" ng-click="toggleEdit(ticket)">Cancel</button></div>
                             </div>
                         </td>
@@ -77,8 +77,15 @@
 
                         <td ng-show="checkIfEdit(ticket.hash, ticket.isArchive) == false">{{ ticket.title }}</td>
                         <td ng-hide="checkIfEdit(ticket.hash, ticket.isArchive) == false">
-                            <label class="control-label">Department</label><br/>
-                            <input type="text" ng-model="$parent.newDept" style="width: 120px;">
+                            <div class="btn-group" style="position: relative; right: 10px;">
+                                <label class="control-label">Department</label><br/>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:125px;height:30px">
+                                    {{ $parent.newDept }} <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li ng-repeat="dept in $parent.session.dept"><a href="" ng-click="setDept(dept)">{{ dept }}</a></li>
+                                </ul>
+                            </div>
                         </td>
 
                         <td ng-show="checkIfEdit(ticket.hash, ticket.isArchive) == false">{{ ticket.department }}</td>
@@ -136,8 +143,15 @@
 
                         <td ng-show="checkIfEdit(ticket.hash, ticket.isArchive) == false">{{ ticket.title }}</td>
                             <td ng-hide="checkIfEdit(ticket.hash, ticket.isArchive) == false">
-                                <label class="control-label">Department</label><br/>
-                                <input type="text" ng-model="$parent.newDept" style="width: 120px;">
+                                <div class="btn-group" style="position: relative; right: 10px;">
+                                    <label class="control-label">Department</label><br/>
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:125px;height:30px">
+                                        {{ $parent.newDept }} <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li ng-repeat="dept in $parent.session.dept"><a href="" ng-click="setDept(dept)">{{ dept }}</a></li>
+                                    </ul>
+                                </div>
                             </td>
 
                         <td ng-show="checkIfEdit(ticket.hash, ticket.isArchive) == false">{{ ticket.department }}</td>

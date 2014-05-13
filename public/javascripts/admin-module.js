@@ -702,6 +702,18 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
 adminModule.controller('newticketController', function($scope, $location) {
     $scope.session.lastLogout = "loggedIn";
     console.log("logout time: " + $scope.session.lastLogout);
+    console.log("depts: " + $scope.session.dept);
+
+    $scope.dept = "Department";
+    $scope.priority = "Priority";
+
+    $scope.setDept = function(dept) {
+        $scope.dept = dept;
+    }
+
+    $scope.setPriority = function(priority) {
+        $scope.priority = priority;
+    }
 
     $scope.submit = function() {
         socket.emit('setTicket', null, $scope.title, $scope.dept, $scope.body, $scope.priority, $scope.user, $scope.email,
@@ -862,6 +874,12 @@ adminModule.controller('viewdeptController', function($scope, $timeout, $route) 
 });
 
 adminModule.controller('newdeptController', function($scope, $location) {
+    $scope.deptname = "Department";
+
+    $scope.setDept = function(dept) {
+        $scope.deptname = dept;
+    }
+
     $scope.create = function() {
         socket.emit('setDept', null, $scope.deptname, $scope.managers);
         $location.path('/viewdepts');
@@ -1077,14 +1095,6 @@ adminModule.directive('newTicket', function() {
                     return false;
                 }
             }
-
-            $(".dropdown-toggle").on('click', function() {
-                $(".dropdown-menu li a").click(function(){
-                    $(".btn:first-child").text($(this).text());
-                    $(".btn:first-child").val($(this).text());
-                    scope.priority = $(this).text();
-                });
-            });
         }
     }
 });

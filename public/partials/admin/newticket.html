@@ -12,8 +12,15 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-group">Dept</label>
-                        <input id="dept" ng-model="dept" placeholder="Department" class="form-control" type="text" required>
+                        <label class="control-group">Department</label><br/>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:125px;height:40px">
+                                {{ dept }} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li ng-repeat="dept in $parent.session.dept"><a href="" ng-click="setDept(dept)">{{ dept }}</a></li>
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -28,15 +35,15 @@
 
                     <label class="control-label">Priority</label><br/>
                     <div class="btn-group" style="margin-bottom:15px">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:100px;height:40px">
-                            Priority <span class="caret"></span>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:75px;height:40px">
+                            {{ priority }} <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="">1</a></li>
-                            <li><a href="">2</a></li>
-                            <li><a href="">3</a></li>
-                            <li><a href="">4</a></li>
-                            <li><a href="">5</a></li>
+                            <li><a href="" ng-click="setPriority(1)">1</a></li>
+                            <li><a href="" ng-click="setPriority(2)">2</a></li>
+                            <li><a href="" ng-click="setPriority(3)">3</a></li>
+                            <li><a href="" ng-click="setPriority(4)">4</a></li>
+                            <li><a href="" ng-click="setPriority(5)">5</a></li>
                         </ul>
                     </div>
 
