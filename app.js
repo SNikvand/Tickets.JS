@@ -61,6 +61,15 @@ app.post('/login', function(req, res) {
             req.session.role = sendback.userRole;
             req.session.dept = sendback.userDepts;
             req.session.lastLogout = sendback.lastLogout;
+
+            req.session.filters = {};
+            req.session.filters.viewfilters = {dept: null, priority: null, assignedTo: null, alteredBy: null, submittedBy: null, clientEmail: null,
+                dateCreated: null, dateAltered: null};
+            req.session.filters.searchParams = {keywords: null, inTitle: false, inBody: false};
+            req.session.filters.includeCompleted = "includeCompleted";
+            req.session.filters.includeExpired = "includeExpired";
+            req.session.filters.includeArchived = "includeArchived";
+            req.session.filters.amount = null;
             res.redirect('/admin');
         }
     }
@@ -81,6 +90,18 @@ app.post('/verifyAccess', function(req, res) {
     var role = req.session.role;
     var pageid = req.body.pageid.toString();
     res.send(permissions.checkRestriction(pageid, role, res));
+});
+
+app.post('/setFilters', function(req, res) {
+    req.session.filters.viewfilters = req.body.viewfilters;
+    req.session.filters.searchParams = req.body.searchParams;
+    req.session.filters.includeCompleted = req.body.includeCompleted;
+    req.session.filters.includeExpired = req.body.includeExpired;
+    req.session.filters.includeArchived = req.body.includeArchived;
+    req.session.filters.amount = req.body.amount;
+
+    console.log("server-side filters: " + JSON.stringify(req.session.filters));
+    res.json(req.session.filters);
 });
 
 var server = http.createServer(app).listen(app.get('port'), function(){

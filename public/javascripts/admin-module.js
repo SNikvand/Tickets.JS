@@ -557,7 +557,7 @@ adminModule.service('verifyAccess', function($http, $location) {
     };
 });
 
-adminModule.service('ticketParams', function($location) {
+adminModule.service('ticketParams', function($location, $http) {
     var viewfilters = {dept: null, priority: null, assignedTo: null, alteredBy: null, submittedBy: null, clientEmail: null,
         dateCreated: null, dateAltered: null};
     var searchParams = {keywords: null, inTitle: false, inBody: false};
@@ -600,7 +600,16 @@ adminModule.service('ticketParams', function($location) {
 
         amount = formdata.amount;
 
-        console.log("search test: " + JSON.stringify(formdata));
+        // try to post parameters to server to store even after refresh
+        $http({method: "POST", url: "/setFilters",
+            data: {viewfilters: viewfilters, searchParams: searchParams, includeCompleted: includeCompleted,
+                includeExpired: includeExpired, includeArchived: includeArchived, amount: amount},
+            headers: {'Content-Type': 'application/json'}})
+            .success(function (data) {
+                session.filters = data;
+                console.log("succeeding");
+            });
+
         $location.path('/viewtickets');
     };
 
@@ -623,11 +632,20 @@ adminModule.service('ticketParams', function($location) {
         }
 
         searchParams = {keywords: null, inTitle: false, inBody: false};
-        includeCompleted = true;
-        includeExpired = true;
-        includeArchived = false;
+        includeCompleted = "includeCompleted";
+        includeExpired = "includeExpired";
+        includeArchived = "excludeArchived";
         amount = null;
-        console.log("resetted");
+
+        // try to post parameters to server to store even after refresh
+        $http({method: "POST", url: "/setFilters",
+            data: {viewfilters: viewfilters, searchParams: searchParams, includeCompleted: includeCompleted,
+                includeExpired: includeExpired, includeArchived: includeArchived, amount: amount},
+            headers: {'Content-Type': 'application/json'}})
+            .success(function (data) {
+                session.filters = data;
+                console.log("succeeding reset");
+            });
     };
 
     this.reqTickets = function(session, fromPanel) {
@@ -640,11 +658,18 @@ adminModule.service('ticketParams', function($location) {
             stringDepts = stringDepts.trim();
 
             viewfilters.dept = stringDepts;
+            session.filters.viewfilters.dept = stringDepts;
         } else if (session.role == "IT User") {
             viewfilters.assignedTo = session.user;
+            session.filters.viewfilters.assignedTo = session.user;
         }
 
-        socket.emit('getTicketsView', viewfilters, searchParams, includeCompleted, includeExpired, includeArchived, null, "create_date", "desc");
+        var sessionFilters = session.filters;
+        console.log("session filters: " + JSON.stringify(session.filters));
+
+        socket.emit('getTicketsView', sessionFilters.viewfilters, sessionFilters.searchParams,
+            sessionFilters.includeCompleted, sessionFilters.includeExpired, sessionFilters.includeArchived,
+            null, "create_date", "desc");
     };
 });
 
@@ -1019,7 +1044,6 @@ adminModule.directive('assignedTickets', function() {
         restrict: 'E',
         link: function(scope, element, attrs) {
             socket.on('displayTicketsView', function(ticketList) {
-                console.log("assigned tickets: " + JSON.stringify(ticketList));
                 scope.assignedTickets.ticketList = ticketList;
                 scope.assignedTickets.numberOfTickets = ticketList.length;
                 scope.$apply();
