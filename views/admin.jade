@@ -21,15 +21,9 @@ block content
             div.navbar-collapse.collapse
                 ul.nav.navbar-nav.navbar-right
                     li
+                        a(href='#/overview') Welcome #{session.user}
+                    li
                         a(href='/logout') Log Out
-                    li
-                        a(href='#') Dashboard
-                    li
-                        a(href='#') Settings
-                    li
-                        a(href='#') Profile
-                    li
-                        a(href='#') Help
 
     div.container-fluid(ng-app='admin', ng-controller='sessionController')
         div.row

@@ -25,12 +25,12 @@
                 <view-tickets>
                     <tr>
                         <th style="width: 155px;"></th>
-                        <th>{{ heading1 }}</th>
-                        <th>{{ heading2 }}</th>
-                        <th>{{ heading3 }}</th>
-                        <th>{{ heading4 }}</th>
-                        <th style="width: 180px;">{{ heading5 }}</th>
-                        <th style="width: 180px;">{{ heading6 }}</th>
+                        <th><a href="" ng-click="predicate = 'priority';reverse=!reverse">{{ heading1 }}</a></th>
+                        <th><a href="" ng-click="predicate = 'title';reverse=!reverse">{{ heading2 }}</th>
+                        <th><a href="" ng-click="predicate = 'department';reverse=!reverse">{{ heading3 }}</th>
+                        <th><a href="" ng-click="predicate = 'assigned_to';reverse=!reverse">{{ heading4 }}</th>
+                        <th style="width: 180px;"><a href="" ng-click="predicate = 'due_date';reverse=!reverse">{{ heading5 }}</th>
+                        <th style="width: 180px;"><a href="" ng-click="predicate = 'complete_date';reverse=!reverse">{{ heading6 }}</th>
                     </tr>
 
                     <tr ng-repeat="ticket in newtickets">
@@ -99,7 +99,7 @@
                         <td><span ng-show="checkIfEdit(ticket.hash, ticket.isArchive) == false">{{ ticket.complete_date }}</span></td>
                     </tr>
 
-                    <tr ng-repeat="ticket in maintickets">
+                    <tr ng-repeat="ticket in maintickets | orderBy:predicate:reverse">
                         <!-- options -->
                         <td ng-show="checkIfEdit(ticket.hash, ticket.isArchive) == false">
                             <span style="display: {{ displayProp }};">
