@@ -10,6 +10,7 @@ var http = require('http');
 var path = require('path');
 var permissions = require('./lib/permissions.js');
 var md5 = require( 'MD5' );
+var portal = require ('./routes/portal');
 
 var app = express();
 
@@ -41,6 +42,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/admin', route_admin.index);
+app.get('/portal', portal.portal);
 
 app.post('/login', function(req, res) {
     // authenticates username and password

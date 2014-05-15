@@ -1,0 +1,80 @@
+<div class="container">
+    <form class="form-signin2" role="form">
+        <h3 class="form-signin-heading">Create a New Ticket</h3>
+        <hr>
+        <div class="row">
+            <div class="row">
+                <div class="col-xs-8 col-sm-6 col-md-6 col-lg-6">
+                    <label for="name">First Name</label>
+                    <input type="text" class="form-control" id="firstname" placeholder="John" required autofocus>
+                </div>
+                <div class="col-xs-8 col-sm-6 col-md-6 col-lg-6">
+                    <label for="name">Last Name</label>
+                    <input type="text" class="form-control" id="lastname" placeholder="Smith" required>
+                </div>
+            </div><br/>
+            <div class="row">
+                <div class="col-xs-10 col-sm-12 col-md-12 col-lg-12 ">
+                    <label for="name">Email</label>
+                    <input type="email" class="form-control" placeholder="JSmith@mail.com" required>
+                </div>
+            </div><br/>
+            <div class="row">
+                <div class="col-xs-10 col-sm-6 col-md-6 col-lg-6">
+                    <label for="name">Department</label><br />
+                    <select class="dropdown" id="assignuser" style="margin-top:1px;height:43px">
+                        <option ng-repeat="dept in departments" value="{{ dept.name }}">{{ dept.name }}</option>
+                    </select>
+                </div>
+
+                <div class="col-xs-10 col-sm-6 col-md-6 col-lg-6">
+                    <label for="name">Priority</label><br />
+                    <select class="dropdown" id="priority" style="margin-top:1px;height:43px" onclick="pioritycolor()">
+                        <option value="1">1 (urgent)</option>
+                        <option value="2">2 (next day)</option>
+                        <option value="3" selected>3 (3 days)</option>
+                        <option value="4">4 (1 week)</option>
+                        <option value="5">5 (2-3 weeks)</option>
+                        <option value="6">6 (1 month)</option>
+                    </select>
+
+                    <label class="control-label">Priority</label><br/>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:90px;height:50px">
+                            {{ priority }} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="" ng-click="setPriority(1)">1</a></li>
+                            <li><a href="" ng-click="setPriority(2)">2</a></li>
+                            <li><a href="" ng-click="setPriority(3)">3</a></li>
+                            <li><a href="" ng-click="setPriority(4)">4</a></li>
+                            <li><a href="" ng-click="setPriority(5)">5</a></li>
+                            <li><a href="" ng-click="setPriority(6)">6</a></li>
+                        </ul>
+                    </div><br/><br/>
+                    <span style="color: #f5001d; font-style: italic;">{{ errorMsg_priority }}</span>
+                </div>
+            </div><br/>
+            <div class='row'>
+                <div class="col-xs-10 col-sm-12 col-md-12 col-lg-12">
+                    <label for="name">Subject</label>
+                    <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                </div>
+            </div>
+
+            <br/>
+            <div class='row'>
+                <div class="container app col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <label for="name">Issue Description</label>
+                    <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent"></div>
+                </div>
+            </div>
+
+            <br/>
+            <div class='row'>
+                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9"><button class="btn btn-lg btn-primary btn-block" type="submit" id="submitbutton">Submit</button></div>
+
+            </div>
+        </div>
+    </form>
+</div>
