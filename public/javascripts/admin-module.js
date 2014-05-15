@@ -461,7 +461,7 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
     }
 });
 
-adminModule.controller('viewticketsDeptController', function($scope, $location, $route, $routeParams, ticketParams) {
+adminModule.controller('viewticketsDeptController', function($scope, $location, $timeout, $route, $routeParams, ticketParams) {
     ticketParams.reqTickets($scope.session, true);
 
     $scope.newtickets = [];
@@ -517,7 +517,7 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
             $scope.newPriority = ticket.priority;
             $scope.newDept = ticket.department;
             $scope.newAssignedTo = ticket.assigned_to;
-            $scope.isCompleted = (ticket.complete_date != null ? true : false);
+            $scope.isCompleted = (ticket.complete_date != null);
 
             $scope.heading1 = "";
             $scope.heading2 = "";
