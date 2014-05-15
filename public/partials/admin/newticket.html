@@ -1,62 +1,63 @@
-<div>
-    <div>
-        <h3>Create a New Ticket</h3>
-        <hr/>
+<h3>Create a New Ticket</h3>
+<hr/>
 
-        <new-ticket>
-            <div class="form-signin">
-                <form role="form">
-                    <div class="form-group">
-                        <label class="control-group">Title</label>
-                        <input id="title" ng-model="title" placeholder="Ticket title" class="form-control" type="text" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-group">Department</label><br/>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:125px;height:40px">
-                                {{ dept }} <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li ng-repeat="dept in $parent.session.dept"><a href="" ng-click="setDept(dept)">{{ dept }}</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-group">User</label>
-                        <input ng-disabled="isUser()" id="user" ng-model="user" placeholder="Your first and last name" class="form-control" type="text" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-group">E-mail Address</label>
-                        <input id="email" ng-model="email" placeholder="Your email address" class="form-control" type="text" required>
-                    </div>
-
-                    <label class="control-label">Priority</label><br/>
-                    <div class="btn-group" style="margin-bottom:15px">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:75px;height:40px">
-                            {{ priority }} <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="" ng-click="setPriority(1)">1</a></li>
-                            <li><a href="" ng-click="setPriority(2)">2</a></li>
-                            <li><a href="" ng-click="setPriority(3)">3</a></li>
-                            <li><a href="" ng-click="setPriority(4)">4</a></li>
-                            <li><a href="" ng-click="setPriority(5)">5</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-group">Description</label>
-                        <textarea id="body" ng-model="body" placeholder="Description/explanation of ticket issue" class="form-control" rows="3" required>
-
-                        </textarea>
-                    </div>
-
-                    <button class="btn btn-lg btn-primary btn-block" ng-click="submit()">Submit Ticket</button>
-                </form>
+<new-ticket>
+    <form role="form" class="col-md-10 col-md-offset-1">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="control-group">Title</label>
+                <input id="title" ng-model="title" placeholder="Ticket title" class="form-control input-lg" type="text">
             </div>
-        </new-ticket>
-    </div>
-</div>
+
+            <div class="form-group col-md-3">
+                <label class="control-group">Department</label><br/>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:125px;height:50px">
+                        {{ dept }} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="dept in $parent.session.dept"><a href="" ng-click="setDept(dept)">{{ dept }}</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-group col-md-3" style="margin-bottom:15px">
+                <label class="control-label">Priority</label><br/>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:90px;height:50px">
+                        {{ priority }} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="" ng-click="setPriority(1)">1</a></li>
+                        <li><a href="" ng-click="setPriority(2)">2</a></li>
+                        <li><a href="" ng-click="setPriority(3)">3</a></li>
+                        <li><a href="" ng-click="setPriority(4)">4</a></li>
+                        <li><a href="" ng-click="setPriority(5)">5</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="control-group">User</label>
+                <input ng-disabled="isUser()" id="user" ng-model="user" placeholder="Your first and last name" class="form-control input-lg" type="text">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-group">E-mail Address</label>
+                <input id="email" ng-model="email" placeholder="Your email address" class="form-control input-lg" type="text">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-group">Description</label>
+            <textarea id="body" ng-model="body" placeholder="Description/explanation of ticket issue"
+                      class="form-control input-lg" rows="5" required>
+
+            </textarea>
+        </div><br/>
+
+        <button class="btn btn-lg btn-primary btn-block" style="width: 300px; margin: auto;" ng-click="submit()">Submit Ticket</button>
+    </form>
+</new-ticket>

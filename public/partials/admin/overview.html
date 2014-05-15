@@ -1,138 +1,123 @@
-<div>
-    <div>
-        <h3>Overview</h3>
-        <hr/>
+<ul class="nav nav-pills">
+    <li ng-class="{active:showLoginTickets == true}">
+        <a href="" ng-click="toggleLoginTickets()">New Tickets Since Last Login
+            <span class="badge" ng-bind="lastLogout.numberOfTickets"></span></a>
+    </li>
+    <li ng-hide="session.role != 'IT User'" ng-class="{active:showAssignedTickets == true}">
+        <a href="" ng-click="toggleAssignedTickets()">Your Assigned Tickets
+            <span class="badge" ng-bind="assignedTickets.numberOfTickets"></span></a>
+    </li>
+</ul><br/>
 
-        <ul class="nav nav-pills">
-            <li ng-class="{active:showLoginTickets == true}">
-                <a href="" ng-click="toggleLoginTickets()">New Tickets Since Last Login
-                    <span class="badge" ng-bind="lastLogout.numberOfTickets"></span></a>
-            </li>
-            <li ng-hide="session.role != 'IT User'" ng-class="{active:showAssignedTickets == true}">
-                <a href="" ng-click="toggleAssignedTickets()">Your Assigned Tickets
-                    <span class="badge" ng-bind="assignedTickets.numberOfTickets"></span></a>
-            </li>
-        </ul><br/>
+<div class="ticketList" ng-show="showLoginTickets == true">
+    <login-tickets>
+        <table>
+            <tr>
+                <th style="width: 50px"></th>
+                <th style="text-align: center;">Priority</th>
+                <th>Title</th>
+                <th>Department</th>
+                <th>Assigned To</th>
+                <th>Date Due</th>
+                <th>Date Completed</th>
+            </tr>
 
-        <div class="ticketList" ng-show="showLoginTickets == true">
-            <login-tickets>
-                <table>
-                    <tr>
-                        <th style="width: 50px"></th>
-                        <th>Priority</th>
-                        <th>Title</th>
-                        <th>Department</th>
-                        <th>Assigned To</th>
-                        <th>Date Due</th>
-                        <th>Date Completed</th>
-                    </tr>
-
-                    <tr ng-repeat="ticket in lastLogout.ticketList">
-                        <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
-                        <td>
-                            <div style="display: flex; justify-content: center;">
-                                {{ ticket.priority }}
-                            </div>
-                        </td>
-                        <td>{{ ticket.title }}</td>
-                        <td>{{ ticket.department }}</td>
-                        <td>{{ ticket.assigned_to }}</td>
-                        <td>{{ ticket.due_date }}</td>
-                        <td>{{ ticket.complete_date }}</td>
-                    </tr>
-                </table>
-            </login-tickets>
-        </div>
-
-        <div class="ticketList" ng-show="showAssignedTickets == true">
-            <assigned-tickets>
-                <table>
-                    <tr>
-                        <th style="width: 50px"></th>
-                        <th>Priority</th>
-                        <th>Title</th>
-                        <th>Department</th>
-                        <th>Assigned To</th>
-                        <th>Date Due</th>
-                        <th>Date Completed</th>
-                    </tr>
-
-                    <tr ng-repeat="ticket in assignedTickets.ticketList">
-                        <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
-                        <td>
-                            <div style="display: flex; justify-content: center;">
-                                {{ ticket.priority }}
-                            </div>
-                        </td>
-                        <td>{{ ticket.title }}</td>
-                        <td>{{ ticket.department }}</td>
-                        <td>{{ ticket.assigned_to }}</td>
-                        <td>{{ ticket.due_date }}</td>
-                        <td>{{ ticket.complete_date }}</td>
-                    </tr>
-                </table>
-            </assigned-tickets>
-        </div>
-    </div>
-    <div class="row ticketList">
-        <over-tickets style="display: flex; justify-content: space-around">
-            <div>
-                <h4 style="position: relative; top: 15px;">{{ overview1 }}</h4>
-                <hr style="position: relative; top: 5px;"/>
-                <table>
-                    <tr>
-                        <th style="width: 50px"></th>
-                        <th style="width: 75px;">Priority</th>
-                        <th>Title</th>
-                        <th style="width: 100px;">Date Due</th>
-                    </tr>
-                    <tr ng-repeat="ticket in ticketList1">
-                        <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
-                        <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
-                        <td>{{ ticket.title }}</td>
-                        <td ng-bind="ticket.due_date.substr(0,10);"></td>
-                    </tr>
-                </table>
-                <br/><br/>
-            </div>
-            <div>
-                <h4 style="position: relative; top: 15px;">{{ overview2 }}</h4>
-                <hr style="position: relative; top: 5px;"/>
-                <table>
-                    <tr>
-                        <th style="width: 50px"></th>
-                        <th style="width: 75px;">Priority</th>
-                        <th>Title</th>
-                        <th style="width: 100px;">Date Due</th>
-                    </tr>
-                    <tr ng-repeat="ticket in ticketList2">
-                        <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
-                        <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
-                        <td>{{ ticket.title }}</td>
-                        <td ng-bind="ticket.due_date.substr(0,10);"></td>
-                    </tr>
-                </table>
-                <br><br/>
-            </div>
-            <div>
-                <h4 style="position: relative; top: 15px;">{{ overview3 }}</h4>
-                <hr style="position: relative; top: 5px;"/>
-                <table>
-                    <tr>
-                        <th style="width: 50px"></th>
-                        <th style="width: 75px;">Priority</th>
-                        <th>Title</th>
-                        <th style="width: 100px;">Date Completed</th>
-                    </tr>
-                    <tr ng-repeat="ticket in ticketList3">
-                        <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
-                        <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
-                        <td>{{ ticket.title }}</td>
-                        <td ng-bind="ticket.complete_date.substr(0,10);"></td>
-                    </tr>
-                </table>
-                <br/><br/>
-            </div>
-        </over-tickets>
-    </div>
+            <tr ng-repeat="ticket in lastLogout.ticketList">
+                <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
+                <td style="text-align: center;">{{ ticket.priority }}</td>
+                <td>{{ ticket.title }}</td>
+                <td>{{ ticket.department }}</td>
+                <td>{{ ticket.assigned_to }}</td>
+                <td>{{ ticket.due_date }}</td>
+                <td>{{ ticket.complete_date }}</td>
+            </tr>
+        </table>
+    </login-tickets>
 </div>
+
+<div class="ticketList" ng-show="showAssignedTickets == true">
+    <assigned-tickets>
+        <table>
+            <tr>
+                <th style="width: 50px"></th>
+                <th style="text-align: center;">Priority</th>
+                <th>Title</th>
+                <th>Department</th>
+                <th>Assigned To</th>
+                <th>Date Due</th>
+                <th>Date Completed</th>
+            </tr>
+
+            <tr ng-repeat="ticket in assignedTickets.ticketList">
+                <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
+                <td style="text-align: center;">{{ ticket.priority }}</td>
+                <td>{{ ticket.title }}</td>
+                <td>{{ ticket.department }}</td>
+                <td>{{ ticket.assigned_to }}</td>
+                <td>{{ ticket.due_date }}</td>
+                <td>{{ ticket.complete_date }}</td>
+            </tr>
+        </table>
+    </assigned-tickets>
+</div>
+</div>
+<div class="row ticketList">
+<over-tickets style="display: flex; justify-content: space-around">
+    <div class="col-md-4">
+        <h4 style="position: relative; top: 15px;">{{ overview1 }}</h4>
+        <hr style="position: relative; top: 5px;"/>
+        <table>
+            <tr>
+                <th style="width: 50px"></th>
+                <th style="width: 75px; text-align: center;">Priority</th>
+                <th>Title</th>
+                <th style="width: 100px;">Date Due</th>
+            </tr>
+            <tr ng-repeat="ticket in ticketList1">
+                <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
+                <td style="text-align: center">{{ ticket.priority }}</td>
+                <td>{{ ticket.title }}</td>
+                <td ng-bind="ticket.due_date.substr(0,10);"></td>
+            </tr>
+        </table>
+        <br/><br/>
+    </div>
+    <div class="col-md-4">
+        <h4 style="position: relative; top: 15px;">{{ overview2 }}</h4>
+        <hr style="position: relative; top: 5px;"/>
+        <table>
+            <tr>
+                <th style="width: 50px"></th>
+                <th style="width: 75px; text-align: center;">Priority</th>
+                <th>Title</th>
+                <th style="width: 100px;">Date Due</th>
+            </tr>
+            <tr ng-repeat="ticket in ticketList2">
+                <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
+                <td style="text-align: center">{{ ticket.priority }}</td>
+                <td>{{ ticket.title }}</td>
+                <td ng-bind="ticket.due_date.substr(0,10);"></td>
+            </tr>
+        </table>
+        <br><br/>
+    </div>
+    <div class="col-md-4">
+        <h4 style="position: relative; top: 15px;">{{ overview3 }}</h4>
+        <hr style="position: relative; top: 5px;"/>
+        <table>
+            <tr>
+                <th style="width: 50px"></th>
+                <th style="width: 75px; text-align: center;">Priority</th>
+                <th>Title</th>
+                <th style="width: 100px;">Date Completed</th>
+            </tr>
+            <tr ng-repeat="ticket in ticketList3">
+                <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
+                <td style="text-align: center">{{ ticket.priority }}</td>
+                <td>{{ ticket.title }}</td>
+                <td ng-bind="ticket.complete_date.substr(0,10);"></td>
+            </tr>
+        </table>
+        <br/><br/>
+    </div>
+</over-tickets>

@@ -780,8 +780,7 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
     // headings
     $scope.heading1 = "Name";
     $scope.heading2 = "Email";
-    $scope.heading3 = "Password";
-    $scope.heading4 = "Role";
+    $scope.heading3 = "Role";
 
     $scope.setRole = function(role) {
         $scope.newRole = role;
@@ -804,7 +803,6 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
             $scope.heading1 = "";
             $scope.heading2 = "";
             $scope.heading3 = "";
-            $scope.heading4 = "";
         } else {
             $scope.isEdit = null;
             $scope.newName = null;
@@ -812,8 +810,7 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
 
             $scope.heading1 = "Name";
             $scope.heading2 = "Email";
-            $scope.heading3 = "Password";
-            $scope.heading4 = "Role";
+            $scope.heading3 = "Role";
         }
     }
 
@@ -1030,8 +1027,8 @@ adminModule.controller('viewdeptController', function($scope, $timeout, $route) 
 
 adminModule.controller('newdeptController', function($scope, $location) {
     $scope.create = function() {
-        socket.emit('setDept', null, $scope.deptname, $scope.managers, null);
         $scope.session.dept.push($scope.deptname);
+        socket.emit('setDept', null, $scope.deptname, $scope.managers, null);
         $location.path('/viewdepts');
     }
 });
