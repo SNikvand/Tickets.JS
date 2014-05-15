@@ -82,12 +82,20 @@ app.get('/logout', function(req, res) {
     });
 });
 
+// mark that the user has already seen their "tickets since last logout"
+// so that they don't appear again
+app.post('/setLoggedIn', function(req, res) {
+    req.session.lastLogout = "loggedIn";
+
+    res.json(req.session.lastLogout);
+});
+
 app.get('/getSession', function(req, res) {
     res.json(req.session);
 });
 
-
 app.post('/verifyAccess', function(req, res) {
+    console.log("verifyAccess session: " + JSON.stringify(req.session));
     var role = req.session.role;
     var pageid = req.body.pageid.toString();
     res.send(permissions.checkRestriction(pageid, role, res));
@@ -101,7 +109,6 @@ app.post('/setFilters', function(req, res) {
     req.session.filters.includeArchived = req.body.includeArchived;
     req.session.filters.amount = req.body.amount;
 
-    console.log("server-side filters: " + JSON.stringify(req.session.filters));
     res.json(req.session.filters);
 });
 

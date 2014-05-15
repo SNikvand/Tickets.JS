@@ -274,7 +274,7 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
     }
 });
 
-adminModule.controller('overviewController', function($scope, $location) {
+adminModule.controller('overviewController', function($scope, $http, $location) {
     console.log("base session test: "  + JSON.stringify($scope.session));
 
     $scope.showLoginTickets = false;
@@ -306,8 +306,8 @@ adminModule.controller('overviewController', function($scope, $location) {
             assignedTo: $scope.session.user, alteredBy: null, dateCreated: null, dateAltered: null, lastLogout: lastLogout};
     }
 
-    $scope.lastLogout = {numberOfTickets: null, ticketList: null};
-    $scope.assignedTickets = {numberOfTickets: null, ticketList: null};
+    $scope.lastLogout = {numberOfTickets: 0, ticketList: null};
+    $scope.assignedTickets = {numberOfTickets: 0, ticketList: null};
 
     socket.emit('getTicketsLogout', defFilters, searchParams, 'includeCompleted', 'includeExpired', 'includeArchived', null, "create_date", "desc");
     socket.emit('getTicketsView', defFilters, searchParams, 'excludeCompleted', 'includeExpired', 'excludeArchived', null, "create_date", "desc");
@@ -316,7 +316,12 @@ adminModule.controller('overviewController', function($scope, $location) {
         if ($scope.showLoginTickets == false) {
             $scope.showLoginTickets = true;
             $scope.showAssignedTickets = false;
+
             $scope.session.lastLogout = "loggedIn";
+            $http({method: "POST", url: "/setLoggedIn", headers: {'Content-Type': 'application/json'}})
+                .success(function (data) {
+                    $scope.session.lastLogout = data;
+                });
         } else {
             $scope.showLoginTickets = false;
         }
@@ -709,8 +714,12 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
 
 });
 
-adminModule.controller('newticketController', function($scope, $location) {
+adminModule.controller('newticketController', function($scope, $location, $http) {
     $scope.session.lastLogout = "loggedIn";
+    $http({method: "POST", url: "/setLoggedIn", headers: {'Content-Type': 'application/json'}})
+        .success(function (data) {
+            $scope.session.lastLogout = data;
+        });
 
     $scope.dept = "Department";
     $scope.priority = "Priority";
