@@ -270,7 +270,6 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
     };
 
     $scope.resetViewParams = function() {
-        console.log("panel test: " + JSON.stringify($scope.session));
         ticketParams.resetParams($scope.session);
     }
 });
@@ -378,8 +377,6 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
     }
 
     $scope.saveEdits = function() {
-        console.log("isEdit: " + $scope.isEdit);
-        console.log("isEditArchive: " + $scope.isEditArchive);
 
         socket.emit('setTicket', $scope.isEdit, null, $scope.newDept, null, $scope.newPriority, null, null,
             $scope.newAssignedTo, $scope.alteredBy, null, null, null, $scope.isCompleted, $scope.isEditArchive);
@@ -390,15 +387,13 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
     }
 
     $scope.toggleEdit = function(ticket) {
-        if ($scope.isEdit != ticket.hash || $scope.isEditArchive != ticket.isArchive) {
-            $scope.isEdit = ticket.hash;
+        if ($scope.isEdit != ticket.id || $scope.isEditArchive != ticket.isArchive) {
+            $scope.isEdit = ticket.id;
             $scope.isEditArchive = ticket.isArchive;
             $scope.newPriority = ticket.priority;
             $scope.newDept = ticket.department;
             $scope.newAssignedTo = ticket.assigned_to;
             $scope.isCompleted = (ticket.complete_date != null);
-
-            console.log("is completed: " + $scope.isCompleted);
 
             $scope.heading1 = "";
             $scope.heading2 = "";
@@ -487,14 +482,9 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
     }
 
     $scope.toggleEdit = function(ticket) {
-        console.log("isEdit: " + $scope.isEdit);
-        console.log("isEditArchive: " + $scope.isEditArchive);
-        console.log("currently editing: " + ticket.hash);
-        console.log("is archive: " + ticket.isArchive);
-        console.log("is completed: " + ticket.complete_date);
 
-        if ($scope.isEdit != ticket.hash || $scope.isEditArchive != ticket.isArchive) {
-            $scope.isEdit = ticket.hash;
+        if ($scope.isEdit != ticket.id || $scope.isEditArchive != ticket.isArchive) {
+            $scope.isEdit = ticket.id;
             $scope.isEditArchive = ticket.isArchive;
             $scope.newPriority = ticket.priority;
             $scope.newDept = ticket.department;
@@ -665,7 +655,6 @@ adminModule.service('ticketParams', function($location, $http) {
         }
 
         var sessionFilters = session.filters;
-        console.log("session filters: " + JSON.stringify(session.filters));
 
         socket.emit('getTicketsView', sessionFilters.viewfilters, sessionFilters.searchParams,
             sessionFilters.includeCompleted, sessionFilters.includeExpired, sessionFilters.includeArchived,
@@ -691,10 +680,6 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
     }
 
     $scope.submitReply = function() {
-        console.log("desc: " + $scope.replyDesc);
-        console.log("id: " + $routeParams.ticketid);
-        console.log("isArchive: " + $routeParams.isArchive);
-
         socket.emit('setReply', $routeParams.ticketid, $routeParams.isArchive, $scope.session.user, $scope.replyDesc);
 
         $timeout(function() {
@@ -726,8 +711,6 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
 
 adminModule.controller('newticketController', function($scope, $location) {
     $scope.session.lastLogout = "loggedIn";
-    console.log("logout time: " + $scope.session.lastLogout);
-    console.log("depts: " + $scope.session.dept);
 
     $scope.dept = "Department";
     $scope.priority = "Priority";
@@ -832,10 +815,6 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
             $scope.heading3 = "Password";
             $scope.heading4 = "Role";
         }
-
-        console.log("currently editing: " + $scope.isEdit);
-        console.log("new name: " + $scope.newName);
-        console.log("new role: " + $scope.newRole);
     }
 
     $scope.checkIfEdit = function(id) {
@@ -864,6 +843,157 @@ adminModule.controller('newuserController', function($scope, $location) {
 
 adminModule.controller('viewdeptController', function($scope, $timeout, $route) {
     socket.emit('getDepts');
+
+    // error message
+    $scope.errorMsg_users = null;
+
+    $scope.isEdit = null;
+    $scope.oldName = null;
+
+    // edited fields
+    $scope.newName = null;
+    $scope.addUsers = [];
+    $scope.delUsers = [];
+    $scope.newUser = null;
+
+    // original list of users
+    $scope.initialUsers = [];
+
+    // temporary list of users that can be added to or removed from
+    // resets upon toggling edit
+    $scope.tempUsers = [];
+
+    // headings
+    $scope.heading1 = "Dept. Name";
+    $scope.heading2 = "Managers";
+
+    $scope.saveEdits = function() {
+        $scope.errorMsg_users = null;
+
+        // modify session
+        if ($scope.oldName != $scope.newName) {
+            $scope.session.dept[$scope.session.dept.indexOf($scope.oldName)] = $scope.newName;
+        }
+
+        $scope.addUserStr = "";
+        $scope.delUserStr = "";
+
+        if ($scope.addUsers != null) {
+            for (var i in $scope.addUsers) {
+                $scope.addUserStr += $scope.addUsers[i] + " ";
+            }
+            $scope.addUserStr = $scope.addUserStr.trim();
+        }
+
+        if ($scope.delUsers != null) {
+            for (var j in $scope.delUsers) {
+                $scope.delUserStr += $scope.delUsers[j] + " ";
+            }
+            $scope.delUserStr = $scope.delUserStr.trim();
+        }
+
+        $scope.addUserStr = ($scope.addUserStr == "" ? null : $scope.addUserStr);
+        $scope.delUserStr = ($scope.delUserStr == "" ? null : $scope.delUserStr);
+
+        console.log("isEdit: " + $scope.isEdit);
+        console.log("addUsers: " + $scope.addUsers);
+        console.log("delUsers: " + $scope.delUsers);
+        console.log("addUsersStr: " + $scope.addUserStr);
+        console.log("delUsersStr: " + $scope.delUserStr);
+
+        socket.emit('setDept', $scope.isEdit, $scope.newName, $scope.addUserStr, $scope.delUserStr);
+
+        $timeout(function() {
+            $route.reload();
+        }, 500);
+    }
+
+    $scope.toggleEdit = function(dept) {
+        if ($scope.isEdit != dept.id) {
+            $scope.errorMsg_users = null;
+
+            $scope.isEdit = dept.id;
+            $scope.oldName = dept.name;
+            $scope.newName = dept.name;
+
+            $scope.addUsers = [];
+            $scope.delUsers = [];
+            $scope.newUser = null;
+
+            $scope.initialUsers = [];
+            $scope.tempUsers = [];
+
+            $scope.initialUsers = dept.managers;
+            for (var x in dept.managers) {
+                $scope.tempUsers.push(dept.managers[x]);
+            }
+
+            $scope.heading1 = "";
+            $scope.heading2 = "";
+        } else {
+            $scope.errorMsg_users = null;
+
+            $scope.isEdit = null;
+            $scope.oldName = null;
+            $scope.newName = null;
+            $scope.addUsers = [];
+            $scope.delUsers = [];
+            $scope.newUser = null;
+
+            $scope.initialUsers = [];
+            $scope.tempUsers = [];
+
+            $scope.heading1 = "Dept. Name";
+            $scope.heading2 = "Managers";
+        }
+    }
+
+    $scope.checkIfEdit = function(id) {
+        return $scope.isEdit == id;
+    }
+
+    $scope.addToUsers = function(username) {
+        if (username == null) {
+            $scope.errorMsg_users = "No username entered.";
+            return;
+        } else {
+            $scope.errorMsg_users = null;
+        }
+
+        // if username wasn't in the initial list, add it
+        // otherwise, it's sufficient to remove it from the "delUsers" array
+        if ($scope.initialUsers.indexOf(username) == -1) {
+            $scope.addUsers.push(username);
+        }
+        // if not already displayed in the list, display the username
+        if ($scope.tempUsers.indexOf(username) == -1) {
+            if ($scope.tempUsers[0] == '') {
+                $scope.tempUsers[0] = username;
+            } else {
+                $scope.tempUsers.push(username);
+            }
+        } else {
+            $scope.errorMsg_users = "The manager is already assigned to this department.";
+            $scope.newUser = null;
+            return;
+        }
+
+        $scope.delUsers.splice($scope.delUsers.indexOf(username), 1);
+        $scope.newUser = null;
+    }
+
+    $scope.delFromUsers = function(username) {
+        if (username == null) {
+            $scope.errorMsg_users = "No username entered.";
+            return;
+        } else {
+            $scope.errorMsg_users = null;
+        }
+
+        $scope.tempUsers.splice($scope.tempUsers.indexOf(username), 1);
+        $scope.addUsers.splice($scope.addUsers.indexOf(username), 1);
+        $scope.delUsers.push(username);
+    }
 
     if ($scope.session.role == "IT User") {
         $scope.displayProp = 'none';
@@ -899,14 +1029,9 @@ adminModule.controller('viewdeptController', function($scope, $timeout, $route) 
 });
 
 adminModule.controller('newdeptController', function($scope, $location) {
-    $scope.deptname = "Department";
-
-    $scope.setDept = function(dept) {
-        $scope.deptname = dept;
-    }
-
     $scope.create = function() {
-        socket.emit('setDept', null, $scope.deptname, $scope.managers);
+        socket.emit('setDept', null, $scope.deptname, $scope.managers, null);
+        $scope.session.dept.push($scope.deptname);
         $location.path('/viewdepts');
     }
 });
@@ -1030,7 +1155,6 @@ adminModule.directive('loginTickets', function() {
         restrict: 'E',
         link: function(scope, element, attrs) {
             socket.on('displayTicketsLogout', function(ticketList) {
-                console.log("login tickets: " + JSON.stringify(ticketList));
                 scope.lastLogout.ticketList = ticketList;
                 scope.lastLogout.numberOfTickets = ticketList.length;
                 scope.$apply();
@@ -1207,14 +1331,15 @@ adminModule.directive('ticketReplies', function() {
     return {
         restrict: 'E',
         link: function(scope, element, attrs) {
+            socket.on('displayReplies', function(replyList) {
+                scope.replies = replyList;
+                scope.$apply();
+            });
+
             $('#toggleReply').on('click', function() {
                 $('html, body').animate({
                     scrollTop: $("#replyForm").offset().top - 65
                 }, 250);
-            });
-
-            socket.on('displayReplies', function(replyList) {
-                scope.replies = replyList;
             });
         }
     }

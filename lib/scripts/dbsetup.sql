@@ -16,7 +16,7 @@ CREATE TABLE departments
   CONSTRAINT pk_departmentID PRIMARY KEY (id)
 )
 
-CREATE TABLE user-dept
+CREATE TABLE user_dept
 (
   user_id INT NOT NULL,
   dept_id INT NOT NULL,

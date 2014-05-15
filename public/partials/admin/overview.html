@@ -28,7 +28,7 @@
                     </tr>
 
                     <tr ng-repeat="ticket in lastLogout.ticketList">
-                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">View</a></td>
+                        <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
                         <td>
                             <div style="display: flex; justify-content: center;">
                                 {{ ticket.priority }}
@@ -58,7 +58,7 @@
                     </tr>
 
                     <tr ng-repeat="ticket in assignedTickets.ticketList">
-                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">View</a></td>
+                        <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
                         <td>
                             <div style="display: flex; justify-content: center;">
                                 {{ ticket.priority }}
@@ -87,7 +87,7 @@
                         <th style="width: 100px;">Date Due</th>
                     </tr>
                     <tr ng-repeat="ticket in ticketList1">
-                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">View</a></td>
+                        <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
                         <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
                         <td ng-bind="ticket.due_date.substr(0,10);"></td>
@@ -106,7 +106,7 @@
                         <th style="width: 100px;">Date Due</th>
                     </tr>
                     <tr ng-repeat="ticket in ticketList2">
-                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">View</a></td>
+                        <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
                         <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
                         <td ng-bind="ticket.due_date.substr(0,10);"></td>
@@ -125,7 +125,7 @@
                         <th style="width: 100px;">Date Completed</th>
                     </tr>
                     <tr ng-repeat="ticket in ticketList3">
-                        <td><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">View</a></td>
+                        <td><a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">View</a></td>
                         <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
                         <td>{{ ticket.title }}</td>
                         <td ng-bind="ticket.complete_date.substr(0,10);"></td>
