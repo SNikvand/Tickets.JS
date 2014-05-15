@@ -48,7 +48,7 @@ app.post('/login', function(req, res) {
 
     function authenticate(user, pass) {
         ticket_server.authenticateLogin(user, md5(pass), authCallback);
-    };
+    }
 
     function authCallback(sendback) {
         console.log(JSON.stringify(sendback));
@@ -85,6 +85,7 @@ app.get('/logout', function(req, res) {
 app.get('/getSession', function(req, res) {
     res.json(req.session);
 });
+
 
 app.post('/verifyAccess', function(req, res) {
     var role = req.session.role;
