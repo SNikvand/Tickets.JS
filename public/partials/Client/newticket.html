@@ -1,55 +1,65 @@
-<div>
-    <div>
-        <h3>Create a New Ticket</h3>
-        <hr/>
 
-        <new-ticket>
-            <div class="form-signin">
-                <form role="form">
-                    <div class="form-group">
-                        <label class="control-group">Title</label>
-                        <input id="title" ng-model="title" placeholder="Ticket title" class="form-control" type="text" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-group">Dept</label>
-                        <input id="dept" ng-model="dept" placeholder="Department" class="form-control" type="text" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-group">User</label>
-                        <input ng-disabled="isUser()" id="user" ng-model="user" placeholder="Your first and last name" class="form-control" type="text" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-group">E-mail Address</label>
-                        <input id="email" ng-model="email" placeholder="Your email address" class="form-control" type="text" required>
-                    </div>
-
-                    <label class="control-label">Priority</label><br/>
-                    <div class="btn-group" style="margin-bottom:15px">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:100px;height:40px">
-                            Priority <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="">1</a></li>
-                            <li><a href="">2</a></li>
-                            <li><a href="">3</a></li>
-                            <li><a href="">4</a></li>
-                            <li><a href="">5</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-group">Description</label>
-                        <textarea id="body" ng-model="body" placeholder="Description/explanation of ticket issue" class="form-control" rows="3" required>
-
-                        </textarea>
-                    </div>
-
-                    <button class="btn btn-lg btn-primary btn-block" ng-click="submit()">Submit Ticket</button>
-                </form>
+<div class="container">
+    <form class="form-signin2" role="form">
+        <h3 class="form-signin-heading">Hello, Create a new ticket</h3>
+        <hr>
+        <div class="row">
+            <div class="row">
+                <div class="col-xs-8 col-sm-6 col-md-6 col-lg-6">
+                    <label for="name">Firstname</label>
+                    <input type="text" class="form-control" id="firstname" placeholder="John" required autofocus>
+                </div>
+                <div class="col-xs-8 col-sm-6 col-md-6 col-lg-6">
+                    <label for="name">Lastname</label>
+                    <input type="text" class="form-control" id="lastname" placeholder="Smith" required>
+                </div>
             </div>
-        </new-ticket>
-    </div>
+            <div class="row">
+                <div class="col-xs-10 col-sm-12 col-md-12 col-lg-12 ">
+                    <label for="name">Email</label>
+                    <input type="email" class="form-control" placeholder="JSmith@mail.com" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-10 col-sm-6 col-md-6 col-lg-6">
+                    <label for="name">Department</label><br />
+                    <select class="dropdown" id="assignuser" style="margin-top:1px;height:43px">
+                        <option ng-repeat="dept in departments" value="{{ dept.name }}">{{ dept.name }}</option>
+                    </select>
+                </div>
+
+                <div class="col-xs-10 col-sm-6 col-md-6 col-lg-6">
+                    <label for="name">Priority</label><br />
+                    <select class="dropdown" id="priority" style="margin-top:1px;height:43px" onclick="pioritycolor()">
+                        <option value="1">1 (urgent)</option>
+                        <option value="2">2 (next day)</option>
+                        <option value="3" selected>3 (3 days)</option>
+                        <option value="4">4 (1 week)</option>
+                        <option value="5">5 (2-3 weeks)</option>
+                        <option value="6">6 (1 month)</option>
+                    </select>
+                </div>
+            </div>
+            <div class='row'>
+                <div class="col-xs-10 col-sm-12 col-md-12 col-lg-12">
+                    <label for="name">Subject</label>
+                    <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                </div>
+            </div>
+
+            <br/>
+            <div class='row'>
+                <div class="container app col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <label for="name">Issue Discription</label>
+                    <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent"></div>
+                </div>
+            </div>
+
+            <br/>
+            <div class='row'>
+                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9"><button class="btn btn-lg btn-primary btn-block" type="submit" id="submitbutton">Submit</button></div>
+
+            </div>
+        </div>
+    </form>
 </div>

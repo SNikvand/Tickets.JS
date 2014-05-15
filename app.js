@@ -75,6 +75,15 @@ app.get('/getSession', function(req, res) {
     res.json(req.session);
 });
 
+app.get('/getDepts', function(req, res) {
+
+    function sendbackDepts(deptList) {
+        res.json(deptList);
+    }
+
+    ticket_server.getAllDepts(sendbackDepts);
+});
+
 app.post('/verifyAccess', function(req, res) {
     var role = req.session.role;
     var pageid = req.body.pageid.toString();

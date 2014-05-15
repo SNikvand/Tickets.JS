@@ -1,4 +1,5 @@
-var clientModule = angular.module('client', ['ngRoute']);
+var clientModule = angular.module('client', ['ngRoute', 'textAngular']);
+
 
 //routing configuration for the portal page.
 clientModule.config(function($routeProvider,$locationProvider) {
@@ -7,7 +8,7 @@ clientModule.config(function($routeProvider,$locationProvider) {
             templateUrl: '/partials/client/newticket.html',
             controller: 'newticketController'
         })
-        .when('/viewticket/:hash', { // route when user has a Hash value for a previously made ticket.
+        .when('/viewticket/:hash', {
             templateUrl: '/partials/client/viewticket.html',
             controller: 'viewticketController'
         })
@@ -21,7 +22,11 @@ clientModule.config(function($routeProvider,$locationProvider) {
 });
 
 // new ticket controller
-clientModule.controller('newticketController', function($scope, $location) {
+clientModule.controller('newticketController', function($scope, $location, $http) {
+    $scope.orightml = '';
+    $scope.htmlcontent = $scope.orightml;
+    $scope.disabled = false;
+
     $scope.submit = function() { // when submit is pressed sends the data in the fields
         socket.emit('setTicket', null, $scope.title, $scope.dept, $scope.body, $scope.priority, $scope.user, $scope.email,
             null, null, null, null, null, null, false);
@@ -29,11 +34,20 @@ clientModule.controller('newticketController', function($scope, $location) {
         $location.path('/viewticket'); // routes to a view of the newly created ticket.
 
     }
+
+    $http({method: "GET", url: "/getDepts", headers: {'Content-Type': 'application/json'}})
+        .success(function (data) {
+            $scope.departments = data;
+            console.log("depts: " + JSON.stringify($scope.departments));
+        });
 });
+
 
 clientModule.controller('viewticketController', function($scope) {
 
 });
+
+
 
 // this directive controls the drop-down options on the new ticket page.
 clientModule.directive('newTicket', function($location) {
