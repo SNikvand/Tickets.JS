@@ -232,12 +232,21 @@ adminModule.config(function($routeProvider,$locationProvider) {
 });
 
 // get session variables from server
-adminModule.controller('sessionController', function($scope, $http) {
+adminModule.controller('sessionController', function($scope, $http, $location) {
     $http({method: "GET", url: "/getSession", headers: {'Content-Type': 'application/json'}})
         .success(function (data) {
             $scope.session = data;
             $scope.userdept = $scope.session.dept;
         });
+
+    $scope.errorMsg = null;
+    socket.on('error', function(msg) {
+        $scope.errorMsg = msg;
+    });
+
+    $scope.eraseErrorMsg = function() {
+        $scope.errorMsg = null;
+    }
 });
 
 adminModule.controller('panelController', function($scope, $location, ticketParams) {
@@ -348,6 +357,10 @@ adminModule.controller('restrictController', function($scope) {
 adminModule.controller('viewticketsController', function($scope, $timeout, $route, ticketParams) {
     ticketParams.reqTickets($scope.session, false);
 
+    $scope.$on("$destroy", function(){
+        $scope.eraseErrorMsg();
+    });
+
     $scope.newtickets = [];
     if ($scope.session.role == "IT User") {
         $scope.displayProp = 'none';
@@ -357,6 +370,9 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
 
     $scope.isEdit = null;
     $scope.isEditArchive = null;
+
+    // display carets
+    $scope.showCarets = true;
 
     // edited fields
     $scope.newPriority = null;
@@ -406,6 +422,8 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
             $scope.heading4 = "";
             $scope.heading5 = "";
             $scope.heading6 = "";
+
+            $scope.showCarets = false;
         } else {
             $scope.isEdit = null;
             $scope.isEditArchive = null;
@@ -420,6 +438,8 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
             $scope.heading4 = "Assigned To";
             $scope.heading5 = "Date Due";
             $scope.heading6 = "Date Completed";
+
+            $scope.showCarets = true;
         }
     }
 
@@ -453,6 +473,9 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
 
     $scope.isEdit = null;
     $scope.isEditArchive = null;
+
+    // display carets
+    $scope.showCarets = true;
 
     // edited fields
     $scope.newPriority = null;
@@ -502,6 +525,8 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
             $scope.heading4 = "";
             $scope.heading5 = "";
             $scope.heading6 = "";
+
+            $scope.showCarets = false;
         } else {
             $scope.isEdit = null;
             $scope.isEditArchive = null;
@@ -516,6 +541,8 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
             $scope.heading4 = "Assigned To";
             $scope.heading5 = "Date Due";
             $scope.heading6 = "Date Completed";
+
+            $scope.showCarets = true;
         }
     }
 
@@ -673,6 +700,9 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
 
     socket.emit('getReplies', $routeParams.ticketid, $routeParams.isArchive);
 
+    // error message
+    $scope.errorMsg_desc = null;
+
     $scope.showReply = false;
     $scope.replyDesc = "";
 
@@ -681,10 +711,23 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
             $scope.showReply = true;
         } else {
             $scope.showReply = false;
+            $scope.replyDesc = "";
         }
     }
 
     $scope.submitReply = function() {
+        if ($scope.replyDesc == null) {
+            $scope.errorMsg_desc = "Post cannot be left blank.";
+            return;
+        } else {
+            if ($scope.replyDesc.trim() == "") {
+                $scope.errorMsg_desc = "Post cannot be left blank.";
+                $scope.replyDesc = null;
+                return;
+            }
+            $scope.errorMsg_desc = null;
+        }
+
         socket.emit('setReply', $routeParams.ticketid, $routeParams.isArchive, $scope.session.user, $scope.replyDesc);
 
         $timeout(function() {
@@ -721,6 +764,12 @@ adminModule.controller('newticketController', function($scope, $location, $http)
             $scope.session.lastLogout = data;
         });
 
+    $scope.errorMsg_title = null;
+    $scope.errorMsg_dept = null;
+    $scope.errorMsg_priority = null;
+    $scope.errorMsg_email = null;
+    $scope.errorMsg_desc = null;
+
     $scope.dept = "Department";
     $scope.priority = "Priority";
 
@@ -733,6 +782,63 @@ adminModule.controller('newticketController', function($scope, $location, $http)
     }
 
     $scope.submit = function() {
+        if ($scope.title == null) {
+            $scope.errorMsg_title = "Title cannot be left blank.";
+            return;
+        } else {
+            if ($scope.title.trim() == "") {
+                $scope.errorMsg_title = "Title cannot be left blank.";
+                $scope.title = null;
+                return;
+            }
+            $scope.errorMsg_title = null;
+        }
+
+        if ($scope.dept == "Department") {
+            $scope.errorMsg_dept = "Invalid department selected.";
+            return;
+        } else {
+            $scope.errorMsg_dept = null;
+        }
+
+        if ($scope.priority == "Priority") {
+            $scope.errorMsg_priority = "Invalid priority selected.";
+            return;
+        } else {
+            $scope.errorMsg_priority = null;
+        }
+
+        if ($scope.email == null) {
+            $scope.errorMsg_email = "Email cannot be left blank.";
+            return;
+        } else {
+            if ($scope.email.trim() == "") {
+                $scope.errorMsg_email = "Email cannot be left blank.";
+                $scope.email = null;
+                return;
+            }
+            if ($scope.email.search('@') == -1 ||
+                $scope.email[0] == '@' ||
+                $scope.email.trim()[$scope.email.length-1] == '@') {
+                $scope.errorMsg_email = "Invalid email address.";
+                $scope.email = null;
+                return;
+            }
+            $scope.errorMsg_email = null;
+        }
+
+        if ($scope.body == null) {
+            $scope.errorMsg_desc = "Ticket description cannot be left blank.";
+            return;
+        } else {
+            if ($scope.body.trim() == "") {
+                $scope.errorMsg_desc = "Ticket description cannot be left blank.";
+                $scope.body = null;
+                return;
+            }
+            $scope.errorMsg_desc = null;
+        }
+
         socket.emit('setTicket', null, $scope.title, $scope.dept, $scope.body, $scope.priority, $scope.user, $scope.email,
             null, null, null, null, null, null, false);
 
@@ -780,7 +886,18 @@ adminModule.controller('searchticketController', function($scope, ticketParams) 
 
 adminModule.controller('viewuserController', function($scope, $timeout, $route) {
     socket.emit('getUsers', null);
+
+    $scope.$on("$destroy", function(){
+        $scope.eraseErrorMsg();
+    });
+
     $scope.isEdit = null;
+
+    // display carets
+    $scope.showCarets = true;
+
+    // error message
+    $scope.errorMsg_name = null;
 
     // edited fields
     $scope.newName = null;
@@ -796,6 +913,19 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
     }
 
     $scope.saveEdits = function() {
+        if ($scope.newName == null) {
+            $scope.errorMsg_name = "Username cannot be blank.";
+            return;
+        } else {
+            if ($scope.newName.trim() == "") {
+                $scope.errorMsg_name = "Username cannot be blank.";
+                $scope.newName = null;
+                return;
+            }
+
+            $scope.errorMsg_name = null;
+        }
+
         socket.emit('setUser', $scope.isEdit, $scope.newName, null, null, $scope.newRole);
 
         $timeout(function() {
@@ -812,7 +942,11 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
             $scope.heading1 = "";
             $scope.heading2 = "";
             $scope.heading3 = "";
+
+            $scope.showCarets = false;
         } else {
+            $scope.errorMsg_name = null;
+
             $scope.isEdit = null;
             $scope.newName = null;
             $scope.newRole = null;
@@ -820,6 +954,8 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
             $scope.heading1 = "Name";
             $scope.heading2 = "Email";
             $scope.heading3 = "Role";
+
+            $scope.showCarets = true;
         }
     }
 
@@ -841,14 +977,80 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
 });
 
 adminModule.controller('newuserController', function($scope, $location) {
+    $scope.errorMsg_name = null;
+    $scope.errorMsg_email = null;
+    $scope.errorMsg_password = null;
+    $scope.errorMsg_role = null;
+
+    $scope.role = null;
+
     $scope.register = function() {
+        if ($scope.name == null) {
+            $scope.errorMsg_name = "Username cannot be left blank.";
+            return;
+        } else {
+            if ($scope.name.trim() == "") {
+                $scope.errorMsg_name = "Username cannot be left blank.";
+                $scope.name = null;
+                return;
+            }
+            $scope.errorMsg_name = null;
+        }
+
+        if ($scope.email == null) {
+            $scope.errorMsg_email = "Email cannot be left blank.";
+            return;
+        } else {
+            if ($scope.email.trim() == "") {
+                $scope.errorMsg_email = "Email cannot be left blank.";
+                $scope.email = null;
+                return;
+            }
+            if ($scope.email.search('@') == -1 ||
+                $scope.email[0] == '@' ||
+                $scope.email.trim()[$scope.email.length-1] == '@') {
+                $scope.errorMsg_email = "Invalid email address.";
+                $scope.email = null;
+                return;
+            }
+            $scope.errorMsg_email = null;
+        }
+
+        if ($scope.password == null || $scope.cpassword == null) {
+            $scope.errorMsg_password = "Password cannot be left blank.";
+            return;
+        } else {
+            if ($scope.password.trim() == "" || $scope.cpassword.trim() == "") {
+                $scope.errorMsg_password = "Password cannot be left blank.";
+                $scope.password = null;
+                $scope.cpassword = null;
+                return;
+            } else if ($scope.password != $scope.cpassword) {
+                $scope.errorMsg_password = "Passwords do not match.";
+                $scope.password = null;
+                $scope.cpassword = null;
+                return;
+            } else {
+                $scope.errorMsg_password = null;
+            }
+        }
+
+        if ($scope.role == null) {
+            $scope.errorMsg_role = "Invalid permission selected.";
+            return;
+        }
+
         socket.emit('setUser', null, $scope.name, $scope.email, $scope.password, $scope.role);
         $location.path('/viewusers');
     }
 });
 
-adminModule.controller('viewdeptController', function($scope, $timeout, $route) {
+adminModule.controller('viewdeptController', function($scope, $route) {
     socket.emit('getDepts');
+
+    $scope.$on("$destroy", function(){
+        $scope.eraseErrorMsg();
+    });
 
     // error message
     $scope.errorMsg_users = null;
@@ -960,7 +1162,7 @@ adminModule.controller('viewdeptController', function($scope, $timeout, $route) 
 
     $scope.addToUsers = function(username) {
         if (username == null) {
-            $scope.errorMsg_users = "No username entered.";
+            $scope.errorMsg_users = "Username cannot be left blank.";
             return;
         } else {
             $scope.errorMsg_users = null;
@@ -979,7 +1181,7 @@ adminModule.controller('viewdeptController', function($scope, $timeout, $route) 
                 $scope.tempUsers.push(username);
             }
         } else {
-            $scope.errorMsg_users = "The manager is already assigned to this department.";
+            $scope.errorMsg_users = "Manager is already assigned to this department.";
             $scope.newUser = null;
             return;
         }
@@ -990,7 +1192,7 @@ adminModule.controller('viewdeptController', function($scope, $timeout, $route) 
 
     $scope.delFromUsers = function(username) {
         if (username == null) {
-            $scope.errorMsg_users = "No username entered.";
+            $scope.errorMsg_users = "Username cannot be left blank.";
             return;
         } else {
             $scope.errorMsg_users = null;
@@ -1035,7 +1237,21 @@ adminModule.controller('viewdeptController', function($scope, $timeout, $route) 
 });
 
 adminModule.controller('newdeptController', function($scope, $location) {
+    $scope.errorMsg_name = null;
+
     $scope.create = function() {
+        if ($scope.deptname == null) {
+            $scope.errorMsg_name = "Department name cannot be left blank.";
+            return;
+        } else {
+            if ($scope.deptname.trim() == "") {
+                $scope.errorMsg_name = "Department name cannot be left blank";
+                $scope.deptname = null;
+                return;
+            }
+            $scope.errorMsg_name = null;
+        }
+
         $scope.session.dept.push($scope.deptname);
         socket.emit('setDept', null, $scope.deptname, $scope.managers, null);
         $location.path('/viewdepts');
@@ -1191,6 +1407,9 @@ adminModule.directive('viewTickets', function() {
             }
 
             socket.on('displayTicketsView', function(ticketList) {
+                if (ticketList.length == 0) {
+                    scope.noTickets = "Your search did not find any results.";
+                }
                 scope.maintickets = ticketList;
                 scope.$apply();
             });
@@ -1314,13 +1533,6 @@ adminModule.directive('userCreation', function() {
     return {
         restrict: 'E',
         link: function(scope, element, attrs) {
-            //JQuery functions can go in here
-            $("#cpassword").keyup(function() {
-                if ($('#cpassword').val() != $('#password').val())
-                    $("#passwordnotmatch").show();
-                else
-                    $("#passwordnotmatch").hide();
-            });
 
             $(".dropdown-toggle").on('click', function() {
                 $(".dropdown-menu li a").click(function(){

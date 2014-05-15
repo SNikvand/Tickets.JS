@@ -17,24 +17,27 @@
 </div>
 
 <div id="usersList" class="ticketList col-md-8 col-md-offset-2">
+
+    <div style="color: #f5001d; font-style: italic; margin-bottom: 20px;">{{ errorMsg }}</div>
+
     <table>
         <tr>
             <th style="width: 110px"></th>
             <th style="width: 175px;">
                 {{ heading1 }}
-                <a href="" ng-click="predicate = 'name';reverse=!reverse">
+                <a href="" ng-show="showCarets == true" ng-click="predicate = 'name';reverse=!reverse">
                     <span class="caret"></span>
                 </a>
             </th>
             <th>
                 {{ heading2 }}
-                <a href="" ng-click="predicate = 'email';reverse=!reverse">
+                <a href="" ng-show="showCarets == true" ng-click="predicate = 'email';reverse=!reverse">
                     <span class="caret"></span>
                 </a>
             </th>
             <th style="width: 110px;">
                 {{ heading3 }}
-                <a href="" ng-click="predicate = 'type';reverse=!reverse">
+                <a href="" ng-show="showCarets == true" ng-click="predicate = 'type';reverse=!reverse">
                     <span class="caret"></span>
                 </a>
             </th>
@@ -62,7 +65,8 @@
                 <td ng-show="checkIfEdit(user.id) == false">{{ user.name }}</td>
                     <td ng-hide="checkIfEdit(user.id) == false">
                         <label class="control-label">Name</label><br/>
-                        <input type="text" ng-model="$parent.newName" style="width: 120px;">
+                        <input type="text" ng-model="$parent.newName" style="width: 120px;"><br/>
+                        <span style="color: #f5001d; font-style: italic;">{{ errorMsg_name }}</span>
                     </td>
 
                 <td ng-show="checkIfEdit(user.id) == false">{{ user.email }}</td>

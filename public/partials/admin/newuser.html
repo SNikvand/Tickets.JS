@@ -5,11 +5,13 @@
         <div class="row">
             <div class="form-group col-md-6">
                 <label for="name">Username</label>
-                <input type="text" ng-model="name" id="name" class="form-control input-lg" placeholder="Login and display name"/>
+                <input type="text" ng-model="name" id="name" class="form-control input-lg" placeholder="Login and display name"/><br/>
+                <span style="color: #f5001d; font-style: italic;">{{ errorMsg_name }}</span>
             </div>
             <div class="form-group col-md-6">
                 <label for="email">Email Address</label>
-                <input type="text" ng-model="email" id="email" class="form-control input-lg" placeholder="Your email address"/>
+                <input type="text" ng-model="email" id="email" class="form-control input-lg" placeholder="Your email address"/><br/>
+                <span style="color: #f5001d; font-style: italic;">{{ errorMsg_email }}</span>
             </div>
         </div>
 
@@ -17,13 +19,11 @@
             <div class="col-md-6">
                 <label for="password">Password</label>
                 <input type="password" ng-model="password" name="password" id="password" class="form-control input-lg" placeholder="Password"/><br/>
-                <div id="passwordnotmatch" style="display:none" class="alert alert-danger">
-                    Password did not match, please try again
-                </div>
+                <div style="color: #f5001d; font-style: italic; margin-bottom: 20px;">{{ errorMsg_password }}</div>
             </div>
             <div class="col-md-6">
                 <label for="password">Confirm Password</label>
-                <input type="password" name="cpassword" id="cpassword" class="form-control input-lg" placeholder="Type your password again"/>
+                <input type="password" ng-model="cpassword" name="cpassword" id="cpassword" class="form-control input-lg" placeholder="Type your password again"/>
             </div>
         </div>
 
@@ -37,7 +37,8 @@
                     <li><a href="">Manager</a></li>
                     <li><a href="">IT User</a></li>
                 </ul>
-            </div>
+            </div><br/><br/>
+            <span style="color: #f5001d; font-style: italic;">{{ errorMsg_role }}</span>
         </div><br/>
 
         <button class="btn btn-lg btn-primary btn-block" style="width: 300px; margin: auto;" ng-click="register()" type="submit">Register</button>
