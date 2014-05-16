@@ -50,7 +50,7 @@ adminModule.config(function($routeProvider,$locationProvider) {
                 }
             }
         })
-        .when('/viewtickets/ticket/:ticketid/:isArchive', {
+        .when('/viewtickets/userticket/:ticketid/:isArchive', {
             templateUrl: '/partials/admin/ticket.html',
             controller: 'ticketController',
             resolve: {
@@ -210,22 +210,6 @@ adminModule.config(function($routeProvider,$locationProvider) {
                 }
             }
         })
-        /*.when('/replyticket', {
-            templateUrl: '/partials/admin/replyticket.html',
-            //controller: 'replyticketController',
-            resolve: {
-                verifyAccess: function(verifyAccess) {
-                    verifyAccess.checkPage("replyticket");
-                },
-                delay: function($q, $timeout) {
-                    var deferred = $q.defer();
-                    $timeout(function() {
-                        deferred.resolve();
-                    }, 100);
-                    return deferred.promise;
-                }
-            }
-        })*/
         .otherwise({
             redirectTo: '/overview'
         });

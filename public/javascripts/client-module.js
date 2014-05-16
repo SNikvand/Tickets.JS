@@ -8,7 +8,7 @@ clientModule.config(function($routeProvider,$locationProvider) {
             templateUrl: '/partials/client/newticket.html',
             controller: 'newticketController'
         })
-        .when('/viewticket/:userhash/:tickethash', {
+        .when('/viewticket/ticket/:ticketid/:isArchive', {
             templateUrl: '/partials/client/viewticket.html',
             controller: 'viewticketController'
         })
@@ -151,7 +151,7 @@ clientModule.controller('newticketController', function($scope, $location, $http
             $scope.email,
             null, null, null, null, null, null, false);
 
-        $location.path('/viewticket'); // routes to a view of the newly created ticket.
+        //$location.path('/viewticket'); // routes to a view of the newly created ticket.
     }
 
     // fetches the full list of departments to display in the dropdown
