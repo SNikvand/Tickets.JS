@@ -146,6 +146,7 @@
                 </td>
             </tr>
 
+            <button type="button" class="btn btn-default" style="height: 30px;" ng-click="archiveTickets()">Archive Tickets</button>
             <tr ng-repeat="ticket in maintickets | orderBy:predicate:reverse">
                 <!-- options -->
                 <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">

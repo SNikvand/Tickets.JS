@@ -390,6 +390,9 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
             $route.reload();
         }, 500);
     }
+  $scope.archiveTickets = function() {
+    socket.emit('archiveTickets');
+  }
 
     $scope.toggleEdit = function(ticket) {
         if ($scope.isEdit != ticket.id || $scope.isEditArchive != ticket.isArchive) {
