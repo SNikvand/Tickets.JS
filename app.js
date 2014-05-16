@@ -96,6 +96,20 @@ app.get('/getSession', function(req, res) {
     res.json(req.session);
 });
 
+app.get('/getDepts', function(req, res) {
+
+    function sendbackDepts(deptList) {
+        var simpleArray = [];
+        for (var x in deptList) {
+            simpleArray.push(deptList[x].name);
+        }
+        console.log(JSON.stringify(simpleArray));
+        res.json(simpleArray);
+    }
+
+    ticket_server.getAllDepts(sendbackDepts);
+});
+
 app.post('/verifyAccess', function(req, res) {
     console.log("verifyAccess session: " + JSON.stringify(req.session));
     var role = req.session.role;

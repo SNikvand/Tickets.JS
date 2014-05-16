@@ -6,7 +6,7 @@
         <div class="row">
             <div class="form-group col-md-6">
                 <label class="control-group">Title</label>
-                <input id="title" ng-model="title" placeholder="Ticket title" class="form-control input-lg" type="text"><br/>
+                <input id="title" ng-model="title" placeholder="Subject" class="form-control input-lg" type="text"><br/>
                 <span style="color: #f5001d; font-style: italic;">{{ errorMsg_title }}</span>
             </div>
 
@@ -49,14 +49,14 @@
             </div>
 
             <div class="form-group col-md-6">
-                <label class="control-group">E-mail Address</label>
+                <label class="control-group">Email Address</label>
                 <input id="email" ng-model="email" placeholder="Your email address" class="form-control input-lg" type="text"><br/>
                 <span style="color: #f5001d; font-style: italic;">{{ errorMsg_email }}</span>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="control-group">Description</label>
+            <label class="control-group">Description of Issue</label>
             <textarea id="body" ng-model="body" placeholder="Description/explanation of ticket issue"
                       class="form-control input-lg" rows="5">
 

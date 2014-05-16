@@ -302,12 +302,9 @@ hr {
 /*
 portal design
 */
-body {
-    background-color: #eee;
-}
 
 .form-signin2 {
-    max-width: 560px;
+    max-width: 850px;
     padding: 15px;
     margin: 0 auto;
 }
@@ -338,14 +335,6 @@ body {
 }
 
 #assignuser{
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    width:150px;
-    height:40px;
-}
-
-#submitbutton{
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
