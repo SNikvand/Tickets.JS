@@ -6,11 +6,12 @@
 var express = require('express');
 var routes = require('./routes');
 var route_admin = require('./routes/admin');
+var route_client = require('./routes/client');
+var route_login = require('./routes/login');
 var http = require('http');
 var path = require('path');
 var permissions = require('./lib/permissions.js');
 var md5 = require( 'MD5' );
-var portal = require ('./routes/portal');
 
 var app = express();
 
@@ -42,7 +43,8 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/admin', route_admin.index);
-app.get('/portal', portal.portal);
+app.get('/client', route_client.index);
+app.get('/login', route_login.index);
 
 app.post('/login', function(req, res) {
     // authenticates username and password
