@@ -54,8 +54,8 @@ adminModule.config(function($routeProvider,$locationProvider) {
             templateUrl: '/partials/admin/ticket.html',
             controller: 'ticketController',
             resolve: {
-                verifyAccess: function(verifyAccess) { // should use separate function to verify ticket page
-                    verifyAccess.checkPage("ticket");
+                verifyAccess: function($route, verifyAccess) {
+                    verifyAccess.checkPage("ticket", $route.current.params.ticketid, $route.current.params.isArchive);
                 },
                 delay: function($q, $timeout) {
                     var deferred = $q.defer();
@@ -70,8 +70,8 @@ adminModule.config(function($routeProvider,$locationProvider) {
             templateUrl: '/partials/admin/viewtickets.html',
             controller: 'viewticketsDeptController',
             resolve: {
-                verifyAccess: function(verifyAccess) { // should use separate function to verify ticket page
-                    verifyAccess.checkPage("dept");
+                verifyAccess: function($route, verifyAccess) {
+                    verifyAccess.checkPage("dept", $route.current.params.dept);
                 },
                 delay: function($q, $timeout) {
                     var deferred = $q.defer();
@@ -557,9 +557,21 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
 });
 
 // server-side authentication
-adminModule.service('verifyAccess', function($http, $location) {
-    this.checkPage = function(pageid) {
-        return $http({method: "POST", url: "/verifyAccess", data: {pageid: pageid},
+adminModule.service('verifyAccess', function($http, $location, $routeParams) {
+    this.checkPage = function(pageid, param1, param2) {
+        var extraParam1 = null;
+        var extraParam2 = null;
+
+        if (pageid == "ticket") {
+            extraParam1 = param1;
+            var isArchiveBool = (param2 === "true");
+            extraParam2 = isArchiveBool;
+        } else if (pageid == "dept") {
+            extraParam1 = param1
+        }
+
+        return $http({method: "POST", url: "/verifyAccess",
+            data: {pageid: pageid, extraParam1: extraParam1, extraParam2: extraParam2},
             headers: {'Content-Type': 'application/json'}})
             .success(function (data) {
                 if (data.toString() == "false") {
@@ -1040,7 +1052,7 @@ adminModule.controller('newuserController', function($scope, $location) {
     }
 });
 
-adminModule.controller('viewdeptController', function($scope, $route) {
+adminModule.controller('viewdeptController', function($scope, $route, $timeout) {
     socket.emit('getDepts');
 
     $scope.$on("$destroy", function(){

@@ -4,7 +4,7 @@ block content
     if session.role != "Admin" && session.role != "Manager" && session.role != "IT User"
         script(type='text/javascript').
             console.log("error: not logged in");
-            window.location.replace("/login");
+            window.location.replace('/');
     else
         script(src='/javascripts/socket.io.js')
         script(src='/javascripts/ticket_client.js')

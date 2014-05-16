@@ -11,7 +11,11 @@ var route_login = require('./routes/login');
 var http = require('http');
 var path = require('path');
 var permissions = require('./lib/permissions.js');
+
+var config = require( './lib/config' );
 var md5 = require( 'MD5' );
+var Hashids = require( 'hashids' );
+var hashids = new Hashids( config.secret );
 
 var app = express();
 
@@ -59,7 +63,7 @@ app.post('/login', function(req, res) {
 
         if (sendback.isValid == false) {
             console.log("false");
-            res.render('index', {issue: sendback.issue})
+            res.render('login', {issue: sendback.issue})
         } else {
             req.session.user = req.body.username;
             req.session.role = sendback.userRole;
@@ -113,10 +117,28 @@ app.get('/getDepts', function(req, res) {
 });
 
 app.post('/verifyAccess', function(req, res) {
-    console.log("verifyAccess session: " + JSON.stringify(req.session));
-    var role = req.session.role;
-    var pageid = req.body.pageid.toString();
-    res.send(permissions.checkRestriction(pageid, role, res));
+    if (req.body.pageid.toString() == "dept") {
+        console.log("dept access: " + (req.session.dept.indexOf(req.body.extraParam1) != -1));
+        res.send(req.session.dept.indexOf(req.body.extraParam1) != -1);
+    } else if (req.body.pageid.toString() == "ticket") {
+        var id = req.body.extraParam1;
+        var isArchive = req.body.extraParam2;
+
+        var table = (isArchive == true ? "tickets_archive" : "tickets");
+
+        var query = "SELECT d.name FROM " + table + " t JOIN departments d ON (t.department = d.id)" +
+            " WHERE t.id = " + hashids.decrypt( id.substr( id.length - 2, 2 ) ); + ";";
+        dbhelper.queryDatabase(query, returnAccess);
+
+        function returnAccess(err, result) {
+            console.log("ticket access: " + (req.session.dept.indexOf(result.rows[0].name) != -1));
+            res.send(req.session.dept.indexOf(result.rows[0].name) != -1);
+        }
+    } else {
+        var role = req.session.role;
+        var pageid = req.body.pageid.toString();
+        res.send(permissions.checkRestriction(pageid, role, res));
+    }
 });
 
 app.post('/setFilters', function(req, res) {
@@ -136,3 +158,4 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 var ticket_server = require('./lib/ticket_server.js');
 ticket_server.listen(server);
+var dbhelper = require('./lib/database.js');
