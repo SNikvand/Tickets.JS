@@ -1,22 +1,67 @@
-<div>
-    <div>
-        <h3>Submitted Ticket</h3>
-        <hr/>
+<div ng-show="isClient == false">
+    <br/>
+    <p style="color: #f5001d; font-style: italic;">You don't have permission to view this ticket.</p>
+</div>
+<div ng-show="isClient == true">
+    <h3>Ticket Information</h3>
+    <hr/>
 
-        <div id="mainTickets" class="ticketList">
-            <table>
-                <view-tickets>
-                    <tr>
-                        <th style="display: {{ displayProp }}; width: 100px"></th>
-                        <th>Priority</th>
-                        <th>Title</th>
-                        <th>Department</th>
-                        <th>Assigned To</th>
-                        <th>Date Created</th>
-                        <th>Date Altered</th>
-                    </tr>
-                </view-tickets>
-            </table>
-        </div>
+    <div class="form-reply">
+        <form role="form">
+            <div class = "replyTicket">
+                <p>Title: {{ title }}</p>
+                <p>Department: {{ department }}</p>
+                <p>Priority: {{ priority }}</p>
+                <p>Due Date: {{ due_date }}</p>
+                <br/>
+
+                <p>Author: {{ author }}</p>
+                <p>Author's Email: {{ email }}</p>
+                <p>Date Created: {{ create_date }}</p>
+                <br/>
+
+                <p>Assigned To: {{ assigned_to }}</p>
+                <p>Altered By: {{ altered_by }}</p>
+                <p>Date Altered: {{ altered_date }}</p>
+
+                <hr/>
+                <p>Description: {{ body }}</p><br />
+            </div><br />
+            <button id="toggleReply" class="btn btn-lg btn-primary btn-block" type="submit"
+                    style="width: 200px; margin: auto;"
+                    ng-click="toggleReply()">
+                New Reply
+            </button>
+
+            <div ng-hide="showReply == false">
+                <br/>
+                <textarea id="replyForm" class="form-control input-lg" ng-model="replyDesc" rows="8" placeholder="Reply to this ticket"
+                          style="width: 450px; margin: auto;"></textarea><br/>
+                <div style="color: #f5001d; font-style: italic; text-align: center;">{{ errorMsg_desc }}</div><br/>
+                <button class="btn btn-lg btn-primary btn-block" type="submit"
+                        style="width: 200px; margin: auto;"
+                        ng-click="submitReply()">
+                    Submit
+                </button>
+            </div>
+
+            <h3>Replies</h3>
+            <hr/>
+
+            <ticket-replies>
+                <div class="media">
+                    <div class="media-body" ng-repeat="reply in replies"
+                         style="border: 1px solid #A8A8A8; margin-bottom: 10px; padding: 8px; padding-bottom: 20px;">
+                        <h4 class="media-heading"
+                            style="height: 35px; letter-spacing: 2px;">
+                            <span>
+                                Posted by {{ reply.name }} - {{ reply.create_date }}
+                            </span>
+                        </h4>
+                        {{ reply.description }}
+                    </div>
+                </div>
+            </ticket-replies>
+        </form>
     </div>
 </div>

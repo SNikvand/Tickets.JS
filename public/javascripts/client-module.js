@@ -8,7 +8,7 @@ clientModule.config(function($routeProvider,$locationProvider) {
             templateUrl: '/partials/client/newticket.html',
             controller: 'newticketController'
         })
-        .when('/viewticket/ticket/:ticketid/:isArchive', {
+        .when('/viewticket/ticket/:ticketid', {
             templateUrl: '/partials/client/viewticket.html',
             controller: 'viewticketController'
         })
@@ -149,9 +149,13 @@ clientModule.controller('newticketController', function($scope, $location, $http
             $scope.priority,
             $scope.fullname.replace(/'/g, "''"),
             $scope.email,
-            null, null, null, null, null, null, false);
+            null, null, null, null, null, null, false, true);
 
         //$location.path('/viewticket'); // routes to a view of the newly created ticket.
+
+        socket.on('clientHash', function(hash) {
+            $location.path('/viewticket/ticket/' + hash);
+        });
     }
 
     // fetches the full list of departments to display in the dropdown
@@ -163,6 +167,90 @@ clientModule.controller('newticketController', function($scope, $location, $http
 });
 
 
-clientModule.controller('viewticketController', function($scope) {
+clientModule.controller('viewticketController', function($scope, $timeout, $route, $location, $routeParams) {
+    // retrieves ticket information
+    // using $routeParams.ticketid and $routeParams.isArchive
 
+    socket.emit('getReplies', $routeParams.ticketid, false);
+
+    // error message
+    $scope.errorMsg_desc = null;
+
+    $scope.showReply = false;
+    $scope.replyDesc = "";
+
+    $scope.toggleReply = function() {
+        if ($scope.showReply == false) {
+            $scope.showReply = true;
+        } else {
+            $scope.showReply = false;
+            $scope.replyDesc = "";
+        }
+    }
+
+    $scope.submitReply = function() {
+        if ($scope.replyDesc == null) {
+            $scope.errorMsg_desc = "Post cannot be left blank.";
+            return;
+        } else {
+            if ($scope.replyDesc.trim() == "") {
+                $scope.errorMsg_desc = "Post cannot be left blank.";
+                $scope.replyDesc = null;
+                return;
+            }
+            $scope.errorMsg_desc = null;
+        }
+
+        socket.emit('setReply', $routeParams.ticketid, false, null, $scope.replyDesc);
+
+        $timeout(function() {
+            $route.reload();
+        }, 500);
+    }
+
+    socket.emit('getTicket', $routeParams.ticketid, null, true);
+    socket.on('notClient', function() {
+        $scope.isClient = false;
+        $scope.$apply();
+    });
+    socket.on('displayTicket', function(hash, title, department, description, priority, author, author_email, assigned_to, altered_by,
+                                        create_date, due_date, altered_date, complete_date) {
+
+        $scope.isClient = true;
+
+        $scope.id = hash;
+        $scope.title = title;
+        $scope.author = author;
+        $scope.email = author_email;
+        $scope.create_date = create_date;
+        $scope.department = department;
+        $scope.body = description;
+        $scope.priority = priority;
+        $scope.due_date = due_date;
+        $scope.assigned_to = assigned_to;
+        $scope.altered_date = altered_date;
+        $scope.altered_by = altered_by;
+        $scope.complete_date = complete_date;
+        $scope.$apply();
+    });
+
+});
+
+clientModule.directive('ticketReplies', function() {
+    return {
+        restrict: 'E',
+        link: function(scope, element, attrs) {
+            socket.on('displayReplies', function(replyList) {
+                console.log("replies: " + JSON.stringify(replyList));
+                scope.replies = replyList;
+                scope.$apply();
+            });
+
+            $('#toggleReply').on('click', function() {
+                $('html, body').animate({
+                    scrollTop: $("#replyForm").offset().top - 65
+                }, 250);
+            });
+        }
+    }
 });

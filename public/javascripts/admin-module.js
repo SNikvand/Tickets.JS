@@ -384,7 +384,7 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
     $scope.saveEdits = function() {
 
         socket.emit('setTicket', $scope.isEdit, null, $scope.newDept, null, $scope.newPriority, null, null,
-            $scope.newAssignedTo, $scope.alteredBy, null, null, null, $scope.isCompleted, $scope.isEditArchive);
+            $scope.newAssignedTo, $scope.alteredBy, null, null, null, $scope.isCompleted, $scope.isEditArchive, null);
 
         $timeout(function() {
             $route.reload();
@@ -486,7 +486,7 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
 
     $scope.saveEdits = function() {
         socket.emit('setTicket', $scope.isEdit, null, $scope.newDept, null, $scope.newPriority, null, null,
-            $scope.newAssignedTo, $scope.alteredBy, null, null, null, $scope.isCompleted, $scope.isEditArchive);
+            $scope.newAssignedTo, $scope.alteredBy, null, null, null, $scope.isCompleted, $scope.isEditArchive, null);
 
         $timeout(function() {
             $route.reload();
@@ -719,7 +719,7 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
         }, 500);
     }
 
-    socket.emit('getTicket', $routeParams.ticketid, $routeParams.isArchive);
+    socket.emit('getTicket', $routeParams.ticketid, $routeParams.isArchive, false);
     socket.on('displayTicket', function(hash, title, department, description, priority, author, author_email, assigned_to, altered_by,
                                         create_date, due_date, altered_date, complete_date) {
 
@@ -824,7 +824,7 @@ adminModule.controller('newticketController', function($scope, $location, $http)
         }
 
         socket.emit('setTicket', null, $scope.title, $scope.dept, $scope.body, $scope.priority, $scope.user, $scope.email,
-            null, null, null, null, null, null, false);
+            null, null, null, null, null, null, false, false);
 
         $location.path('/viewtickets');
     }
@@ -1399,7 +1399,7 @@ adminModule.directive('viewTickets', function() {
             });
 
             socket.on('newTicket', function(newid) {
-                socket.emit('getTicket', newid, false);
+                socket.emit('getTicket', newid, false, false);
                 socket.on('displayTicket',
                     function(id, title, dept, description, priority, submittedBy, clientEmail,
                              assignedTo, alteredBy, dateCreated, dateDue, dateAltered, dateCompleted) {
