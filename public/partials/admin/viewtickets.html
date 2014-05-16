@@ -70,7 +70,7 @@
                         <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(ticket.id, ticket.isArchive)">Delete</a>
                         | <a href="" ng-click="toggleEdit(ticket)">Edit</a> |
                     </span>
-                    <a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">Detail</a>
+                    <a href="#/viewtickets/userticket/{{ ticket.id }}/{{ ticket.isArchive }}">Detail</a>
                 </td>
                 <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
                     <div style="min-height: 100px; position: relative; right: 15px; display: flex;
@@ -153,7 +153,7 @@
                         <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(ticket.id, ticket.isArchive)">Delete</a>
                         | <a href="" ng-click="toggleEdit(ticket)">Edit</a> |
                     </span>
-                    <a href="#/viewtickets/ticket/{{ ticket.id }}/{{ ticket.isArchive }}">Detail</a>
+                    <a href="#/viewtickets/userticket/{{ ticket.id }}/{{ ticket.isArchive }}">Detail</a>
                 </td>
                     <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
                         <div style="min-height: 100px; position: relative; right: 15px; display: flex;
@@ -217,7 +217,7 @@
                         <label class="control-label">State</label><br/>
                         <label class="checkbox-inline">
                             <input type="checkbox" ng-init="$parent.isCompleted = (ticket.complete_date != null)"
-                                   ng-model="$parent.isCompleted" ng-checked="true"> Completed?
+                                   ng-model="$parent.isCompleted"> Completed?
                         </label>
                     </td>
 

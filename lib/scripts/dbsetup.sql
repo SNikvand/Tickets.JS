@@ -40,6 +40,7 @@ CREATE TABLE tickets
   altered_date TIMESTAMP,
   assigned_to INT,
   complete_date TIMESTAMP,
+  is_client BOOLEAN,
   CONSTRAINT pk_ticketID PRIMARY KEY (id),
   CONSTRAINT fk_department FOREIGN KEY (department) REFERENCES departments(id),
   CONSTRAINT fk_alteredBy FOREIGN KEY (altered_by) REFERENCES users(id),
@@ -61,6 +62,7 @@ CREATE TABLE tickets_archive
   altered_date TIMESTAMP,
   assigned_to INT,
   complete_date TIMESTAMP NOT NULL,
+  is_client BOOLEAN,
   CONSTRAINT pk_ticket_archiveID PRIMARY KEY (id),
   CONSTRAINT fk_department FOREIGN KEY (department) REFERENCES departments(id),
   CONSTRAINT fk_alteredBy FOREIGN KEY (altered_by) REFERENCES users(id),
@@ -71,7 +73,7 @@ CREATE TABLE comments
 (
   id SERIAL NOT NULL,
   ticket_id VARCHAR(255) NOT NULL,
-  user_id INT NOT NULL,
+  user_id INT,
   create_date TIMESTAMP NOT NULL,
   description TEXT NOT NULL,
   CONSTRAINT pk_commentID PRIMARY KEY (id),
@@ -83,7 +85,7 @@ CREATE TABLE comments_archive
 (
   id SERIAL NOT NULL,
   ticket_id VARCHAR(255) NOT NULL,
-  user_id INT NOT NULL,
+  user_id INT,
   create_date TIMESTAMP NOT NULL,
   description TEXT NOT NULL,
   CONSTRAINT pk_comment_archiveID PRIMARY KEY (id),

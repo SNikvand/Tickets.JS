@@ -10,6 +10,7 @@ var http = require('http');
 var path = require('path');
 var permissions = require('./lib/permissions.js');
 var md5 = require( 'MD5' );
+var portal = require ('./routes/portal');
 
 var app = express();
 
@@ -41,6 +42,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/admin', route_admin.index);
+app.get('/portal', portal.portal);
 
 app.post('/login', function(req, res) {
     // authenticates username and password
@@ -92,6 +94,20 @@ app.post('/setLoggedIn', function(req, res) {
 
 app.get('/getSession', function(req, res) {
     res.json(req.session);
+});
+
+app.get('/getDepts', function(req, res) {
+
+    function sendbackDepts(deptList) {
+        var simpleArray = [];
+        for (var x in deptList) {
+            simpleArray.push(deptList[x].name);
+        }
+        console.log(JSON.stringify(simpleArray));
+        res.json(simpleArray);
+    }
+
+    ticket_server.getAllDepts(sendbackDepts);
 });
 
 app.post('/verifyAccess', function(req, res) {
