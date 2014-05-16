@@ -392,12 +392,17 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
     }
   $scope.archiveTickets = function() {
     socket.emit('archiveTickets');
+
+    $timeout(function() {
+        $route.reload();
+    }, 500);
   }
 
     $scope.toggleEdit = function(ticket) {
         if ($scope.isEdit != ticket.id || $scope.isEditArchive != ticket.isArchive) {
             $scope.isEdit = ticket.id;
             $scope.isEditArchive = ticket.isArchive;
+            console.log("isArchive: " + ticket.isArchive + " type: " + typeof(ticket.isArchive) );
             $scope.newPriority = ticket.priority;
             $scope.newDept = ticket.department;
             $scope.newAssignedTo = ticket.assigned_to;
@@ -685,7 +690,10 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
     // retrieves ticket information
     // using $routeParams.ticketid and $routeParams.isArchive
 
-    socket.emit('getReplies', $routeParams.ticketid, $routeParams.isArchive);
+    var isArchiveBool = ($routeParams.isArchive === "true");
+    console.log("isArchive: " + $routeParams.isArchive + " type: " + typeof(isArchiveBool) );
+
+    socket.emit('getReplies', $routeParams.ticketid, isArchiveBool);
 
     // error message
     $scope.errorMsg_desc = null;
@@ -715,14 +723,14 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
             $scope.errorMsg_desc = null;
         }
 
-        socket.emit('setReply', $routeParams.ticketid, $routeParams.isArchive, $scope.session.user, $scope.replyDesc);
+        socket.emit('setReply', $routeParams.ticketid, isArchiveBool, $scope.session.user, $scope.replyDesc);
 
         $timeout(function() {
             $route.reload();
         }, 500);
     }
 
-    socket.emit('getTicket', $routeParams.ticketid, $routeParams.isArchive, false);
+    socket.emit('getTicket', $routeParams.ticketid, isArchiveBool, false);
     socket.on('displayTicket', function(hash, title, department, description, priority, author, author_email, assigned_to, altered_by,
                                         create_date, due_date, altered_date, complete_date) {
 
