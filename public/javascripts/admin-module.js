@@ -468,6 +468,14 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
             $route.reload();
         }, 500);
     }
+
+    // for pagination
+
+    $scope.currentPage = 0;
+    $scope.pageSize = 10;
+    $scope.numberOfPages=function(){
+        return Math.ceil($scope.maintickets.length/$scope.pageSize);
+    }
 });
 
 adminModule.controller('viewticketsDeptController', function($scope, $location, $timeout, $route, $routeParams, ticketParams) {
@@ -589,6 +597,14 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
         $timeout(function() {
             $route.reload();
         }, 500);
+    }
+
+    // for pagination
+
+    $scope.currentPage = 0;
+    $scope.pageSize = 10;
+    $scope.numberOfPages=function(){
+        return Math.ceil($scope.maintickets.length/$scope.pageSize);
     }
 });
 
@@ -1053,6 +1069,14 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
         $timeout(function() {
             $route.reload();
         }, 500);
+    }
+
+    // for pagination
+
+    $scope.currentPage = 0;
+    $scope.pageSize = 10;
+    $scope.numberOfPages=function(){
+        return Math.ceil($scope.mainusers.length/$scope.pageSize);
     }
 });
 
@@ -1684,5 +1708,14 @@ adminModule.directive('ticketReplies', function() {
                 }, 250);
             });
         }
+    }
+});
+
+// for pagination
+
+adminModule.filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        return input.slice(start);
     }
 });
