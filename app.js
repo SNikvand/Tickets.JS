@@ -6,10 +6,17 @@
 var express = require('express');
 var routes = require('./routes');
 var route_admin = require('./routes/admin');
+var route_client = require('./routes/client');
+var route_login = require('./routes/login');
 var http = require('http');
 var path = require('path');
 var permissions = require('./lib/permissions.js');
-var portal = require('./routes/portal')
+
+var config = require( './lib/config' );
+var md5 = require( 'MD5' );
+var Hashids = require( 'hashids' );
+var hashids = new Hashids( config.secret );
+
 var app = express();
 
 // all environments
@@ -40,35 +47,55 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/admin', route_admin.index);
-app.get('/portal', portal.portal);
+app.get('/client', route_client.index);
+app.get('/login', route_login.index);
 
 app.post('/login', function(req, res) {
     // authenticates username and password
-    authenticate(req.body.username, req.body.password);
+    authenticate(req.body.username.replace(/'/g, "''"), req.body.password.replace(/'/g, "''"));
 
     function authenticate(user, pass) {
-        ticket_server.authenticateLogin(user, pass, authCallback);
-    };
+        ticket_server.authenticateLogin(user, md5(pass), authCallback);
+    }
 
     function authCallback(sendback) {
         console.log(JSON.stringify(sendback));
 
         if (sendback.isValid == false) {
             console.log("false");
-            res.render('index', {issue: sendback.issue})
+            res.render('login', {issue: sendback.issue})
         } else {
             req.session.user = req.body.username;
             req.session.role = sendback.userRole;
             req.session.dept = sendback.userDepts;
+            req.session.lastLogout = sendback.lastLogout;
+
+            req.session.filters = {};
+            req.session.filters.viewfilters = {dept: null, priority: null, assignedTo: null, alteredBy: null, submittedBy: null, clientEmail: null,
+                dateCreated: null, dateAltered: null};
+            req.session.filters.searchParams = {keywords: null, inTitle: false, inBody: false};
+            req.session.filters.includeCompleted = "includeCompleted";
+            req.session.filters.includeExpired = "includeExpired";
+            req.session.filters.includeArchived = "includeArchived";
+            req.session.filters.amount = null;
             res.redirect('/admin');
         }
     }
 });
 
 app.get('/logout', function(req, res) {
+    ticket_server.setLogoutTime(req.session.user);
     req.session.destroy(function() {
         res.redirect('/');
     });
+});
+
+// mark that the user has already seen their "tickets since last logout"
+// so that they don't appear again
+app.post('/setLoggedIn', function(req, res) {
+    req.session.lastLogout = "loggedIn";
+
+    res.json(req.session.lastLogout);
 });
 
 app.get('/getSession', function(req, res) {
@@ -78,16 +105,51 @@ app.get('/getSession', function(req, res) {
 app.get('/getDepts', function(req, res) {
 
     function sendbackDepts(deptList) {
-        res.json(deptList);
+        var simpleArray = [];
+        for (var x in deptList) {
+            simpleArray.push(deptList[x].name);
+        }
+        console.log(JSON.stringify(simpleArray));
+        res.json(simpleArray);
     }
 
     ticket_server.getAllDepts(sendbackDepts);
 });
 
 app.post('/verifyAccess', function(req, res) {
-    var role = req.session.role;
-    var pageid = req.body.pageid.toString();
-    res.send(permissions.checkRestriction(pageid, role, res));
+    if (req.body.pageid.toString() == "dept") {
+        console.log("dept access: " + (req.session.dept.indexOf(req.body.extraParam1) != -1));
+        res.send(req.session.dept.indexOf(req.body.extraParam1) != -1);
+    } else if (req.body.pageid.toString() == "ticket") {
+        var id = req.body.extraParam1;
+        var isArchive = req.body.extraParam2;
+
+        var table = (isArchive == true ? "tickets_archive" : "tickets");
+
+        var query = "SELECT d.name FROM " + table + " t JOIN departments d ON (t.department = d.id)" +
+            " WHERE t.id = " + hashids.decrypt( id.substr( id.length - 2, 2 ) ); + ";";
+        dbhelper.queryDatabase(query, returnAccess);
+
+        function returnAccess(err, result) {
+            console.log("ticket access: " + (req.session.dept.indexOf(result.rows[0].name) != -1));
+            res.send(req.session.dept.indexOf(result.rows[0].name) != -1);
+        }
+    } else {
+        var role = req.session.role;
+        var pageid = req.body.pageid.toString();
+        res.send(permissions.checkRestriction(pageid, role, res));
+    }
+});
+
+app.post('/setFilters', function(req, res) {
+    req.session.filters.viewfilters = req.body.viewfilters;
+    req.session.filters.searchParams = req.body.searchParams;
+    req.session.filters.includeCompleted = req.body.includeCompleted;
+    req.session.filters.includeExpired = req.body.includeExpired;
+    req.session.filters.includeArchived = req.body.includeArchived;
+    req.session.filters.amount = req.body.amount;
+
+    res.json(req.session.filters);
 });
 
 var server = http.createServer(app).listen(app.get('port'), function(){
@@ -96,3 +158,4 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 var ticket_server = require('./lib/ticket_server.js');
 ticket_server.listen(server);
+var dbhelper = require('./lib/database.js');

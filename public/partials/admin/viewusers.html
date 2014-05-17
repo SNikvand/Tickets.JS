@@ -1,32 +1,99 @@
-<div>
-    <div>
-        <h3>View Users</h3>
-        <hr/>
+<h3>View Users</h3>
+<hr/>
 
-        <div id="usersList" class="ticketList">
-            <table>
-                <tr>
-                    <th style="width: 75px"></th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
-                    <th>Email Address</th>
-                    <th>Password</th>
-                    <th>Role</th>
-                </tr>
+<div class="modal fade deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 350px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4>Are you sure you want to delete this user?</h4>
+            </div>
 
-                <view-users>
-                    <tr ng-repeat="user in mainusers">
-                        <td><a href="deleteUser({{ user.id }})">Delete</a></td>
-                        <td>{{ user.firstname }}</td>
-                        <td>{{ user.lastname }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.password }}</td>
-                        <td>{{ user.role }}</td>
-                    </tr>
-                </view-users>
-            </table>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deleteUser()">Yes</button>
+            </div>
         </div>
     </div>
+</div>
+
+<div id="usersList" class="ticketList col-md-8 col-md-offset-2">
+
+    <div style="color: #f5001d; font-style: italic; margin-bottom: 20px;">{{ errorMsg }}</div>
+
+    <table>
+        <tr>
+            <th style="width: 110px"></th>
+            <th style="width: 175px;">
+                {{ heading1 }}
+                <a href="" ng-show="showCarets == true" ng-click="predicate = 'name';reverse=!reverse">
+                    <span class="caret"></span>
+                </a>
+            </th>
+            <th>
+                {{ heading2 }}
+                <a href="" ng-show="showCarets == true" ng-click="predicate = 'email';reverse=!reverse">
+                    <span class="caret"></span>
+                </a>
+            </th>
+            <th style="width: 110px;">
+                {{ heading3 }}
+                <a href="" ng-show="showCarets == true" ng-click="predicate = 'type';reverse=!reverse">
+                    <span class="caret"></span>
+                </a>
+            </th>
+        </tr>
+
+        <view-users>
+            <tr ng-repeat="user in mainusers | orderBy:predicate:reverse | startFrom:currentPage*pageSize | limitTo:pageSize">
+                <!-- options -->
+                <td style="display: {{ displayProp }};" ng-hide="checkIfEdit(user.id) == true">
+                    <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(user.id)">Delete</a>
+                    | <a href="" ng-click="toggleEdit(user)">Edit</a>
+                </td>
+                    <td ng-hide="checkIfEdit(user.id) == false">
+                        <div style="height: 100px; position: relative; right: 15px; display: flex;
+                            flex-direction: column; justify-content: space-around; align-items: center;">
+
+                            <div><button type="button" class="btn btn-default"
+                                    style="height: 30px;" ng-click="saveEdits()">Save</button></div>
+                            <div><button type="button" class="btn btn-default"
+                                    style="height: 30px;" ng-click="toggleEdit(user)">Cancel</button></div>
+                        </div>
+                    </td>
+
+                <!-- data fields -->
+                <td ng-show="checkIfEdit(user.id) == false">{{ user.name }}</td>
+                    <td ng-hide="checkIfEdit(user.id) == false">
+                        <label class="control-label">Name</label><br/>
+                        <input type="text" ng-model="$parent.newName" style="width: 120px;"><br/>
+                        <span style="color: #f5001d; font-style: italic;">{{ errorMsg_name }}</span>
+                    </td>
+
+                <td ng-show="checkIfEdit(user.id) == false">{{ user.email }}</td>
+                    <td ng-hide="checkIfEdit(user.id) == false">
+                        <div class="btn-group" style="position: relative; right: 10px;">
+                            <label class="control-label">Role</label><br/>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:90px;height:30px">
+                                {{ $parent.newRole }} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="" ng-click="setRole('Admin')">Admin</a></li>
+                                <li><a href="" ng-click="setRole('Manager')">Manager</a></li>
+                                <li><a href="" ng-click="setRole('IT User')">IT User</a></li>
+                            </ul>
+
+                        </div>
+                    </td>
+
+                <td><span ng-show="checkIfEdit(user.id) == false">{{ user.type }}</span></td>
+            </tr>
+        </view-users>
+        <button class="btn btn-default" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+            Previous
+        </button>
+        {{currentPage+1}}/{{numberOfPages()}}
+        <button class="btn btn-default" ng-disabled="currentPage >= mainusers.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+            Next
+        </button><br/><br/>
+    </table>
 </div>

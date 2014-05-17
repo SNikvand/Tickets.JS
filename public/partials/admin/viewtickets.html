@@ -1,44 +1,239 @@
-<div>
-    <div>
-        <h3>View Tickets</h3>
-        <hr/>
+<h3>View Tickets</h3>
+<hr/>
 
-        <div id="mainTickets" class="ticketList">
-            <table>
-                <view-tickets>
-                    <tr>
-                        <th style="display: {{ displayProp }}; width: 100px"></th>
-                        <th>Priority</th>
-                        <th>Title</th>
-                        <th>Department</th>
-                        <th>Assigned To</th>
-                        <th>Date Due</th>
-                        <th>Date Completed</th>
-                    </tr>
+<div class="modal fade deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 350px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4>Are you sure you want to delete this ticket?</h4>
 
-                    <tr ng-repeat="ticket in newtickets">
-                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">Detail</a>
-                            | <a href="deleteTicket({{ ticket.hash }}, {{ ticket.isArchive }})">Delete</a></td>
-                        <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
-                        <td>{{ ticket.title }}</td>
-                        <td>{{ ticket.department }}</td>
-                        <td>{{ ticket.assigned_to }}</td>
-                        <td>{{ ticket.due_date }}</td>
-                        <td>{{ ticket.complete_date }}</td>
-                    </tr>
+                <p class="help-block">(All posts linked to this ticket will also be deleted.)</p>
+            </div>
 
-                    <tr ng-repeat="ticket in maintickets">
-                        <td style="display: {{ displayProp }};"><a href="#/viewtickets/ticket/{{ ticket.hash }}/{{ ticket.isArchive }}">Detail</a>
-                            | <a href="deleteTicket({{ ticket.hash }}, {{ ticket.isArchive }})">Delete</a></td>
-                        <td style="display: flex; justify-content: space-around; align-items: center;">{{ ticket.priority }}</td>
-                        <td>{{ ticket.title }}</td>
-                        <td>{{ ticket.department }}</td>
-                        <td>{{ ticket.assigned_to }}</td>
-                        <td>{{ ticket.due_date }}</td>
-                        <td>{{ ticket.complete_date }}</td>
-                    </tr>
-                </view-tickets>
-            </table>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deleteTicket()">Yes</button>
+            </div>
         </div>
     </div>
+</div>
+
+<div id="mainTickets" class="ticketList">
+
+    <div style="color: #f5001d; font-style: italic; margin-bottom: 20px;">{{ errorMsg }}</div>
+
+    <table>
+        <view-tickets>
+            <tr>
+                <th style="width: 155px;"></th>
+                <th style="width: 100px; text-align: center">
+                    {{ heading1 }}
+                    <a href="" ng-show="showCarets == true" ng-click="predicate = 'priority';reverse=!reverse">
+                        <span class="caret"></span>
+                    </a>
+                </th>
+                <th style="width: 210px;">
+                    {{ heading2 }}
+                    <a href="" ng-show="showCarets == true" ng-click="predicate = 'title';reverse=!reverse">
+                        <span class="caret"></span>
+                    </a>
+                </th>
+                <th style="width: 150px;">
+                    {{ heading3 }}
+                    <a href="" ng-show="showCarets == true" ng-click="predicate = 'department';reverse=!reverse">
+                        <span class="caret"></span>
+                    </a>
+                </th>
+                <th style="width: 150px;">
+                    {{ heading4 }}
+                    <a href="" ng-show="showCarets == true" ng-click="predicate = 'assigned_to';reverse=!reverse">
+                        <span class="caret"></span>
+                    </a>
+                </th>
+                <th style="width: 180px;">
+                    {{ heading5 }}
+                    <a href="" ng-show="showCarets == true" ng-click="predicate = 'due_date';reverse=!reverse">
+                        <span class="caret"></span>
+                    </a>
+                </th>
+                <th style="width: 180px;">
+                    {{ heading6 }}
+                    <a href="" ng-show="showCarets == true" ng-click="predicate = 'complete_date';reverse=!reverse">
+                        <span class="caret"></span>
+                    </a>
+                </th>
+            </tr>
+
+            <!--<tr ng-repeat="ticket in newtickets">
+                <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    <span style="display: {{ displayProp }};">
+                        <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(ticket.id, ticket.isArchive)">Delete</a>
+                        | <a href="" ng-click="toggleEdit(ticket)">Edit</a> |
+                    </span>
+                    <a href="#/viewtickets/userticket/{{ ticket.id }}/{{ ticket.isArchive }}">Detail</a>
+                </td>
+                <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    <div style="min-height: 100px; position: relative; right: 15px; display: flex;
+                                flex-direction: column; justify-content: space-around; align-items: center;">
+
+                        <div><button type="button" class="btn btn-success"
+                                     style="height: 30px;" ng-click="saveEdits()">Save</button></div>
+                        <div><button type="button" class="btn btn-primary"
+                                     style="height: 30px;" ng-click="toggleEdit(ticket)">Cancel</button></div>
+                    </div>
+                </td>
+
+                <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false" style="text-align: center">
+                    {{ ticket.priority }}
+                </td>
+                <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    <div class="btn-group" style="position: relative; right: 10px;">
+                        <label class="control-label">Priority</label><br/>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:75px;height:30px">
+                            {{ $parent.newPriority }} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="" ng-click="setPriority(1)">1</a></li>
+                            <li><a href="" ng-click="setPriority(2)">2</a></li>
+                            <li><a href="" ng-click="setPriority(3)">3</a></li>
+                            <li><a href="" ng-click="setPriority(4)">4</a></li>
+                            <li><a href="" ng-click="setPriority(5)">5</a></li>
+                        </ul>
+                    </div>
+                </td>
+
+                <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    {{ ticket.title }}
+                </td>
+                <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    <div class="btn-group" style="position: relative; right: 10px;">
+                        <label class="control-label">Department</label><br/>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:125px;height:30px">
+                            {{ $parent.newDept }} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="dept in $parent.session.dept"><a href="" ng-click="setDept(dept)">{{ dept }}</a></li>
+                        </ul>
+                    </div>
+                </td>
+
+                <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    {{ ticket.department }}
+                </td>
+                <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    <label class="control-label">Assigned To</label><br/>
+                    <input type="text" ng-model="$parent.newAssignedTo" style="width: 120px;">
+                </td>
+
+                <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    {{ ticket.assigned_to }}
+                </td>
+                    <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                        <label class="control-label">State</label><br/>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" ng-init="$parent.isCompleted = (ticket.complete_date != null)"
+                                   ng-model="$parent.isCompleted" ng-checked="true"> Completed?
+                        </label>
+                    </td>
+
+                <td><span ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false" style="text-align: justify">{{ ticket.due_date }}</span></td>
+                <td><span ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false" style="text-align: justify">{{ ticket.complete_date }}</span></td>
+            </tr>-->
+
+            <tr ng-show="maintickets.length == 0">
+                <td colspan="3">
+                    <span style="color: #428bca; font-style: italic;">{{ noTickets }}</span><br/>
+                </td>
+            </tr>
+
+            <button type="button" class="btn btn-default" style="height: 30px;" ng-click="archiveTickets()">Archive Tickets</button><br/><br/>
+            <tr ng-repeat="ticket in maintickets | orderBy:predicate:reverse | startFrom:currentPage*pageSize | limitTo:pageSize">
+                <!-- options -->
+                <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    <span style="display: {{ displayProp }};">
+                        <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(ticket.id, ticket.isArchive)">Delete</a>
+                        | <a href="" ng-click="toggleEdit(ticket)">Edit</a> |
+                    </span>
+                    <a href="#/viewtickets/userticket/{{ ticket.id }}/{{ ticket.isArchive }}">Detail</a>
+                </td>
+                    <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                        <div style="min-height: 100px; position: relative; right: 15px; display: flex;
+                                flex-direction: column; justify-content: space-around; align-items: center;">
+
+                            <div><button type="button" class="btn btn-default"
+                                         style="height: 30px;" ng-click="saveEdits()">Save</button></div>
+                            <div><button type="button" class="btn btn-default"
+                                         style="height: 30px;" ng-click="toggleEdit(ticket)">Cancel</button></div>
+                        </div>
+                    </td>
+
+                <!-- data fields -->
+                <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false" style="text-align: center">
+                    {{ ticket.priority }}
+                </td>
+                    <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                        <div class="btn-group" style="position: relative; right: 10px;">
+                            <label class="control-label">Priority</label><br/>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:75px;height:30px">
+                                {{ $parent.newPriority }} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="" ng-click="setPriority(1)">1</a></li>
+                                <li><a href="" ng-click="setPriority(2)">2</a></li>
+                                <li><a href="" ng-click="setPriority(3)">3</a></li>
+                                <li><a href="" ng-click="setPriority(4)">4</a></li>
+                                <li><a href="" ng-click="setPriority(5)">5</a></li>
+                                <li><a href="" ng-click="setPriority(6)">6</a></li>
+                            </ul>
+                        </div>
+                    </td>
+
+                <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    {{ ticket.title }}
+                </td>
+                    <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                        <div class="btn-group" style="position: relative; right: 10px;">
+                            <label class="control-label">Department</label><br/>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:125px;height:30px">
+                                {{ $parent.newDept }} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li ng-repeat="dept in $parent.session.dept"><a href="" ng-click="setDept(dept)">{{ dept }}</a></li>
+                            </ul>
+                        </div>
+                    </td>
+
+                <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    {{ ticket.department }}
+                </td>
+                    <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                        <label class="control-label">Assigned To</label><br/>
+                        <input type="text" ng-model="$parent.newAssignedTo" style="width: 120px;"><br/>
+                        <span style="color: #f5001d; font-style: italic;">{{ errorMsg_assignedTo }}</span>
+                    </td>
+
+                <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                    {{ ticket.assigned_to }}
+                </td>
+                    <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
+                        <label class="control-label">State</label><br/>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" ng-init="$parent.isCompleted = (ticket.complete_date != null)"
+                                   ng-model="$parent.isCompleted"> Completed?
+                        </label>
+                    </td>
+
+                <td><span ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">{{ ticket.due_date }}</span></td>
+                <td><span ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">{{ ticket.complete_date }}</span></td>
+            </tr>
+        </view-tickets>
+
+        <button class="btn btn-default" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+            Previous
+        </button>
+        {{currentPage+1}}/{{numberOfPages()}}
+        <button class="btn btn-default" ng-disabled="currentPage >= maintickets.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+            Next
+        </button><br/><br/>
+    </table>
 </div>

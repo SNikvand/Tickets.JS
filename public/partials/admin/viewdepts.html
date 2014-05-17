@@ -1,24 +1,91 @@
-<div>
-    <div>
-        <h3>View Departments</h3>
-        <hr/>
+<h3>View Departments</h3>
+<hr/>
 
-        <div id="deptsList" class="ticketList">
-            <table>
-                <tr>
-                    <th style="width: 75px;"></th>
-                    <th>Dept. Name</th>
-                    <th>Managers</th>
-                </tr>
+<div class="modal fade deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 350px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4>Are you sure you want to delete this department?</h4>
 
-                <view-depts>
-                    <tr ng-repeat="dept in departments">
-                        <td><a href="deleteDept({{ dept.id }})">Delete</a></td>
-                        <td>{{ dept.name }}</td>
-                        <td>|&nbsp;&nbsp;<span ng-repeat="manager in dept.managers">{{ manager }}&nbsp;&nbsp;|&nbsp;&nbsp;</span></td>
-                    </tr>
-                </view-depts>
-            </table>
+                <p class="help-block">(All tickets under this department will also be deleted.)</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deleteDept()">Yes</button>
+            </div>
         </div>
     </div>
+</div>
+
+<div id="deptsList" class="ticketList col-md-8 col-md-offset-2">
+
+    <div style="color: #f5001d; font-style: italic; margin-bottom: 20px;">{{ errorMsg }}</div>
+
+    <table>
+        <tr>
+            <th style="width: 110px;"></th>
+            <th style="width: 200px;">{{ heading1 }}</th>
+            <th>{{ heading2 }}</th>
+        </tr>
+
+        <view-depts>
+            <tr ng-repeat="dept in departments">
+                <td style="display: {{ displayProp }};" ng-hide="checkIfEdit(dept.id) == true">
+                    <a href="" data-toggle="modal" data-target=".deleteConfirmModal" ng-click="storeDelete(dept.id, dept.name)">Delete</a>
+                    | <a href="" ng-click="toggleEdit(dept)">Edit</a>
+                </td>
+                    <td ng-hide="checkIfEdit(dept.id) == false">
+                        <div style="min-height: 100px; position: relative; right: 15px; display: flex;
+                                flex-direction: column; justify-content: space-around; align-items: center;">
+
+                            <div><button type="button" class="btn btn-default"
+                                         style="height: 30px;" ng-click="saveEdits()">Save</button></div>
+                            <div><button type="button" class="btn btn-default"
+                                         style="height: 30px;" ng-click="toggleEdit(dept)">Cancel</button></div>
+                        </div>
+                    </td>
+
+                <td ng-show="checkIfEdit(dept.id) == false">{{ dept.name }}</td>
+                    <td ng-hide="checkIfEdit(dept.id) == false">
+                        <label class="control-label">Name</label><br/>
+                        <input type="text" ng-model="$parent.newName" style="width: 120px;"><br/>
+                        <span style="color: #f5001d; font-style: italic;">{{ errorMsg_name }}</span>
+                    </td>
+
+                <td ng-bind="stringifyUsers(dept.managers)" ng-show="checkIfEdit(dept.id) == false"></td>
+                    <td style="padding-top: 20px; padding-bottom: 20px;" ng-hide="checkIfEdit(dept.id) == false">
+                        <!-- form for inserting/deleting users -->
+
+                        <label class="control-label">Managers</label><br/>
+                        <p class="help-block">Click to remove users, or add a new one using the form.</p>
+
+                        <ul ng-hide="$parent.tempUsers[0] == ''" style="list-style-type: none; position: relative; right: 30px;">
+                            <li ng-repeat="manager in $parent.tempUsers">
+                                <a href="" ng-click="delFromUsers(manager)" style="color: #428bca; text-decoration: none;">
+                                    <span class="glyphicon glyphicon-minus" style="font-size: 20px;"></span>
+                                </a>&nbsp;
+                                <span style="position: relative; bottom: 2px;">{{ manager }}</span>
+                            </li><br/>
+
+                            <li>
+                                <input type="text" ng-model="$parent.newUser" style="width: 120px;">&nbsp;
+                                <button type="button" class="btn btn-default"
+                                        style="height: 30px;" ng-click="addToUsers($parent.newUser)">Add</button>
+                            </li>
+                        </ul>
+
+                        <div ng-show="$parent.tempUsers[0] == ''">
+                            <span style="color: #428bca; font-style: italic;">No managers exist for this department.</span><br/><br/>
+                            <input type="text" ng-model="$parent.newUser" style="width: 120px;">&nbsp;
+                            <button type="button" class="btn btn-default"
+                                    style="height: 30px;" ng-click="addToUsers($parent.newUser)">Add</button>
+                        </div>
+
+                        <span style="color: #f5001d; font-style: italic;">{{ errorMsg_users }}</span>
+
+                    </td>
+            </tr>
+        </view-depts>
+    </table>
 </div>

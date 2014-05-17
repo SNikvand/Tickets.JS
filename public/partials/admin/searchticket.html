@@ -1,110 +1,114 @@
-<div>
-    <div>
-        <h3>Search Tickets</h3>
-        <hr/>
-        <search-tickets>
-            <div class="form-signin" style="float: left;">
-                <form role="form">
-                    <div class="form-group">
-                        <label for="dept">Department</label>
-                        <input id="dept" ng-disabled="isManager()" ng-model="dept" placeholder="Search by department" class="form-control" type="text">
-                    </div>
-
-                    <div style="display: flex; justify-content: flex-start; width: 750px;">
-                        <div class="form-group">
-                            <label for="assignedTo">Assigned To</label>
-                            <input id="assignedTo" ng-disabled="isITUser()" ng-model="assignedTo" placeholder="Search by user assigned" class="form-control" type="text">
-                        </div>
-
-                        <div class="form-group" style="margin-left: 25px;">
-                            <label class="control-label" for="alteredBy">Altered By</label>
-                            <input id="alteredBy" ng-model="alteredBy" placeholder="Search by altering user" class="form-control" type="text">
-                        </div>
-                    </div>
-
-                    <div style="display: flex; justify-content: flex-start; width: 750px;">
-                        <div class="form-group">
-                            <label class="control-label" for="submittedBy">Submitted By</label>
-                            <input id="submittedBy" ng-model="submittedBy" placeholder="Search by client" class="form-control" type="text">
-                        </div>
-
-                        <div class="form-group" style="margin-left: 25px;">
-                            <label class="control-label" for="clientEmail">Client Email</label>
-                            <input id="clientEmail" ng-model="clientEmail" placeholder="Search by client email" class="form-control" type="text">
-                        </div>
-                    </div>
-
-                    <label class="control-label">Priority</label><br/>
-                    <div class="btn-group" style="margin-bottom:15px">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:100px;height:40px">
-                            Priority <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="">1</a></li>
-                            <li><a href="">2</a></li>
-                            <li><a href="">3</a></li>
-                            <li><a href="">4</a></li>
-                            <li><a href="">5</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label" for="keywords">Keywords</label>
-                        <input id="keywords" ng-model="keywords" placeholder="Search by keywords" class="form-control" type="text">
-                        <p class="help-block">Separate words by spaces.</p>
-                    </div>
-
-                    <div class="form-group" style="margin-top: -12px;">
-                        <label class="checkbox-inline">
-                            <input type="checkbox" ng-model="searchTitle" ng-true-value="true" ng-false-value="false"> In title
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" ng-model="searchBody" ng-true-value="true" ng-false-value="false"> In body/description
-                        </label>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Completed Tickets</label><br/>
-                        <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isCompletedDisabled()" ng-model="completedSelection" name="completed" value="includeCompleted"> Include
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isCompletedDisabled()" ng-model="completedSelection" name="completed" value="excludeCompleted"> Exclude
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isCompletedDisabled()" ng-model="completedSelection" name="completed" value="onlyCompleted"> Only
-                        </label>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Expired Tickets</label><br/>
-                        <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isExpiredDisabled()" ng-model="expiredSelection" name="expired" value="includeExpired"> Include
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isExpiredDisabled()" ng-model="expiredSelection" name="expired" value="excludeExpired"> Exclude
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isExpiredDisabled()" ng-model="expiredSelection" name="expired" value="onlyExpired"> Only
-                        </label>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Archived Tickets</label><br/>
-                        <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isArchivedDisabled()" ng-model="archivedSelection" name="archived" value="includeArchived"> Include
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isArchivedDisabled()" ng-model="archivedSelection" name="archived" value="excludeArchived"> Exclude
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="radio" ng-disabled="isArchivedDisabled()" ng-model="archivedSelection" name="archived" value="onlyArchived"> Only
-                        </label>
-                    </div>
-
-                    <button class="btn btn-lg btn-primary btn-block" ng-click="search()">Search</button>
-                </form>
+<h3>Search Tickets</h3>
+<hr/>
+<search-tickets>
+    <form role="form" class="col-md-10 col-md-offset-1">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="dept">Department</label>
+                <input id="dept" ng-disabled="isManager()" ng-model="dept" placeholder="Department name(s)" class="form-control input-lg" type="text">
+                <p class="help-block">Separate departments by spaces.</p>
             </div>
-        </search-tickets>
-    </div>
-</div>
+
+            <div class="form-group col-md-2">
+                <label class="control-label">Priority</label><br/>
+                <div class="btn-group" style="margin-bottom:15px">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:90px;height:50px">
+                        Priority <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="">1</a></li>
+                        <li><a href="">2</a></li>
+                        <li><a href="">3</a></li>
+                        <li><a href="">4</a></li>
+                        <li><a href="">5</a></li>
+                        <li><a href="">6</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="assignedTo">Assigned To</label>
+                    <input id="assignedTo" ng-disabled="isITUser()" ng-model="assignedTo" placeholder="Assigned to user" class="form-control input-lg" type="text">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="alteredBy">Altered By</label>
+                    <input id="alteredBy" ng-model="alteredBy" placeholder="Altered by user" class="form-control input-lg" type="text">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label" for="submittedBy">Submitted By</label>
+                    <input id="submittedBy" ng-model="submittedBy" placeholder="Client" class="form-control input-lg" type="text">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="clientEmail">Client Email</label>
+                    <input id="clientEmail" ng-model="clientEmail" placeholder="Client email" class="form-control input-lg" type="text">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="keywords">Keywords</label>
+                    <input id="keywords" ng-model="keywords" placeholder="Search by keywords" class="form-control input-lg" type="text">
+                    <p class="help-block">Separate keywords by spaces.</p>
+                </div>
+
+                <div class="form-group" style="margin-top: -12px;">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="searchTitle" ng-true-value="true" ng-false-value="false"> In title
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" ng-model="searchBody" ng-true-value="true" ng-false-value="false"> In body/description
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Completed Tickets</label><br/>
+            <label class="checkbox-inline">
+                <input type="radio" ng-disabled="isCompletedDisabled()" ng-model="completedSelection" name="completed" value="includeCompleted"> Include
+            </label>
+            <label class="checkbox-inline">
+                <input type="radio" ng-disabled="isCompletedDisabled()" ng-model="completedSelection" name="completed" value="excludeCompleted"> Exclude
+            </label>
+            <label class="checkbox-inline">
+                <input type="radio" ng-disabled="isCompletedDisabled()" ng-model="completedSelection" name="completed" value="onlyCompleted"> Only
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label>Expired Tickets</label><br/>
+            <label class="checkbox-inline">
+                <input type="radio" ng-disabled="isExpiredDisabled()" ng-model="expiredSelection" name="expired" value="includeExpired"> Include
+            </label>
+            <label class="checkbox-inline">
+                <input type="radio" ng-disabled="isExpiredDisabled()" ng-model="expiredSelection" name="expired" value="excludeExpired"> Exclude
+            </label>
+            <label class="checkbox-inline">
+                <input type="radio" ng-disabled="isExpiredDisabled()" ng-model="expiredSelection" name="expired" value="onlyExpired"> Only
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label>Archived Tickets</label><br/>
+            <label class="checkbox-inline">
+                <input type="radio" ng-disabled="isArchivedDisabled()" ng-model="archivedSelection" name="archived" value="includeArchived"> Include
+            </label>
+            <label class="checkbox-inline">
+                <input type="radio" ng-disabled="isArchivedDisabled()" ng-model="archivedSelection" name="archived" value="excludeArchived"> Exclude
+            </label>
+            <label class="checkbox-inline">
+                <input type="radio" ng-disabled="isArchivedDisabled()" ng-model="archivedSelection" name="archived" value="onlyArchived"> Only
+            </label>
+        </div><br/>
+
+        <button class="btn btn-lg btn-primary btn-block" style="width: 300px; margin: auto;" ng-click="search()">Search</button>
+    </form>
+</search-tickets>

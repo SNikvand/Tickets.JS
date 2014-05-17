@@ -123,6 +123,18 @@ body {
     margin-top: 0;
 }
 
+/*
+ * "home" template styling. Added by Matt
+ */
+
+.homeTickets {
+    margin-top: 25px;
+}
+
+.homeHr {
+    margin-top: 0;
+}
+
 .ticketList table {
     width: 100%;
     border: 1px solid #dbdbdb;
@@ -140,6 +152,28 @@ body {
     height: 35px;
     padding-left: 10px;
 }
+
+/*.ticketList td.priority1 {
+    background-color: #FF6161;
+}
+
+.ticketList td.priority2 {
+    background-color: #FFC561;
+}
+
+.ticketList td.priority3 {
+    background-color: #FFFF61;
+}
+
+.ticketList td.priority4 {
+    background-color: #61B0FF;
+}
+
+.ticketList td.priority5 {
+    background-color: #61FF61;
+}*/
+
+
 /*
  * Placeholder dashboard ideas
  */
@@ -229,7 +263,7 @@ hr {
 }
 
 .form-signin {
-    max-width: 930px;
+    max-width: 330px;
     padding: 15px;
     margin: 0 auto;
 }
@@ -262,15 +296,15 @@ hr {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+/* chris's css */
+
 /*
 portal design
 */
-body {
-    background-color: #eee;
-}
 
 .form-signin2 {
-    max-width: 560px;
+    max-width: 850px;
     padding: 15px;
     margin: 0 auto;
 }
@@ -300,24 +334,7 @@ body {
 
 }
 
-#piority{
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    width:150px;
-    height:40px;
-    background-color:#FFEF07;
-}
-
 #assignuser{
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    width:150px;
-    height:40px;
-}
-
-#submitbutton{
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
