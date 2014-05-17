@@ -3,25 +3,28 @@
 
 <div class="form-reply">
     <form role="form">
-        <div class = "replyTicket">
-            <p>Title: {{ title }}</p>
-            <p>Department: {{ department }}</p>
-            <p>Priority: {{ priority }}</p>
-            <p>Due Date: {{ due_date }}</p>
-            <br/>
+        <div class = "ticketList col-md-12">
+            <table>
+                <tr><th class="col-md-2">Ticket Number:</th><th class="col-md-10">{{ id }} </th></tr>
 
-            <p>Author: {{ author }}</p>
-            <p>Author's Email: {{ email }}</p>
-            <p>Date Created: {{ create_date }}</p>
-            <br/>
+                <tr><p><td style="font-style:italic; letter-spacing:1px;">Title</td><td>{{ title }}</td></p></tr>
+                <tr><p><td style="font-style:italic; letter-spacing:1px;">Department</td><td> {{ department }}</td></p></tr>
+                <tr><p><td style="font-style:italic; letter-spacing:1px;">Priority</td><td> {{ priority }}</td></p></tr>
+                <tr><p><td style="font-style:italic; letter-spacing:1px;">Due Date</td><td> {{ due_date }}</td></p></tr>
 
-            <p>Assigned To: {{ assigned_to }}</p>
-            <p>Altered By: {{ altered_by }}</p>
-            <p>Date Altered: {{ altered_date }}</p>
+                <tr><p><td style="font-style:italic;letter-spacing:1px;">Author</td><td> {{ author }}</td></p></tr>
+                <tr><p><td style="font-style:italic; letter-spacing:1px;">Author's Email</td><td> {{ email }}</td></p></tr>
+                <tr><p><td style="font-style:italic; letter-spacing:1px;">Date Created</td><td> {{ create_date }}</td></p></tr>
 
-            <hr/>
-            <p>Description: {{ body }}</p><br />
-        </div><br />
+                <tr><p><td style="font-style:italic; letter-spacing:1px;">Assigned To</td><td> {{ assigned_to }}</td></p></tr>
+                <tr><p><td style="font-style:italic; letter-spacing:1px;">Altered By</td><td> {{ altered_by }}</td></p></tr>
+                <tr><p><td style="font-style:italic; letter-spacing:1px;">Date Altered</td><td> {{ altered_date }}</td></p></tr>
+
+                <tr><p><td style="font-style:italic; letter-spacing:1px;">Description</td><td> {{ body }}</td></p></tr>
+            </table>
+        </div>
+        <div style="clear:both"></div>
+        <br />
         <button id="toggleReply" class="btn btn-lg btn-primary btn-block" type="submit"
                 style="width: 200px; margin: auto;"
                 ng-click="toggleReply()">

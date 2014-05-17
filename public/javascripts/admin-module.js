@@ -763,7 +763,8 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
             $scope.errorMsg_desc = "Post cannot be left blank.";
             return;
         } else {
-            if ($scope.replyDesc.trim() == "") {
+            $scope.replyDesc = $scope.replyDesc.trim();
+            if ($scope.replyDesc == "") {
                 $scope.errorMsg_desc = "Post cannot be left blank.";
                 $scope.replyDesc = null;
                 return;

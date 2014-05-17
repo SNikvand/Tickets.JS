@@ -193,7 +193,8 @@ clientModule.controller('viewticketController', function($scope, $timeout, $rout
             $scope.errorMsg_desc = "Post cannot be left blank.";
             return;
         } else {
-            if ($scope.replyDesc.trim() == "") {
+            $scope.replyDesc = $scope.replyDesc.trim();
+            if ($scope.replyDesc == "") {
                 $scope.errorMsg_desc = "Post cannot be left blank.";
                 $scope.replyDesc = null;
                 return;
@@ -201,7 +202,7 @@ clientModule.controller('viewticketController', function($scope, $timeout, $rout
             $scope.errorMsg_desc = null;
         }
 
-        socket.emit('setReply', $routeParams.ticketid, false, null, $scope.replyDesc);
+        socket.emit('setReply', $routeParams.ticketid, false, null, $scope.replyDesc.replace(/'/g, "''"));
 
         $timeout(function() {
             $route.reload();
