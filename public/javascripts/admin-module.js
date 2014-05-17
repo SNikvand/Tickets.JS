@@ -468,14 +468,6 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
             $route.reload();
         }, 500);
     }
-
-    // for pagination
-
-    $scope.currentPage = 0;
-    $scope.pageSize = 10;
-    $scope.numberOfPages=function(){
-        return Math.ceil($scope.maintickets.length/$scope.pageSize);
-    }
 });
 
 adminModule.controller('viewticketsDeptController', function($scope, $location, $timeout, $route, $routeParams, ticketParams) {
@@ -597,14 +589,6 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
         $timeout(function() {
             $route.reload();
         }, 500);
-    }
-
-    // for pagination
-
-    $scope.currentPage = 0;
-    $scope.pageSize = 10;
-    $scope.numberOfPages=function(){
-        return Math.ceil($scope.maintickets.length/$scope.pageSize);
     }
 });
 
@@ -1070,14 +1054,6 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
             $route.reload();
         }, 500);
     }
-
-    // for pagination
-
-    $scope.currentPage = 0;
-    $scope.pageSize = 10;
-    $scope.numberOfPages=function(){
-        return Math.ceil($scope.mainusers.length/$scope.pageSize);
-    }
 });
 
 adminModule.controller('newuserController', function($scope, $location) {
@@ -1308,7 +1284,14 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
         // if username wasn't in the initial list, add it
         // otherwise, it's sufficient to remove it from the "delUsers" array
         if ($scope.initialUsers.indexOf(username) == -1) {
-            $scope.addUsers.push(username);
+            var temp = "";
+
+            // if multi-word username, encase in double-quotes
+            if (username.split(" ").length > 1)
+                temp = "\"" + username + "\"";
+            else
+                temp = username;
+                $scope.addUsers.push(temp);
         }
         // if not already displayed in the list, display the username
         if ($scope.tempUsers.indexOf(username) == -1) {
@@ -1335,9 +1318,15 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
             $scope.errorMsg_users = null;
         }
 
+        var temp = "";
+        if (username.split(" ").length > 1)
+            temp = "\"" + username + "\"";
+        else
+            temp = username;
+
         $scope.tempUsers.splice($scope.tempUsers.indexOf(username), 1);
-        $scope.addUsers.splice($scope.addUsers.indexOf(username), 1);
-        $scope.delUsers.push(username);
+        $scope.addUsers.splice($scope.addUsers.indexOf(temp), 1);
+        $scope.delUsers.push(temp);
     }
 
     if ($scope.session.role == "IT User") {
@@ -1559,6 +1548,15 @@ adminModule.directive('viewTickets', function() {
                     scope.noTickets = "Your search did not find any results.";
                 }
                 scope.maintickets = ticketList;
+
+                // for pagination
+
+                scope.currentPage = 0;
+                scope.pageSize = 10;
+                scope.numberOfPages=function(){
+                    return Math.ceil(scope.maintickets.length/scope.pageSize);
+                }
+
                 scope.$apply();
             });
 
@@ -1584,6 +1582,14 @@ adminModule.directive('viewUsers', function() {
         link: function(scope, element, attrs) {
             socket.on('displayUsers', function(userList) {
                 scope.mainusers = userList;
+
+                // for pagination
+
+                scope.currentPage = 0;
+                scope.pageSize = 10;
+                scope.numberOfPages=function(){
+                    return Math.ceil(scope.mainusers.length/scope.pageSize);
+                }
 
                 scope.$apply();
             });
@@ -1716,6 +1722,7 @@ adminModule.directive('ticketReplies', function() {
 adminModule.filter('startFrom', function() {
     return function(input, start) {
         start = +start; //parse to int
-        return input.slice(start);
+        if (input)
+            return input.slice(start);
     }
 });
