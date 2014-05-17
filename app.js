@@ -52,7 +52,7 @@ app.get('/login', route_login.index);
 
 app.post('/login', function(req, res) {
     // authenticates username and password
-    authenticate(req.body.username, req.body.password);
+    authenticate(req.body.username.replace(/'/g, "''"), req.body.password.replace(/'/g, "''"));
 
     function authenticate(user, pass) {
         ticket_server.authenticateLogin(user, md5(pass), authCallback);

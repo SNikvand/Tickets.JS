@@ -283,7 +283,7 @@ adminModule.controller('overviewController', function($scope, $http, $location) 
     // stringify the departments
     var stringDepts = "";
     for (var x in $scope.session.dept) {
-        stringDepts += $scope.session.dept[x] + " ";
+        stringDepts += $scope.session.dept[x].replace(/'/g, "''") + " ";
     }
     stringDepts = stringDepts.trim();
 
@@ -296,7 +296,7 @@ adminModule.controller('overviewController', function($scope, $http, $location) 
             assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null, lastLogout: lastLogout};
     } else if ($scope.session.role == "IT User") {
         defFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
-            assignedTo: $scope.session.user, alteredBy: null, dateCreated: null, dateAltered: null, lastLogout: lastLogout};
+            assignedTo: $scope.session.user.replace(/'/g, "''"), alteredBy: null, dateCreated: null, dateAltered: null, lastLogout: lastLogout};
     }
 
     $scope.lastLogout = {numberOfTickets: 0, ticketList: null};
@@ -345,6 +345,8 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
         $scope.eraseErrorMsg();
     });
 
+    $scope.errorMsg_assignedTo = null;
+
     $scope.newtickets = [];
     if ($scope.session.role == "IT User") {
         $scope.displayProp = 'none';
@@ -363,7 +365,7 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
     $scope.newDept = null;
     $scope.newAssignedTo = null;
     $scope.isCompleted = false;
-    $scope.alteredBy = $scope.session.user
+    $scope.alteredBy = $scope.session.user;
 
     // headings
     $scope.heading1 = "Priority";
@@ -382,9 +384,21 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
     }
 
     $scope.saveEdits = function() {
+        $scope.errorMsg_assignedTo = null;
+
+        if ($scope.newAssignedTo != null) {
+            $scope.newAssignedTo = $scope.newAssignedTo.trim();
+            if ($scope.newAssignedTo == "") {
+                $scope.errorMsg_assignedTo = "Username cannot be blank.";
+                $scope.newAssignedTo = null;
+                return;
+            } else {
+                $scope.errorMsg_assignedTo = null;
+            }
+        }
 
         socket.emit('setTicket', $scope.isEdit, null, $scope.newDept, null, $scope.newPriority, null, null,
-            $scope.newAssignedTo, $scope.alteredBy, null, null, null, $scope.isCompleted, $scope.isEditArchive, null);
+            $scope.newAssignedTo.replace(/'/g, "''"), $scope.alteredBy.replace(/'/g, "''"), null, null, null, $scope.isCompleted, $scope.isEditArchive, null);
 
         $timeout(function() {
             $route.reload();
@@ -400,9 +414,10 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
 
     $scope.toggleEdit = function(ticket) {
         if ($scope.isEdit != ticket.id || $scope.isEditArchive != ticket.isArchive) {
+            $scope.errorMsg_assignedTo = null;
+
             $scope.isEdit = ticket.id;
             $scope.isEditArchive = ticket.isArchive;
-            console.log("isArchive: " + ticket.isArchive + " type: " + typeof(ticket.isArchive) );
             $scope.newPriority = ticket.priority;
             $scope.newDept = ticket.department;
             $scope.newAssignedTo = ticket.assigned_to;
@@ -417,6 +432,8 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
 
             $scope.showCarets = false;
         } else {
+            $scope.errorMsg_assignedTo = null;
+
             $scope.isEdit = null;
             $scope.isEditArchive = null;
             $scope.newPriority = null;
@@ -456,12 +473,18 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
 adminModule.controller('viewticketsDeptController', function($scope, $location, $timeout, $route, $routeParams, ticketParams) {
     ticketParams.reqTickets($scope.session, true);
 
+    $scope.$on("$destroy", function(){
+        $scope.eraseErrorMsg();
+    });
+
     $scope.newtickets = [];
     if ($scope.session.role == "IT User") {
         $scope.displayProp = 'none';
     } else {
         $scope.displayProp = 'inline';
     }
+
+    $scope.errorMsg_assignedTo = null;
 
     $scope.isEdit = null;
     $scope.isEditArchive = null;
@@ -493,8 +516,19 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
     }
 
     $scope.saveEdits = function() {
+        if ($scope.newAssignedTo != null) {
+            $scope.newAssignedTo = $scope.newAssignedTo.trim();
+            if ($scope.newAssignedTo == "") {
+                $scope.errorMsg_assignedTo = "Username cannot be blank.";
+                $scope.newAssignedTo = null;
+                return;
+            } else {
+                $scope.errorMsg_assignedTo = null;
+            }
+        }
+
         socket.emit('setTicket', $scope.isEdit, null, $scope.newDept, null, $scope.newPriority, null, null,
-            $scope.newAssignedTo, $scope.alteredBy, null, null, null, $scope.isCompleted, $scope.isEditArchive, null);
+            $scope.newAssignedTo.replace(/'/g, "''"), $scope.alteredBy.replace(/'/g, "''"), null, null, null, $scope.isCompleted, $scope.isEditArchive, null);
 
         $timeout(function() {
             $route.reload();
@@ -520,6 +554,8 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
 
             $scope.showCarets = false;
         } else {
+            $scope.errorMsg_assignedTo = null;
+
             $scope.isEdit = null;
             $scope.isEditArchive = null;
             $scope.newPriority = null;
@@ -597,13 +633,13 @@ adminModule.service('ticketParams', function($location, $http) {
             // stringify the departments
             var stringDepts = "";
             for (var x in session.dept) {
-                stringDepts += session.dept[x] + " ";
+                stringDepts += session.dept[x].replace(/'/g, "''") + " ";
             }
             stringDepts = stringDepts.trim();
 
             formdata.dept = stringDepts;
         } else if (session.role == "IT User") {
-            formdata.assignedTo = session.user;
+            formdata.assignedTo = session.user.replace(/'/g, "''");
         }
 
         viewfilters.dept = formdata.dept;
@@ -648,13 +684,13 @@ adminModule.service('ticketParams', function($location, $http) {
             // stringify the departments
             var stringDepts = "";
             for (var x in session.dept) {
-                stringDepts += session.dept[x] + " ";
+                stringDepts += session.dept[x].replace(/'/g, "''") + " ";
             }
             stringDepts = stringDepts.trim();
 
             viewfilters.dept = stringDepts;
         } else if (session.role == "IT User") {
-            viewfilters.assignedTo = session.user;
+            viewfilters.assignedTo = session.user.replace(/'/g, "''");
         }
 
         searchParams = {keywords: null, inTitle: false, inBody: false};
@@ -679,15 +715,15 @@ adminModule.service('ticketParams', function($location, $http) {
             // stringify the departments
             var stringDepts = "";
             for (var x in session.dept) {
-                stringDepts += session.dept[x] + " ";
+                stringDepts += session.dept[x].replace(/'/g, "''") + " ";
             }
             stringDepts = stringDepts.trim();
 
             viewfilters.dept = stringDepts;
             session.filters.viewfilters.dept = stringDepts;
         } else if (session.role == "IT User") {
-            viewfilters.assignedTo = session.user;
-            session.filters.viewfilters.assignedTo = session.user;
+            viewfilters.assignedTo = session.user.replace(/'/g, "''");
+            session.filters.viewfilters.assignedTo = session.user.replace(/'/g, "''");
         }
 
         var sessionFilters = session.filters;
@@ -735,7 +771,7 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
             $scope.errorMsg_desc = null;
         }
 
-        socket.emit('setReply', $routeParams.ticketid, isArchiveBool, $scope.session.user, $scope.replyDesc);
+        socket.emit('setReply', $routeParams.ticketid, isArchiveBool, $scope.session.user.replace(/'/g, "''"), $scope.replyDesc.replace(/'/g, "''"));
 
         $timeout(function() {
             $route.reload();
@@ -793,7 +829,8 @@ adminModule.controller('newticketController', function($scope, $location, $http)
             $scope.errorMsg_title = "Title cannot be left blank.";
             return;
         } else {
-            if ($scope.title.trim() == "") {
+            $scope.title = $scope.title.trim();
+            if ($scope.title == "") {
                 $scope.errorMsg_title = "Title cannot be left blank.";
                 $scope.title = null;
                 return;
@@ -819,7 +856,8 @@ adminModule.controller('newticketController', function($scope, $location, $http)
             $scope.errorMsg_email = "Email cannot be left blank.";
             return;
         } else {
-            if ($scope.email.trim() == "") {
+            $scope.email = $scope.email.trim()
+            if ($scope.email == "") {
                 $scope.errorMsg_email = "Email cannot be left blank.";
                 $scope.email = null;
                 return;
@@ -831,6 +869,12 @@ adminModule.controller('newticketController', function($scope, $location, $http)
                 $scope.email = null;
                 return;
             }
+            // prevents apostrophes in an email address
+            if ($scope.email.search("'") != -1) {
+                $scope.errorMsg_email = "Invalid email address.";
+                $scope.email = null;
+                return;
+            }
             $scope.errorMsg_email = null;
         }
 
@@ -838,7 +882,8 @@ adminModule.controller('newticketController', function($scope, $location, $http)
             $scope.errorMsg_desc = "Ticket description cannot be left blank.";
             return;
         } else {
-            if ($scope.body.trim() == "") {
+            $scope.body = $scope.body.trim();
+            if ($scope.body == "") {
                 $scope.errorMsg_desc = "Ticket description cannot be left blank.";
                 $scope.body = null;
                 return;
@@ -846,7 +891,14 @@ adminModule.controller('newticketController', function($scope, $location, $http)
             $scope.errorMsg_desc = null;
         }
 
-        socket.emit('setTicket', null, $scope.title, $scope.dept, $scope.body, $scope.priority, $scope.user, $scope.email,
+        socket.emit('setTicket',
+            null,
+            $scope.title.replace(/'/g, "''"),
+            $scope.dept,
+            $scope.body.replace(/'/g, "''"),
+            $scope.priority,
+            $scope.user.replace(/'/g, "''"),
+            $scope.email,
             null, null, null, null, null, null, false, false);
 
         $location.path('/viewtickets');
@@ -868,6 +920,25 @@ adminModule.controller('searchticketController', function($scope, ticketParams) 
     $scope.priority = null;
 
     $scope.search = function() {
+        if ($scope.dept != null) {
+            $scope.dept = $scope.dept.replace(/'/g, "''").trim()
+        }
+        if ($scope.assignedTo != null) {
+            $scope.assignedTo = $scope.assignedTo.replace(/'/g, "''").trim()
+        }
+        if ($scope.alteredBy != null) {
+            $scope.alteredBy = $scope.alteredBy.replace(/'/g, "''").trim()
+        }
+        if ($scope.submittedBy != null) {
+            $scope.submittedBy = $scope.submittedBy.replace(/'/g, "''").trim()
+        }
+        if ($scope.clientEmail != null) {
+            $scope.clientEmail = $scope.clientEmail.replace(/'/g, "''").trim()
+        }
+        if ($scope.keywords != null) {
+            $scope.keywords = $scope.keywords.replace(/'/g, "''").trim()
+        }
+
         var formdata = {
             dept: $scope.dept,
             priority: $scope.priority,
@@ -924,7 +995,8 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
             $scope.errorMsg_name = "Username cannot be blank.";
             return;
         } else {
-            if ($scope.newName.trim() == "") {
+            $scope.newName = $scope.newName.trim();
+            if ($scope.newName == "") {
                 $scope.errorMsg_name = "Username cannot be blank.";
                 $scope.newName = null;
                 return;
@@ -933,7 +1005,7 @@ adminModule.controller('viewuserController', function($scope, $timeout, $route) 
             $scope.errorMsg_name = null;
         }
 
-        socket.emit('setUser', $scope.isEdit, $scope.newName, null, null, $scope.newRole);
+        socket.emit('setUser', $scope.isEdit, $scope.newName.replace(/'/g, "''"), null, null, $scope.newRole);
 
         $timeout(function() {
             $route.reload();
@@ -996,7 +1068,8 @@ adminModule.controller('newuserController', function($scope, $location) {
             $scope.errorMsg_name = "Username cannot be left blank.";
             return;
         } else {
-            if ($scope.name.trim() == "") {
+            $scope.name = $scope.name.trim();
+            if ($scope.name == "") {
                 $scope.errorMsg_name = "Username cannot be left blank.";
                 $scope.name = null;
                 return;
@@ -1008,7 +1081,8 @@ adminModule.controller('newuserController', function($scope, $location) {
             $scope.errorMsg_email = "Email cannot be left blank.";
             return;
         } else {
-            if ($scope.email.trim() == "") {
+            $scope.email = $scope.email.trim();
+            if ($scope.email == "") {
                 $scope.errorMsg_email = "Email cannot be left blank.";
                 $scope.email = null;
                 return;
@@ -1016,6 +1090,12 @@ adminModule.controller('newuserController', function($scope, $location) {
             if ($scope.email.search('@') == -1 ||
                 $scope.email[0] == '@' ||
                 $scope.email.trim()[$scope.email.length-1] == '@') {
+                $scope.errorMsg_email = "Invalid email address.";
+                $scope.email = null;
+                return;
+            }
+            // prevents apostrophes in an email address
+            if ($scope.email.search("'") != -1) {
                 $scope.errorMsg_email = "Invalid email address.";
                 $scope.email = null;
                 return;
@@ -1047,7 +1127,7 @@ adminModule.controller('newuserController', function($scope, $location) {
             return;
         }
 
-        socket.emit('setUser', null, $scope.name, $scope.email, $scope.password, $scope.role);
+        socket.emit('setUser', null, $scope.name.replace(/'/g, "''"), $scope.email, $scope.password.replace(/'/g, "''"), $scope.role);
         $location.path('/viewusers');
     }
 });
@@ -1061,6 +1141,7 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
 
     // error message
     $scope.errorMsg_users = null;
+    $scope.errorMsg_name = null;
 
     $scope.isEdit = null;
     $scope.oldName = null;
@@ -1084,6 +1165,21 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
 
     $scope.saveEdits = function() {
         $scope.errorMsg_users = null;
+        $scope.errorMsg_name = null;
+
+        if ($scope.newName == null) {
+            $scope.errorMsg_name = "Department name cannot be left blank.";
+            return;
+        } else {
+            $scope.newName = $scope.newName.trim();
+            if ($scope.newName == "") {
+                $scope.errorMsg_name = "Department name cannot be left blank.";
+                $scope.newName = null;
+                return;
+            } else {
+                $scope.errorMsg_name = null;
+            }
+        }
 
         // modify session
         if ($scope.oldName != $scope.newName) {
@@ -1095,14 +1191,14 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
 
         if ($scope.addUsers != null) {
             for (var i in $scope.addUsers) {
-                $scope.addUserStr += $scope.addUsers[i] + " ";
+                $scope.addUserStr += $scope.addUsers[i].replace(/'/g, "''") + " ";
             }
             $scope.addUserStr = $scope.addUserStr.trim();
         }
 
         if ($scope.delUsers != null) {
             for (var j in $scope.delUsers) {
-                $scope.delUserStr += $scope.delUsers[j] + " ";
+                $scope.delUserStr += $scope.delUsers[j].replace(/'/g, "''") + " ";
             }
             $scope.delUserStr = $scope.delUserStr.trim();
         }
@@ -1116,7 +1212,7 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
         console.log("addUsersStr: " + $scope.addUserStr);
         console.log("delUsersStr: " + $scope.delUserStr);
 
-        socket.emit('setDept', $scope.isEdit, $scope.newName, $scope.addUserStr, $scope.delUserStr);
+        socket.emit('setDept', $scope.isEdit, $scope.newName.replace(/'/g, "''"), $scope.addUserStr, $scope.delUserStr);
 
         $timeout(function() {
             $route.reload();
@@ -1126,6 +1222,7 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
     $scope.toggleEdit = function(dept) {
         if ($scope.isEdit != dept.id) {
             $scope.errorMsg_users = null;
+            $scope.errorMsg_name = null;
 
             $scope.isEdit = dept.id;
             $scope.oldName = dept.name;
@@ -1147,6 +1244,7 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
             $scope.heading2 = "";
         } else {
             $scope.errorMsg_users = null;
+            $scope.errorMsg_name = null;
 
             $scope.isEdit = null;
             $scope.oldName = null;
@@ -1168,10 +1266,17 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
     }
 
     $scope.addToUsers = function(username) {
+        $scope.errorMsg_name = null;
+
         if (username == null) {
             $scope.errorMsg_users = "Username cannot be left blank.";
             return;
         } else {
+            username = username.trim();
+            if (username == "") {
+                $scope.errorMsg_users = "Username cannot be left blank.";
+                return;
+            }
             $scope.errorMsg_users = null;
         }
 
@@ -1251,7 +1356,8 @@ adminModule.controller('newdeptController', function($scope, $location) {
             $scope.errorMsg_name = "Department name cannot be left blank.";
             return;
         } else {
-            if ($scope.deptname.trim() == "") {
+            $scope.deptname = $scope.deptname.trim();
+            if ($scope.deptname == "") {
                 $scope.errorMsg_name = "Department name cannot be left blank";
                 $scope.deptname = null;
                 return;
@@ -1259,8 +1365,18 @@ adminModule.controller('newdeptController', function($scope, $location) {
             $scope.errorMsg_name = null;
         }
 
+        if ($scope.managers != null) {
+            $scope.managerArray = $scope.managers.split(" ");
+            $scope.managers = "";
+
+            for (var x in $scope.managerArray) {
+                $scope.managers += $scope.managerArray[x].replace(/'/g, "''") + " ";
+            }
+            $scope.managers = $scope.managers.trim();
+        }
+
         $scope.session.dept.push($scope.deptname);
-        socket.emit('setDept', null, $scope.deptname, $scope.managers, null);
+        socket.emit('setDept', null, $scope.deptname.replace(/'/g, "''"), $scope.managers, null);
         $location.path('/viewdepts');
     }
 });
@@ -1327,7 +1443,7 @@ adminModule.directive('overTickets', function() {
             // stringify the departments
             var stringDepts = "";
             for (var x in scope.session.dept) {
-                stringDepts += scope.session.dept[x] + " ";
+                stringDepts += scope.session.dept[x].replace(/'/g, "''") + " ";
             }
             stringDepts = stringDepts.trim();
 
@@ -1340,7 +1456,7 @@ adminModule.directive('overTickets', function() {
                     assignedTo: null, alteredBy: null, dateCreated: null, dateAltered: null};
             } else if (scope.session.role == "IT User") {
                 defFilters = {dept: null, priority: null, submittedBy: null, clientEmail: null,
-                    assignedTo: scope.session.user, alteredBy: null, dateCreated: null, dateAltered: null};
+                    assignedTo: scope.session.user.replace(/'/g, "''"), alteredBy: null, dateCreated: null, dateAltered: null};
             }
 
             var getMessages, displayMessages;
@@ -1469,7 +1585,7 @@ adminModule.directive('newTicket', function() {
         link: function(scope, element, attrs) {
             scope.isUser = function() {
                 if (scope.session.role == "Admin" || scope.session.role == "Manager" || scope.session.role == "IT User") {
-                    scope.user = scope.session.user;
+                    scope.user = scope.session.user.replace(/'/g, "''");
                     return true;
                 } else {
                     return false;

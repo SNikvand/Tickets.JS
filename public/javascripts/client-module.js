@@ -143,9 +143,9 @@ clientModule.controller('newticketController', function($scope, $location, $http
 
         // automatically escapes any apostrophes found by doubling them
         socket.emit('setTicket', null,
-            $scope.title = $scope.title.replace(/'/g, "''"),
+            $scope.title.replace(/'/g, "''"),
             $scope.dept,
-            $scope.htmlContent = $scope.htmlcontent.replace(/'/g, "''"),
+            $scope.htmlcontent.replace(/'/g, "''"),
             $scope.priority,
             $scope.fullname.replace(/'/g, "''"),
             $scope.email,

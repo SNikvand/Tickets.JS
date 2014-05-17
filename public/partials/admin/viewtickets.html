@@ -208,7 +208,8 @@
                 </td>
                     <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
                         <label class="control-label">Assigned To</label><br/>
-                        <input type="text" ng-model="$parent.newAssignedTo" style="width: 120px;">
+                        <input type="text" ng-model="$parent.newAssignedTo" style="width: 120px;"><br/>
+                        <span style="color: #f5001d; font-style: italic;">{{ errorMsg_assignedTo }}</span>
                     </td>
 
                 <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">

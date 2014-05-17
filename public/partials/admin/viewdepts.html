@@ -49,7 +49,8 @@
                 <td ng-show="checkIfEdit(dept.id) == false">{{ dept.name }}</td>
                     <td ng-hide="checkIfEdit(dept.id) == false">
                         <label class="control-label">Name</label><br/>
-                        <input type="text" ng-model="$parent.newName" style="width: 120px;">
+                        <input type="text" ng-model="$parent.newName" style="width: 120px;"><br/>
+                        <span style="color: #f5001d; font-style: italic;">{{ errorMsg_name }}</span>
                     </td>
 
                 <td ng-bind="stringifyUsers(dept.managers)" ng-show="checkIfEdit(dept.id) == false"></td>
