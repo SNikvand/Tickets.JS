@@ -1362,7 +1362,7 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
     }
 });
 
-adminModule.controller('newdeptController', function($scope, $location) {
+adminModule.controller('newdeptController', function($scope, $location, $http) {
     $scope.errorMsg_name = null;
 
     $scope.create = function() {
@@ -1391,7 +1391,13 @@ adminModule.controller('newdeptController', function($scope, $location) {
 
         $scope.session.dept.push($scope.deptname);
         socket.emit('setDept', null, $scope.deptname.replace(/'/g, "''"), $scope.managers, null);
-        $location.path('/viewdepts');
+
+        $http({method: "POST", url: "/addDept", headers: {'Content-Type': 'application/json'},
+            data: {newDept: $scope.deptname}})
+            .success(function (data) {
+                $scope.session.dept = data;
+                $location.path('/viewdepts');
+            });
     }
 });
 

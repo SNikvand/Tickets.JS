@@ -116,6 +116,12 @@ app.get('/getDepts', function(req, res) {
     ticket_server.getAllDepts(sendbackDepts);
 });
 
+app.post('/addDept', function(req, res) {
+    req.session.dept.push(req.body.newDept);
+
+    res.json(req.session.dept);
+});
+
 app.post('/verifyAccess', function(req, res) {
     if (req.body.pageid.toString() == "dept") {
         console.log("dept access: " + (req.session.dept.indexOf(req.body.extraParam1) != -1));
