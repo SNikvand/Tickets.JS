@@ -1,4 +1,4 @@
-var adminModule = angular.module('admin', ['ngRoute']);
+var adminModule = angular.module('admin', ['ngRoute', 'textAngular']);
 
 adminModule.config(function($routeProvider,$locationProvider) {
     $routeProvider
@@ -715,32 +715,31 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
     $scope.errorMsg_desc = null;
 
     $scope.showReply = false;
-    $scope.replyDesc = "";
+
+    // variables pertaining to the editor
+    $scope.orightml = '';
+    $scope.htmlcontent = $scope.orightml; // ticket body
+    $scope.disabled = false;
 
     $scope.toggleReply = function() {
         if ($scope.showReply == false) {
             $scope.showReply = true;
         } else {
             $scope.showReply = false;
-            $scope.replyDesc = "";
+            $scope.htmlcontent = "";
         }
     }
 
     $scope.submitReply = function() {
-        if ($scope.replyDesc == null) {
+        if ($scope.htmlcontent == null) {
             $scope.errorMsg_desc = "Post cannot be left blank.";
             return;
         } else {
-            $scope.replyDesc = $scope.replyDesc.trim();
-            if ($scope.replyDesc == "") {
-                $scope.errorMsg_desc = "Post cannot be left blank.";
-                $scope.replyDesc = null;
-                return;
-            }
+            $scope.htmlcontent = $scope.htmlcontent.trim();
             $scope.errorMsg_desc = null;
         }
 
-        socket.emit('setReply', $routeParams.ticketid, isArchiveBool, $scope.session.user.replace(/'/g, "''"), $scope.replyDesc.replace(/'/g, "''"));
+        socket.emit('setReply', $routeParams.ticketid, isArchiveBool, $scope.session.user.replace(/'/g, "''"), $scope.htmlcontent.replace(/'/g, "''"));
 
         $timeout(function() {
             $route.reload();
@@ -773,7 +772,7 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
 
 });
 
-adminModule.controller('newticketController', function($scope, $location, $http) {
+adminModule.controller('newticketController', function($scope, $location, $http, $window) {
     $scope.session.lastLogout = "loggedIn";
     $http({method: "POST", url: "/setLoggedIn", headers: {'Content-Type': 'application/json'}})
         .success(function (data) {
@@ -788,6 +787,11 @@ adminModule.controller('newticketController', function($scope, $location, $http)
 
     $scope.dept = "Department";
     $scope.priority = "Priority";
+
+    // variables pertaining to the editor
+    $scope.orightml = '';
+    $scope.htmlcontent = $scope.orightml; // ticket body
+    $scope.disabled = false;
 
     $scope.setDept = function(dept) {
         $scope.dept = dept;
@@ -851,16 +855,11 @@ adminModule.controller('newticketController', function($scope, $location, $http)
             $scope.errorMsg_email = null;
         }
 
-        if ($scope.body == null) {
+        if ($scope.htmlcontent == null) {
             $scope.errorMsg_desc = "Ticket description cannot be left blank.";
             return;
         } else {
-            $scope.body = $scope.body.trim();
-            if ($scope.body == "") {
-                $scope.errorMsg_desc = "Ticket description cannot be left blank.";
-                $scope.body = null;
-                return;
-            }
+            $scope.htmlcontent = $scope.htmlcontent.trim();
             $scope.errorMsg_desc = null;
         }
 
@@ -868,13 +867,13 @@ adminModule.controller('newticketController', function($scope, $location, $http)
             null,
             $scope.title.replace(/'/g, "''"),
             $scope.dept,
-            $scope.body.replace(/'/g, "''"),
+            $scope.htmlcontent.replace(/'/g, "''"),
             $scope.priority,
             $scope.user.replace(/'/g, "''"),
             $scope.email,
             null, null, null, null, null, null, false, false);
 
-        $location.path('/viewtickets');
+        $window.location = document.URL.replace("/newticket", "") + "/viewticket";
     }
 });
 

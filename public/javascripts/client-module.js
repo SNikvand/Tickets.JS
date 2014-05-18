@@ -18,7 +18,7 @@ clientModule.config(function($routeProvider,$locationProvider) {
 });
 
 
-clientModule.controller('newticketController', function($scope, $location, $http) {
+clientModule.controller('newticketController', function($scope, $location, $http, $window) {
     // error messages
     // these display underneath the form fields and appear when appropriate
     $scope.errorMsg_firstname = null;
@@ -134,6 +134,14 @@ clientModule.controller('newticketController', function($scope, $location, $http
                 return;
             }
             $scope.errorMsg_email = null;
+
+            if ($scope.htmlcontent == null) {
+                $scope.errorMsg_desc = "Ticket description cannot be left blank.";
+                return;
+            } else {
+                $scope.htmlcontent = $scope.htmlcontent.trim();
+                $scope.errorMsg_desc = null;
+            }
         }
 
         // combine first and last names
@@ -151,11 +159,8 @@ clientModule.controller('newticketController', function($scope, $location, $http
             $scope.email,
             null, null, null, null, null, null, false, true);
 
-        //$location.path('/viewticket'); // routes to a view of the newly created ticket.
-
         socket.on('clientHash', function(hash) {
-            console.log("2");
-            $location.path('/viewticket/ticket/' + hash);
+            $window.location = document.URL.replace("/newticket", "") + "/viewticket/ticket/" + hash;
         });
     }
 
@@ -178,32 +183,31 @@ clientModule.controller('viewticketController', function($scope, $timeout, $rout
     $scope.errorMsg_desc = null;
 
     $scope.showReply = false;
-    $scope.replyDesc = "";
+
+    // variables pertaining to the editor
+    $scope.orightml = '';
+    $scope.htmlcontent = $scope.orightml; // ticket body
+    $scope.disabled = false;
 
     $scope.toggleReply = function() {
         if ($scope.showReply == false) {
             $scope.showReply = true;
         } else {
             $scope.showReply = false;
-            $scope.replyDesc = "";
+            $scope.htmlcontent = "";
         }
     }
 
     $scope.submitReply = function() {
-        if ($scope.replyDesc == null) {
+        if ($scope.htmlcontent == null) {
             $scope.errorMsg_desc = "Post cannot be left blank.";
             return;
         } else {
-            $scope.replyDesc = $scope.replyDesc.trim();
-            if ($scope.replyDesc == "") {
-                $scope.errorMsg_desc = "Post cannot be left blank.";
-                $scope.replyDesc = null;
-                return;
-            }
+            $scope.htmlcontent = $scope.htmlcontent.trim();
             $scope.errorMsg_desc = null;
         }
 
-        socket.emit('setReply', $routeParams.ticketid, false, null, $scope.replyDesc.replace(/'/g, "''"));
+        socket.emit('setReply', $routeParams.ticketid, false, null, $scope.htmlcontent.replace(/'/g, "''"));
 
         $timeout(function() {
             $route.reload();

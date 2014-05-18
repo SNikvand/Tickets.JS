@@ -57,10 +57,7 @@
 
         <div class="form-group">
             <label class="control-group">Description of Issue</label>
-            <textarea id="body" ng-model="body" placeholder="Description/explanation of ticket issue"
-                      class="form-control input-lg" rows="5">
-
-            </textarea><br/>
+            <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent"></div>
             <span style="color: #f5001d; font-style: italic;">{{ errorMsg_desc }}</span>
         </div><br/>
 
