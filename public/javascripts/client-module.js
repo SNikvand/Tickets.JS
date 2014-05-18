@@ -154,6 +154,7 @@ clientModule.controller('newticketController', function($scope, $location, $http
         //$location.path('/viewticket'); // routes to a view of the newly created ticket.
 
         socket.on('clientHash', function(hash) {
+            console.log("2");
             $location.path('/viewticket/ticket/' + hash);
         });
     }
@@ -167,7 +168,7 @@ clientModule.controller('newticketController', function($scope, $location, $http
 });
 
 
-clientModule.controller('viewticketController', function($scope, $timeout, $route, $location, $routeParams) {
+clientModule.controller('viewticketController', function($scope, $timeout, $route, $location, $routeParams, $sce) {
     // retrieves ticket information
     // using $routeParams.ticketid and $routeParams.isArchive
 
@@ -232,6 +233,10 @@ clientModule.controller('viewticketController', function($scope, $timeout, $rout
         $scope.altered_date = altered_date;
         $scope.altered_by = altered_by;
         $scope.complete_date = complete_date;
+
+        $scope.body_htmlSafe =
+            $sce.trustAsHtml($scope.body);
+
         $scope.$apply();
     });
 

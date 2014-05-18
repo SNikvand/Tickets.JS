@@ -702,7 +702,7 @@ adminModule.service('ticketParams', function($location, $http) {
     };
 });
 
-adminModule.controller('ticketController', function($scope, $timeout, $route, $location, $routeParams) {
+adminModule.controller('ticketController', function($scope, $timeout, $route, $location, $routeParams, $sce) {
     // retrieves ticket information
     // using $routeParams.ticketid and $routeParams.isArchive
 
@@ -764,6 +764,10 @@ adminModule.controller('ticketController', function($scope, $timeout, $route, $l
         $scope.altered_date = altered_date;
         $scope.altered_by = altered_by;
         $scope.complete_date = complete_date;
+
+        $scope.body_htmlSafe =
+            $sce.trustAsHtml($scope.body);
+
         $scope.$apply();
     });
 

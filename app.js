@@ -9,8 +9,15 @@ var route_admin = require('./routes/admin');
 var route_client = require('./routes/client');
 var route_login = require('./routes/login');
 var http = require('http');
+var https = require('https');
+var fs = require('fs');
 var path = require('path');
 var permissions = require('./lib/permissions.js');
+
+var options = {
+    key: fs.readFileSync('./certs/privatekey.pem'),
+    cert: fs.readFileSync('./certs/certificate.pem')
+};
 
 var config = require( './lib/config' );
 var md5 = require( 'MD5' );
@@ -159,9 +166,15 @@ app.post('/setFilters', function(req, res) {
 });
 
 var server = http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+    console.log('Express server listening on port ' + app.get('port'));
+});
+
+var sslserver = https.createServer(options, app).listen(443, function(){
+    console.log('Express server listening on port ' + app.get('port'));
 });
 
 var ticket_server = require('./lib/ticket_server.js');
 ticket_server.listen(server);
+ticket_server.listen(sslserver);
+
 var dbhelper = require('./lib/database.js');

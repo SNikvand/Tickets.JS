@@ -25,7 +25,7 @@
                     <tr><p><td style="font-style:italic; letter-spacing:1px;">Altered By</td><td> {{ altered_by }}</td></p></tr>
                     <tr><p><td style="font-style:italic; letter-spacing:1px;">Date Altered</td><td> {{ altered_date }}</td></p></tr>
 
-                    <tr><p><td style="font-style:italic; letter-spacing:1px;">Description</td><td> {{ body }}</td></p></tr>
+                    <tr><p><td style="font-style:italic; letter-spacing:1px;">Description</td><td ng-bind-html="body_htmlSafe"> </td></p></tr>
                 </table>
             </div>
             <div style="clear:both"></div>
