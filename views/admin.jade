@@ -45,50 +45,31 @@ block content
                         a(href="#/searchticket")
                             span.glyphicon.glyphicon-search
                             | Search Ticket
-                h3 Departments
-                ul.nav.nav-sidebar
-                    // | <li ng-repeat="dept in departments"><a href="" ng-click="viewTicketsByDept({{ dept }})">{{ dept }}</a></li>
-
-                    li(ng-repeat="dept in userdept",ng-class="{active:isActive('/viewtickets/department/{{dept}}')}")
-                        a(href="#/viewtickets/department/{{dept}}",ng-click="viewTicketsByDept(dept)")
-                            span.glyphicon(ng-class="isActive('/viewtickets/department/{{dept}}') ? 'glyphicon-folder-open' : 'glyphicon-folder-close'")
-                            | {{ dept }}
-
-                    //li
-                    //    a(href="#/newticket")
-                    //        span.glyphicon.glyphicon-folder-close
-                    //        | Accounting
-                    //li
-                    //    a(href="#/searchticket")
-                    //        span.glyphicon.glyphicon-folder-close
-                    //        | Marketing
-
-                h3 Control Panel
-                ul.nav.nav-sidebar
-                    li(ng-class="{active:isActive('/viewusers')}")
-                        a(href="#/viewusers")
-                            span.glyphicon.glyphicon-user
-                            | View Users
-                    li(ng-class="{active:isActive('/newuser')}")
-                        a(href="#/newuser")
-                            span.glyphicon.glyphicon-certificate
-                            | New User
-                    li(ng-class="{active:isActive('/viewdepts')}")
-                        a(href="#/viewdepts")
-                            span.glyphicon.glyphicon-user
-                            | View Departments
-                    li(ng-class="{active:isActive('/newdept')}")
-                        a(href="#/newdept")
-                            span.glyphicon.glyphicon-certificate
-                            | New Department
-                    li(ng-class="{active:isActive('/settings/mail')}")
-                        a(href="#/settings/mail")
-                            span.glyphicon.glyphicon-envelope
-                            | Mail Settings
-                    li(ng-class="{active:isActive('/settings')}")
-                        a(href="#/settings")
-                            span.glyphicon.glyphicon-cog
-                            | Other Settings
+                if session.role != "IT User"
+                    h3 Departments
+                    ul.nav.nav-sidebar
+                        li(ng-repeat="dept in userdept",ng-class="{active:isActive('/viewtickets/department/{{dept}}')}")
+                            a(href="#/viewtickets/department/{{dept}}",ng-click="viewTicketsByDept(dept)")
+                                span.glyphicon(ng-class="isActive('/viewtickets/department/{{dept}}') ? 'glyphicon-folder-open' : 'glyphicon-folder-close'")
+                                | {{ dept }}
+                    h3 Control Panel
+                    ul.nav.nav-sidebar
+                        li(ng-class="{active:isActive('/viewusers')}")
+                            a(href="#/viewusers")
+                                span.glyphicon.glyphicon-user
+                                | View Users
+                        li(ng-class="{active:isActive('/newuser')}")
+                            a(href="#/newuser")
+                                span.glyphicon.glyphicon-certificate
+                                | New User
+                        li(ng-class="{active:isActive('/viewdepts')}")
+                            a(href="#/viewdepts")
+                                span.glyphicon.glyphicon-user
+                                | View Departments
+                        li(ng-class="{active:isActive('/newdept')}")
+                            a(href="#/newdept")
+                                span.glyphicon.glyphicon-certificate
+                                | New Department
                 hr
             div.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
                 div(ng-view)

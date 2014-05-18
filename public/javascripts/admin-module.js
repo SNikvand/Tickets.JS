@@ -178,38 +178,6 @@ adminModule.config(function($routeProvider,$locationProvider) {
                 }
             }
         })
-        .when('/settings/mail', {
-            templateUrl: '/partials/admin/mailsettings.html',
-            controller: 'mailsettingsController',
-            resolve: {
-                verifyAccess: function(verifyAccess) {
-                    verifyAccess.checkPage("mailsettings");
-                },
-                delay: function($q, $timeout) {
-                    var deferred = $q.defer();
-                    $timeout(function() {
-                        deferred.resolve();
-                    }, 100);
-                    return deferred.promise;
-                }
-            }
-        })
-        .when('/settings', {
-            templateUrl: '/partials/admin/settings.html',
-            controller: 'settingsController',
-            resolve: {
-                verifyAccess: function(verifyAccess) {
-                    verifyAccess.checkPage("settings");
-                },
-                delay: function($q, $timeout) {
-                    var deferred = $q.defer();
-                    $timeout(function() {
-                        deferred.resolve();
-                    }, 100);
-                    return deferred.promise;
-                }
-            }
-        })
         .otherwise({
             redirectTo: '/overview'
         });
