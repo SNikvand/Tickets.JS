@@ -30,6 +30,14 @@
     padding-left: 10px;
 }
 
+.colorBlock {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #000;
+    background-color: #ffe8a8;
+}
+
 /*.ticketList td.priority1 {
     background-color: #FF6161;
 }

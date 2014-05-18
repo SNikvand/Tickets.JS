@@ -146,8 +146,8 @@
                 </td>
             </tr>
 
-            <button type="button" class="btn btn-default" style="height: 30px;" ng-click="archiveTickets()">Archive Tickets</button><br/><br/>
-            <tr ng-repeat="ticket in maintickets | orderBy:predicate:reverse | startFrom:currentPage*pageSize | limitTo:pageSize">
+            <tr ng-repeat="ticket in maintickets | orderBy:predicate:reverse | startFrom:currentPage*pageSize | limitTo:pageSize"
+                ng-style="isArchiveStyle(ticket)">
                 <!-- options -->
                 <td ng-show="checkIfEdit(ticket.id, ticket.isArchive) == false">
                     <span style="display: {{ displayProp }};">
@@ -235,5 +235,12 @@
         <button class="btn btn-default" ng-disabled="currentPage >= maintickets.length/pageSize - 1" ng-click="currentPage=currentPage+1">
             Next
         </button><br/><br/>
+        <div>
+            <div class="colorBlock"></div>&nbsp;&nbsp;Archived Tickets
+            <div style="float: right;">
+                <button type="button" class="btn btn-default" style="height: 30px; position: relative; bottom: 12px;"
+                        ng-click="archiveTickets()">Archive Tickets</button>
+            </div>
+        </div>
     </table>
 </div>

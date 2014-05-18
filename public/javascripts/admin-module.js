@@ -221,8 +221,9 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
             keywords: null,
             searchTitle: false,
             searchBody: false,
-            expiredSelection: true,
-            completedSelection: true,
+            expiredSelection: "includeExpired",
+            completedSelection: "includeCompleted",
+            archivedSelection: "includeArchived",
             amount: null
         };
 
@@ -312,6 +313,14 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
     $scope.$on("$destroy", function(){
         $scope.eraseErrorMsg();
     });
+
+    $scope.isArchiveStyle = function(ticket) {
+        var rowStyle = {"background-color": "#fff"};
+        if (ticket.isArchive == true) {
+            rowStyle["background-color"] = "#FFE8A8";
+        }
+        return rowStyle;
+    }
 
     $scope.errorMsg_assignedTo = null;
 
@@ -444,6 +453,14 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
     $scope.$on("$destroy", function(){
         $scope.eraseErrorMsg();
     });
+
+    $scope.isArchiveStyle = function(ticket) {
+        var rowStyle = {"background-color": "#fff"};
+        if (ticket.isArchive == true) {
+            rowStyle["background-color"] = "#ffe8a8";
+        }
+        return rowStyle;
+    }
 
     $scope.newtickets = [];
     if ($scope.session.role == "IT User") {
