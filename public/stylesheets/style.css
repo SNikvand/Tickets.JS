@@ -353,3 +353,88 @@ portal design
 #taTextElement{
     height:140px;
 }
+
+#title2{
+    font-size:large;
+}
+
+#loginbutton{
+    text-align:right;
+}
+
+
+.leftright{
+    margin-top:10px;
+    font-size:x-large;
+}
+
+html,body{
+    height:100%;
+}
+.t-wrapper{
+    height:100%;
+}
+#frontContainer{
+    background:#FCFCFA;
+    padding-top:20px;
+}
+#demoBackground{
+    background-color:#fff;
+    margin-top:40px;
+    overflow:hidden;
+    visibility:hidden;
+}
+
+#timelinelite{
+    background: url(/images/weitoticket.png) no-repeat;
+    height: 76px;
+    overflow:hidden;
+}
+
+#bestchoice{
+    position:relative;
+    background: url(/images/bestchoice.png) no-repeat;
+    height: 60px;
+}
+
+#taglinewrapper {
+    height: 100px;
+    margin-top: 150px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    -webkit-animation: fadeIn 3.5s; /* Chrome, Safari, Opera */
+    animation: fadeIn 3.5s;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes fadeIn
+{
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+/* Standard syntax */
+@keyframes fadeIn
+{
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+.box {
+    width: 205px;
+    height: 52px;
+}
+
+#taglinesimple{
+    background: url(/images/simple.png) no-repeat;
+}
+#taglinelite{
+    background: url(/images/lite.png) no-repeat;
+}
+#taglinefun{
+    background: url(/images/easy.png) no-repeat;
+}
+

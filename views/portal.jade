@@ -1,10 +1,49 @@
 extends layout
-
 block content
-  .container(style="display: flex; flex-direction: column; justify-content: center;")
-     p
-       a(href="/client") New Ticket
-     p
-       a(href="/login") Log In
+    .container
+        div.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+            div.container-fluid
+                div.navbar-header
+                    button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+                        span.sr-only Toggle Navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href='/') Wei To Ticket
+        script(src='/javascripts/TweenMax.min.js')
+        script(src='/javascripts/TimelineMax.min.js')
+        script.
+            function image() {
+                var logo = ("#logo"),
+                timelineLite = ("#timelinelite"),
+                bestchoice = ("#bestchoice"),
+                tl = new TimelineLite();
+                TweenLite.to(bestchoice, 4, {left:"600px", ease:Bounce.easeOut});
+                TweenLite.set(("#demoBackground"), {css:{visibility:"visible"}});
 
-
+                //TweenMax.staggerTo([taglinesimple,taglinelite,taglinefun], 1,  {scale:2.5, opacity:2}, 1);
+            }
+        div#frontContainer.col-xs-12
+            div.row-fluid
+                div.col-md-6.col-sm-6.col-xs-6.col-lg-6
+                    p.leftright
+                        a(href="/client", style="text-decoration: none; font-size: 35px; font-family: 'Source Sans Pro', sans-serif;")
+                            span.glyphicon.glyphicon-arrow-left
+                            | &nbsp; New Ticket
+                div.col-md-6.col-sm-6.col-xs-6.col-lg-6.pull-right#loginbutton
+                    p.leftright
+                        a(href="/login", style="text-decoration: none; font-size: 35px; font-family: 'Source Sans Pro', sans-serif;")
+                            | Log In &nbsp;
+                            span.glyphicon.glyphicon-arrow-right
+            div.col-md-12.col-sm-12.col-xs-12.col-lg-12#demoBackground
+                div#timelinelite
+                div#bestchoicewrapper
+                    div#bestchoice
+                div#taglinewrapper
+                    div.box#taglinesimple
+                    div.box#taglinelite
+                    div.box#taglinefun
+                script.
+                    image();
+        div.navbar.navbar-inverse.navbar-fixed-bottom
+            a.navbar-brand.pull-right Created by Team Wei
