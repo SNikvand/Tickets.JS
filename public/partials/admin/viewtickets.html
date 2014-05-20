@@ -218,7 +218,7 @@
                     <td ng-hide="checkIfEdit(ticket.id, ticket.isArchive) == false">
                         <label class="control-label">State</label><br/>
                         <label class="checkbox-inline">
-                            <input type="checkbox" ng-init="$parent.isCompleted = (ticket.complete_date != null)"
+                            <input type="checkbox" ng-checked="ticket.complete_date != null"
                                    ng-model="$parent.isCompleted"> Completed?
                         </label>
                     </td>

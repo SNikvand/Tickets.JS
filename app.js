@@ -75,6 +75,11 @@ app.post('/login', function(req, res) {
             req.session.user = req.body.username;
             req.session.role = sendback.userRole;
             req.session.dept = sendback.userDepts;
+
+            if (req.session.dept == "none") {
+                req.session.dept = [];
+            }
+
             req.session.lastLogout = sendback.lastLogout;
 
             req.session.filters = {};
@@ -123,6 +128,12 @@ app.get('/getDepts', function(req, res) {
     ticket_server.getAllDepts(sendbackDepts);
 });
 
+app.post('/delDept', function(req, res) {
+    req.session.dept.splice(req.session.dept.indexOf(req.body.deptName), 1);
+
+    res.json(req.session.dept);
+});
+
 app.post('/addDept', function(req, res) {
     req.session.dept.push(req.body.newDept);
 
@@ -139,13 +150,22 @@ app.post('/verifyAccess', function(req, res) {
 
         var table = (isArchive == true ? "tickets_archive" : "tickets");
 
-        var query = "SELECT d.name FROM " + table + " t JOIN departments d ON (t.department = d.id)" +
+        var query = "SELECT u.name AS assigned_to, d.name FROM " + table + " t JOIN departments d ON (t.department = d.id)" +
+            " JOIN users u ON (t.assigned_to = u.id)" +
             " WHERE t.id = " + hashids.decrypt( id.substr( id.length - 2, 2 ) ); + ";";
         dbhelper.queryDatabase(query, returnAccess);
 
         function returnAccess(err, result) {
-            console.log("ticket access: " + (req.session.dept.indexOf(result.rows[0].name) != -1));
-            res.send(req.session.dept.indexOf(result.rows[0].name) != -1);
+            var hasAccess;
+
+            if (req.session.dept.indexOf(result.rows[0].name) != -1) {
+                hasAccess = true;
+            } else if (req.session.user == result.rows[0].assigned_to) {
+                hasAccess = true;
+            } else {
+                hasAccess = false;
+            }
+            res.send(hasAccess);
         }
     } else {
         var role = req.session.role;

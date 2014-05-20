@@ -50,9 +50,9 @@ block content
                 if session.role != "IT User"
                     h3 Departments
                     ul.nav.nav-sidebar
-                        li(ng-repeat="dept in userdept",ng-class="{active:isActive('/viewtickets/department/{{dept}}')}")
+                        li(ng-repeat="dept in userdept",ng-class="{active:isActive(getDeptUrl(dept))}")
                             a(href="#/viewtickets/department/{{dept}}",ng-click="viewTicketsByDept(dept)")
-                                span.glyphicon(ng-class="isActive('/viewtickets/department/{{dept}}') ? 'glyphicon-folder-open' : 'glyphicon-folder-close'")
+                                span.glyphicon(ng-class="isActive(getDeptUrl(dept)) ? 'glyphicon-folder-open' : 'glyphicon-folder-close'")
                                 | {{ dept }}
                     h3 Control Panel
                     ul.nav.nav-sidebar

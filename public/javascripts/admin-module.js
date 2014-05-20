@@ -206,9 +206,14 @@ adminModule.controller('panelController', function($scope, $location, ticketPara
         return route === $location.path();
     };
 
+    $scope.getDeptUrl = function(name) {
+        name.replace(/'/g, "&#39;");
+        return "/viewtickets/department/" + name;
+    }
+
     $scope.viewTicketsByDept = function(name) {
         var formdata = {
-            dept: name,
+            dept: "\"" + name + "\"",
             priority: null,
             assignedTo: null,
             alteredBy: null,
@@ -341,7 +346,7 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
     $scope.newPriority = null;
     $scope.newDept = null;
     $scope.newAssignedTo = null;
-    $scope.isCompleted = false;
+    $scope.isCompleted = null;
     $scope.alteredBy = $scope.session.user;
 
     // headings
@@ -370,12 +375,13 @@ adminModule.controller('viewticketsController', function($scope, $timeout, $rout
                 $scope.newAssignedTo = null;
                 return;
             } else {
+                $scope.newAssignedToEsc = $scope.newAssignedTo.replace(/'/g, "''");
                 $scope.errorMsg_assignedTo = null;
             }
         }
 
         socket.emit('setTicket', $scope.isEdit, null, $scope.newDept, null, $scope.newPriority, null, null,
-            $scope.newAssignedTo.replace(/'/g, "''"), $scope.alteredBy.replace(/'/g, "''"), null, null, null, $scope.isCompleted, $scope.isEditArchive, null);
+            $scope.newAssignedToEsc, $scope.alteredBy.replace(/'/g, "''"), null, null, null, $scope.isCompleted, $scope.isEditArchive, null);
 
         $timeout(function() {
             $route.reload();
@@ -509,11 +515,12 @@ adminModule.controller('viewticketsDeptController', function($scope, $location, 
                 return;
             } else {
                 $scope.errorMsg_assignedTo = null;
+                $scope.newAssignedToEsc = $scope.newAssignedTo.replace(/'/g, "''");
             }
         }
 
         socket.emit('setTicket', $scope.isEdit, null, $scope.newDept, null, $scope.newPriority, null, null,
-            $scope.newAssignedTo.replace(/'/g, "''"), $scope.alteredBy.replace(/'/g, "''"), null, null, null, $scope.isCompleted, $scope.isEditArchive, null);
+            $scope.newAssignedToEsc, $scope.alteredBy.replace(/'/g, "''"), null, null, null, $scope.isCompleted, $scope.isEditArchive, null);
 
         $timeout(function() {
             $route.reload();
@@ -883,7 +890,7 @@ adminModule.controller('newticketController', function($scope, $location, $http,
         socket.emit('setTicket',
             null,
             $scope.title.replace(/'/g, "''"),
-            $scope.dept,
+            $scope.dept.replace(/'/g, "''"),
             $scope.htmlcontent.replace(/'/g, "''"),
             $scope.priority,
             $scope.user.replace(/'/g, "''"),
@@ -1121,7 +1128,7 @@ adminModule.controller('newuserController', function($scope, $location) {
     }
 });
 
-adminModule.controller('viewdeptController', function($scope, $route, $timeout) {
+adminModule.controller('viewdeptController', function($scope, $route, $timeout, $http) {
     socket.emit('getDepts');
 
     $scope.$on("$destroy", function(){
@@ -1313,8 +1320,13 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
             temp = username;
 
         $scope.tempUsers.splice($scope.tempUsers.indexOf(username), 1);
-        $scope.addUsers.splice($scope.addUsers.indexOf(temp), 1);
-        $scope.delUsers.push(temp);
+
+        // if added to addUsers (i.e. not in original list) simply remove from addUsers
+        if ($scope.addUsers.indexOf(temp) != -1) {
+            $scope.addUsers.splice($scope.addUsers.indexOf(temp), 1);
+        } else {
+            $scope.delUsers.push(temp);
+        }
     }
 
     if ($scope.session.role == "IT User") {
@@ -1344,9 +1356,15 @@ adminModule.controller('viewdeptController', function($scope, $route, $timeout) 
 
         $scope.session.dept.splice($scope.session.dept.indexOf($scope.name), 1);
 
-        $timeout(function() {
-            $route.reload();
-        }, 500);
+        $http({method: "POST", url: "/delDept", headers: {'Content-Type': 'application/json'},
+            data: {deptName: $scope.name}})
+            .success(function (data) {
+                $scope.session.dept = data;
+
+                $timeout(function() {
+                    $route.reload();
+                }, 500);
+            });
     }
 });
 
@@ -1364,21 +1382,28 @@ adminModule.controller('newdeptController', function($scope, $location, $http) {
                 $scope.deptname = null;
                 return;
             }
+            if ($scope.deptname.search("'") != -1) {
+                $scope.errorMsg_name = "Invalid department name";
+                $scope.deptname = null;
+                return;
+            }
             $scope.errorMsg_name = null;
         }
 
         if ($scope.managers != null) {
             $scope.managerArray = $scope.managers.split(" ");
-            $scope.managers = "";
+            $scope.managerEsc = "";
 
             for (var x in $scope.managerArray) {
-                $scope.managers += $scope.managerArray[x].replace(/'/g, "''") + " ";
+                $scope.managerEsc += $scope.managerArray[x].replace(/'/g, "''") + " ";
             }
-            $scope.managers = $scope.managers.trim();
+            $scope.managerEsc = $scope.managerEsc.trim();
         }
 
         $scope.session.dept.push($scope.deptname);
-        socket.emit('setDept', null, $scope.deptname.replace(/'/g, "''"), $scope.managers, null);
+        $scope.deptnameEsc = $scope.deptname.replace(/'/g, "''");
+
+        socket.emit('setDept', null, $scope.deptnameEsc, $scope.managerEsc, null);
 
         $http({method: "POST", url: "/addDept", headers: {'Content-Type': 'application/json'},
             data: {newDept: $scope.deptname}})
