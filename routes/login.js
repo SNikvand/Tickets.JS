@@ -1,3 +1,5 @@
+//created by Matthew Chan
+
 exports.index = function(req, res){
     var role = req.session.role;
     if (role == "Admin" || role == "Manager" || role == "IT User") {

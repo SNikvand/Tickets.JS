@@ -1,3 +1,6 @@
+//created by Chris Jensen
+//edited by Matthew Chan
+
 var clientModule = angular.module('client', ['ngRoute', 'textAngular']);
 
 

@@ -1,3 +1,6 @@
+//created by Shahin Nikvand
+//edited by Matthew Chan
+
 var adminModule = angular.module('admin', ['ngRoute', 'textAngular']);
 
 adminModule.config(function($routeProvider,$locationProvider) {
