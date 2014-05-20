@@ -897,7 +897,7 @@ adminModule.controller('newticketController', function($scope, $location, $http,
             $scope.email,
             null, null, null, null, null, null, false, false);
 
-        $window.location = document.URL.replace("/newticket", "") + "/viewticket";
+        $window.location = document.URL.replace("/newticket", "") + "/viewtickets";
     }
 });
 

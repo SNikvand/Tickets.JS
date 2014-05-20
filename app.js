@@ -150,8 +150,8 @@ app.post('/verifyAccess', function(req, res) {
 
         var table = (isArchive == true ? "tickets_archive" : "tickets");
 
-        var query = "SELECT u.name AS assigned_to, d.name FROM " + table + " t JOIN departments d ON (t.department = d.id)" +
-            " JOIN users u ON (t.assigned_to = u.id)" +
+        var query = "SELECT u.name AS assigned_to, d.name FROM " + table + " t LEFT JOIN departments d ON (t.department = d.id)" +
+            " LEFT JOIN users u ON (t.assigned_to = u.id)" +
             " WHERE t.id = " + hashids.decrypt( id.substr( id.length - 2, 2 ) ); + ";";
         dbhelper.queryDatabase(query, returnAccess);
 
